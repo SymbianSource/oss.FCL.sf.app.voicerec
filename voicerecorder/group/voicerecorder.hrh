@@ -1,0 +1,171 @@
+/*
+* Copyright (c) 2002 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+*     Defines commands and control identifiers.
+*     The file can be included in C++ or resource file.
+*
+*/
+
+
+#ifndef __VOICERECORDER_HRH_
+#define __VOICERECORDER_HRH_
+
+// INCLUDES
+#include "VoiceRecorderContexts.h"
+#include <bldvariant.hrh>
+
+enum TVRDialogIds
+	{
+	EVRSettingsListboxId = 1	//Dialog control ID can't be zero
+	};
+
+enum TVRButtonStates
+	{
+	ENormal = 0,
+	EDimmed,
+	EPressed
+	};
+
+enum TVRCommands
+	{
+	ECmdPlay = 100,			// Don't override EIKON IDs..
+	ECmdPause,
+	ECmdStop,
+	ECmdAutoStopInterrupted,
+	ECmdAutoStopAtEnd,
+	ECmdSilentStop,
+	ECmdRecord,
+	ECmdRewind,
+	ECmdForward,
+	ECmdRecordNew,
+	ECmdOpen,
+	ECmdDelete,
+	ECmdAddToPinboard,
+	ECmdRename,
+	ECmdSaveAttachment,
+	ECmdOk,
+	ECmdCancel,
+	ECmdSettings,
+	ECmdEditListCascade,
+	ECmdChange,
+	ECmdHelp,
+	ECmdEndKey,
+	ECmdCancelNote,
+	ECmdEmbeddedRecordingReady,
+	ECmdDisconnectCall,
+	ECmdNewFileServiceNotify,
+	ECmdMSK,			// When Middle Softkey is pressed
+	ECmdSetNewPosition,		// Progress Bar Touch	
+	ECmdNOP,			// No operation
+	ECmdGoToMyClips,
+	
+	ECmdSendVia			// This MUST be the last entry
+	};
+
+enum TVRRecViewStates
+	{
+	EStateIdle = 0,
+	EStateDeleted,
+	EStateRecording,
+	EStateRecordEmbedded,
+	EStatePlaying,
+	EStatePlayingPaused,
+	EStateRecordingPaused,
+	EStateIdleEmbedded,
+	EStateIdleRecordEmbedded,
+	EStateNRTIdle,
+	EStateNRTPlaying,
+	EStateDisableButtons, // all buttons disabled for no in-call recording feature
+
+    ENumStates,		// this must be the last line
+	EStateInitial = 255
+	};
+	
+enum TVRRecViewLabels
+	{
+	ELabelMemoName = 0,
+	ELabelMemoDate,
+	ELabelMemoQuality,
+	ELabelBarMin,
+	ELabelBarMax,
+	ELabelStatus,
+	ELabelQualityText,
+	ENumLabels		// this must be the last line
+	};
+
+enum TVRFunctions
+	{
+	EFunctionNop = 0,
+	EFunctionPlay,
+	EFunctionStop,
+	EFunctionRecord,
+	EFunctionPause,
+	EFunctionForward,
+	EFunctionRewind,
+	EFunctionRecordNew,
+	EFunctionDelete,
+	EFunctionRename,
+	EFunctionStopAndSave,
+	EFunctionStopWithNote,
+	EFunctionOk,
+	EFunctionCancel,
+	EFunctionAutoStopAndSave,
+	EFunctionSilentStopAndSave,
+	EFunctionAutoStop,
+	EFunctionNRTStop,
+	EFunctionNRTAutoStop,
+	EFunctionSaveBeforeExit,
+	EFunctionSetNewPosition,	// Progress Bar Touch
+	ENumFunctions
+	};
+	
+enum TVRSpeaker
+	{
+	ESpeakerEarPiece,
+	ESpeakerIhf
+	};
+
+// EQualityMMSOptimized -> save file as amr
+// EQualityNormal is used only when mp4 is supported,  save file as wav
+// EQualityHigh -> when mp4 is supported, save file as mp4, otherwise save as wave 
+enum TVRQuality
+	{
+	EQualityMMSOptimized,
+
+#ifdef __AAC_ENCODER_PLUGIN
+    EQualityNormal,
+#endif
+
+  	EQualityHigh
+	};
+
+enum TVRButtons
+    {
+    EButtonPlay = 0,
+    EButtonStop,
+    EButtonRecord,
+    EButtonRewind,
+    EButtonForward
+    };
+
+enum TVRSettingFeatures
+    {
+    ESettingQuality = 0,
+    ESettingMemoStore
+    };
+
+#define VRMEMONAMEMAXLENGTH 20
+#define VRLABELMAXLENGTH 32
+
+#endif // __VOICERECORDER_HRH_

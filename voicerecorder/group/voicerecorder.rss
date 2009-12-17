@@ -1,0 +1,2195 @@
+/*
+* Copyright (c) 2002 - 2006 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+*     Voice Recorder resource file
+*	  
+*
+*/
+
+#include <bldvariant.hrh>
+#include <data_caging_paths_strings.hrh>
+
+#include <e32keys.h>
+#include <eikon.rh>   
+#include <avkon.rsg>
+#include <eikon.rsg>
+#include <avkon.hrh>
+#include <avkon.rh>
+#include <uikon.rh>
+#include <appinfo.rh>
+#include <avkon.loc>
+#include <avkon.mbg>
+
+#include <pathconfiguration.hrh>
+#include <CommonDialogs.rh>
+
+#include "RecView.rh"
+#include <voicerecorder.mbg>
+#include "voicerecorder.hrh"
+#include "VoiceRecorder.rh"
+#include <voicerecorder.loc>
+
+NAME VREC
+
+RESOURCE RSS_SIGNATURE { }
+
+RESOURCE TBUF { buf = qtn_vorec_first_memo_name; } //default document name
+
+RESOURCE EIK_APP_INFO
+	{
+	}
+
+// For the scalable AIF
+RESOURCE LOCALISABLE_APP_INFO r_vr_localisable_app_info
+    {
+    short_caption = qtn_vorec_app_menu_grid;
+    caption_and_icon = CAPTION_AND_ICON_INFO
+        {
+        caption = qtn_vorec_app_title;
+#ifdef __SCALABLE_ICONS
+		number_of_icons = 1;
+		icon_file = APP_BITMAP_DIR"\\VoiceRecorder_aif.mif";
+#else
+        number_of_icons = 2;
+        icon_file = APP_BITMAP_DIR"\\VoiceRecorder_aif.mbm";
+#endif
+        };
+    }
+
+
+RESOURCE AVKON_VIEW r_vr_recorder_view
+	{
+	menubar = r_vr_recview_menubar_empty;  
+	cba = r_vr_softkeys_options_back_select;	
+	}
+
+
+RESOURCE MENU_PANE r_vr_editlist_menupane
+	{
+	items =
+		{
+		MENU_ITEM { command = EAknCmdMark;		txt=qtn_options_list_mark_one; },
+		MENU_ITEM { command = EAknCmdUnmark;	txt=qtn_options_list_unmark_one; },
+		MENU_ITEM { command = EAknMarkAll;		txt=qtn_options_list_mark_all; },
+		MENU_ITEM { command = EAknUnmarkAll;	txt=qtn_options_list_unmark_all; }
+		};
+	}
+
+
+RESOURCE MENU_BAR r_vr_recview_menubar_empty
+	{
+	titles=
+		{
+		};
+	}
+
+RESOURCE MENU_BAR r_vr_recview_menubar_default
+	{
+	titles=
+		{
+		MENU_TITLE { menu_pane = r_vr_rec_menupane_default; }
+		};
+	}
+
+
+RESOURCE MENU_PANE r_vr_rec_menupane_default
+	{
+	items=
+		{
+		MENU_ITEM { command = ECmdRecord;		txt = qtn_vorec_rec_new; },
+		MENU_ITEM { command = ECmdDelete;		txt = qtn_vorec_delete; },
+		MENU_ITEM { command = ECmdRename;		txt = text_voice_rec_edit_title; },
+		MENU_ITEM { command = ECmdGoToMyClips;          txt = qtn_vorec_goto_my_clips; },
+#if defined ( __SERIES60_MMC )
+		MENU_ITEM { command = ECmdSettings; 	txt = qtn_vorec_settings; },
+#endif
+
+		MENU_ITEM { command = ECmdHelp; 		txt = qtn_options_help; },
+		MENU_ITEM { command = EAknCmdExit;		txt = qtn_options_exit; }
+		};
+	}
+
+RESOURCE MENU_BAR r_vr_recview_menubar_deleted
+	{
+	titles=
+		{
+		MENU_TITLE { menu_pane = r_vr_rec_menupane_deleted; }
+		};
+	}
+
+RESOURCE MENU_PANE r_vr_rec_menupane_deleted
+	{
+	items=
+		{
+		MENU_ITEM { command = ECmdRecord;		txt = qtn_vorec_rec_new; },
+		MENU_ITEM { command = ECmdGoToMyClips;  txt = qtn_vorec_goto_my_clips; },
+#if defined ( __SERIES60_MMC )
+		MENU_ITEM { command = ECmdSettings; 	txt = qtn_vorec_settings; },
+#endif
+
+		MENU_ITEM { command = ECmdHelp; 		txt = qtn_options_help; },
+		MENU_ITEM { command = EAknCmdExit; 		txt = qtn_options_exit; }
+		};
+	}
+
+RESOURCE MENU_BAR r_vr_recview_menubar_viewer
+	{
+	titles=
+		{
+		MENU_TITLE { menu_pane = r_vr_rec_menupane_viewer; }
+		};
+	}
+
+RESOURCE MENU_PANE r_vr_rec_menupane_viewer
+	{
+	items=
+		{
+		MENU_ITEM { command = ECmdSaveAttachment;	txt = qtn_vorec_save_mail_atta; },
+		MENU_ITEM { command = ECmdHelp; 			txt = qtn_options_help; },
+		MENU_ITEM { command = EAknCmdExit;			txt = qtn_options_exit; }
+		};
+	}
+
+// In-call recording disabled menu
+RESOURCE MENU_BAR r_vr_recview_menupane_incall_recording_disabled
+	{
+	titles=
+		{
+		MENU_TITLE { menu_pane = r_vr_rec_menupane_incall_recording_disabled; }
+		};
+	}
+
+RESOURCE MENU_PANE r_vr_rec_menupane_incall_recording_disabled
+	{
+	items=
+		{
+		MENU_ITEM { command = ECmdGoToMyClips;  txt = qtn_vorec_goto_my_clips; },
+#if defined ( __SERIES60_MMC )
+		MENU_ITEM { command = ECmdSettings; 	txt = qtn_vorec_settings; },
+#endif
+		MENU_ITEM { command = ECmdHelp; 		txt = qtn_options_help; },
+		MENU_ITEM { command = EAknCmdExit; 		txt = qtn_options_exit; }
+		};
+	}
+
+
+
+RESOURCE TBUF r_qtn_query_common_conf_delete { buf = qtn_query_common_conf_delete; }
+RESOURCE TBUF r_qtn_vorec_quest_delete_many { buf = qtn_vorec_quest_delete_many; }
+
+RESOURCE TBUF r_qtn_fldr_overwrite_query { buf = qtn_fldr_overwrite_query; }
+RESOURCE TBUF r_qtn_fldr_item_name_prmpt { buf = qtn_fldr_item_name_prmpt; }
+RESOURCE TBUF r_qtn_fldr_illegal_characters { buf = qtn_fldr_illegal_characters; }
+RESOURCE TBUF r_qtn_fldr_cant_rename_item { buf = qtn_fldr_cant_rename_item; }
+
+// MMC usage related strings
+
+RESOURCE TBUF r_qtn_vorec_set_store { buf = qtn_vorec_set_store; }
+RESOURCE TBUF r_qtn_memc_vorec_note1 { buf = qtn_memc_vorec_note1; }
+RESOURCE TBUF r_qtn_memc_vorec_note2 { buf = qtn_memc_vorec_note2; }
+RESOURCE TBUF r_qtn_memc_unlock_query1 { buf = qtn_memc_unlock_query1; }
+RESOURCE TBUF r_qtn_memc_set_password_error { buf = qtn_memc_set_password_error; }
+RESOURCE TBUF r_qtn_memc_readonly { buf = qtn_memc_memorycard_read_only; }
+
+// Settings dialog stuff needed when there's an MMC (default store setting)
+// or the voice key is missing (defauly speaker setting)
+
+RESOURCE MENU_PANE r_vr_settings_menupane
+	{
+	items=
+		{
+		MENU_ITEM { command = ECmdChange;		txt = qtn_vorec_settings_change; },
+		MENU_ITEM { command = ECmdHelp; 		txt = qtn_options_help; },
+		MENU_ITEM { command = EEikCmdExit; 		txt = qtn_options_exit; }
+		};
+	}
+
+RESOURCE MENU_BAR r_vr_settings_menubar
+	{
+	titles=
+		{
+		MENU_TITLE { menu_pane = r_vr_settings_menupane; }
+		};
+	}
+
+RESOURCE DIALOG r_vr_settings_dialog
+	{
+	buttons = r_vr_softkeys_options_back_change;
+	flags = EEikDialogFlagWait | EEikDialogFlagNoDrag
+			| EEikDialogFlagCbaButtons | EEikDialogFlagNoTitleBar
+			| EEikDialogFlagFillAppClientRect;
+	items =
+		{
+		DLG_LINE
+			{
+			type = EAknCtSettingListBox;
+			id = EVRSettingsListboxId;
+			itemflags = EEikDlgItemTakesEnterKey | EEikDlgItemOfferAllHotKeys;
+			control = LISTBOX
+				{
+				flags = EAknListBoxSelectionList;
+				};
+			}
+		};
+	}
+
+RESOURCE TBUF r_qtn_vorec_set_ihf { buf = qtn_vorec_set_ihf; }
+RESOURCE TBUF r_qtn_vorec_set_quality { buf = qtn_vorec_set_quality; }
+
+RESOURCE AVKON_POPUP_SETTING_TEXTS r_vr_settings_default_speaker_texts
+	{
+	setting_texts_resource = r_vr_settings_default_speaker;
+	popped_up_texts_resource = r_vr_settings_default_speaker_popup;
+	}
+
+RESOURCE AVKON_POPUP_SETTING_TEXTS r_vr_settings_quality_texts
+	{
+	setting_texts_resource = r_vr_settings_quality;
+	popped_up_texts_resource = r_vr_settings_quality_popup;
+	}
+
+RESOURCE ARRAY r_vr_settings_default_speaker
+	{
+	items=
+		{
+		AVKON_ENUMERATED_TEXT { value = ESpeakerEarPiece; text = qtn_vorec_settings_ihf_ear; },
+		AVKON_ENUMERATED_TEXT { value = ESpeakerIhf; text = qtn_vorec_settings_ihf_hf; }
+		};
+	}
+
+RESOURCE ARRAY r_vr_settings_default_speaker_popup
+	{
+	items=
+		{
+		LBUF { txt = qtn_vorec_settings_ihf_ear; },
+		LBUF { txt = qtn_vorec_settings_ihf_hf; }
+		};
+	}
+
+RESOURCE ARRAY r_vr_settings_quality
+	{
+	items=
+		{
+		AVKON_ENUMERATED_TEXT { value = EQualityMMSOptimized; text = qtn_vorec_settings_quality_mms_optimized; },
+
+#ifdef  __AAC_ENCODER_PLUGIN
+		AVKON_ENUMERATED_TEXT { value = EQualityNormal; text = qtn_vorec_settings_quality_normal; },
+#endif
+
+		AVKON_ENUMERATED_TEXT { value = EQualityHigh; text = qtn_vorec_settings_quality_high; }
+		};
+	}
+
+RESOURCE ARRAY r_vr_settings_quality_popup
+	{
+	items=
+		{
+		LBUF { txt = qtn_vorec_settings_quality_mms_optimized; },
+
+#ifdef  __AAC_ENCODER_PLUGIN
+		LBUF { txt = qtn_vorec_settings_quality_normal; },
+#endif
+
+		LBUF { txt = qtn_vorec_settings_quality_high; }
+		};
+	}
+
+RESOURCE POPUP_SETTING_LIST r_vr_settings_popup_control
+	{
+	}
+
+RESOURCE AVKON_SETTING_PAGE r_vr_settings_default_speaker_page
+	{
+	type = EAknCtPopupSettingList;
+        softkey_resource = R_AVKON_SOFTKEYS_OK_CANCEL;
+	editor_resource_id = r_vr_settings_popup_control;
+	}
+
+RESOURCE TBUF r_vr_video_call_infonote_label { buf = qtn_vorec_info_video_call_ongoing; }
+RESOURCE TBUF r_vr_internet_call_infonote_label { buf = qtn_vorec_info_internet_call_ongoing; }
+RESOURCE TBUF r_vr_save_waitnote_label { buf = qtn_vorec_wait_saving_memo; }
+RESOURCE TBUF r_vr_stop_save_waitnote_label { buf = qtn_vorec_wait_stop_saved; }
+RESOURCE TBUF r_vr_stop_infonote_label { buf = qtn_vorec_info_record_stopped; }
+RESOURCE TBUF r_vr_corrupt_infonote_label { buf = qtn_vorec_info_memo_corrupted; }
+RESOURCE TBUF r_vr_unsupported_infonote_label { buf = qtn_vorec_info_memo_unsupported; }
+RESOURCE TBUF r_vr_server_error_infonote_label { buf = qtn_vorec_info_server_error; }
+RESOURCE TBUF r_vr_memory_warning { buf = qtn_memlo_memory_running_out; }
+RESOURCE TBUF r_vr_memory_mmc_warning { buf = qtn_memlo_mmc_memory_running_out; }
+
+// Quality strings for UI
+RESOURCE TBUF r_vorec_quality_mms_optimized { buf = qtn_vorec_quality_mms_optimized; }
+
+#ifdef __AAC_ENCODER_PLUGIN
+RESOURCE TBUF r_vorec_quality_normal { buf = qtn_vorec_quality_normal; }
+#endif
+
+RESOURCE TBUF r_vorec_quality_high { buf = qtn_vorec_quality_high; }
+
+// Memo naming strings
+RESOURCE TBUF r_vorec_first_memo_name { buf = qtn_vorec_first_memo_name; }
+RESOURCE TBUF r_vorec_memo_name { buf = qtn_vorec_memo_name; }
+RESOURCE TBUF r_vorec_default_memo_name { buf = qtn_vorec_default_memo_name; }
+
+RESOURCE DIALOG r_vr_rename_dialog
+	{
+	flags = EEikDialogFlagWait|EEikDialogFlagNoDrag | EEikDialogFlagNoTitleBar | EEikDialogFlagCbaButtons | EEikDialogFlagNoShadow;
+	buttons = R_AVKON_SOFTKEYS_OK_CANCEL__OK;
+	items =
+		{
+		DLG_LINE
+			{
+			type = EAknCtQuery;
+			id = EGeneralQuery;
+			control = AVKON_DATA_QUERY 
+				{
+				layout = EDataLayout;
+				label = qtn_fldr_item_name_prmpt;
+				control = EDWIN 
+					{ 
+					flags = EEikEdwinNoHorizScrolling | EEikEdwinResizable
+						| EEikEdwinNoLineOrParaBreaks;
+					maxlength = VRMEMONAMEMAXLENGTH;
+					lines = 1;
+					width = 16;
+					};
+				};
+			}
+		};
+	}
+
+// For remote recording
+RESOURCE DIALOG r_vr_confirmation_query
+	{
+	flags = EGeneralQueryFlags;
+	buttons = R_AVKON_SOFTKEYS_YES_NO;
+	// r_vr_softkeys_ok_cancel;
+	items =
+		{
+		DLG_LINE
+			{
+			type = EAknCtQuery;
+			id = EGeneralQuery;
+			control = AVKON_CONFIRMATION_QUERY 
+				{ 
+				layout = EConfirmationLayout;
+				};
+			}
+		};
+	}
+
+
+// ------- RECORDER VIEW STUFF ---------------------------------------
+
+RESOURCE VR_STATEMACHINE r_vr_recview_states
+	{
+	labelsets =
+		{
+		VR_LABELSET
+			{
+			labels =
+				{
+				LBUF { txt = qtn_vorec_memo_label; },
+				LBUF { txt = qtn_vorec_date_label; },
+				LBUF { txt = qtn_vorec_quality_label; },				
+				LBUF { txt = qtn_vorec_min_label; },
+				LBUF { txt = qtn_vorec_time_indic; },
+				LBUF { txt = " "; }, // this is a placeholder for the status text, don't touch :-)
+				LBUF { txt = " "; } // this is a placeholder for quality text (MMS or High)
+				};
+			},
+
+		VR_LABELSET
+			{
+			},
+
+		VR_LABELSET // for .rng:s
+			{
+			labels =
+				{
+				LBUF { txt = qtn_vorec_memo_label; },
+				LBUF { txt = qtn_vorec_date_label; },
+				LBUF { txt = " "; } // this is a placeholder for the status text, don't touch :-)
+				};
+			}
+		};
+	labelLayouts =
+		{
+		VR_LABEL_LINK { euroLabelId = r_vr_statusinfo_label_1_euro; 
+						apacLabelId = r_vr_statusinfo_label_1_apac;
+						arabicHebrewLabelId = r_vr_statusinfo_label_1_arabic_hebrew;
+					  },
+		VR_LABEL_LINK { euroLabelId = r_vr_statusinfo_label_2_euro; 
+						apacLabelId = r_vr_statusinfo_label_2_apac;
+						arabicHebrewLabelId = r_vr_statusinfo_label_2_arabic_hebrew;
+					  },
+		VR_LABEL_LINK { euroLabelId = r_vr_statusinfo_label_3_euro; 
+						apacLabelId = r_vr_statusinfo_label_3_apac;
+						arabicHebrewLabelId = r_vr_statusinfo_label_3_arabic_hebrew;
+					  },
+		VR_LABEL_LINK { euroLabelId = r_vr_statusinfo_label_4_euro; 
+						apacLabelId = r_vr_statusinfo_label_4_apac;
+						arabicHebrewLabelId = r_vr_statusinfo_label_4_arabic_hebrew;
+					  },
+		VR_LABEL_LINK { euroLabelId = r_vr_statusinfo_label_5_euro; 
+						apacLabelId = r_vr_statusinfo_label_5_apac;
+						arabicHebrewLabelId = r_vr_statusinfo_label_5_arabic_hebrew;
+					  },
+		VR_LABEL_LINK { euroLabelId = r_vr_statusinfo_label_6_euro; 
+						apacLabelId = r_vr_statusinfo_label_6_apac;
+						arabicHebrewLabelId = r_vr_statusinfo_label_6_arabic_hebrew;
+					  }
+		};
+	states =
+		{
+		// memo_open
+		VR_VISUAL_STATE
+			{
+			menubar = r_vr_recview_menubar_default;
+			cba = r_vr_softkeys_options_exit_select;
+			status = "";
+			labelSetId = 0;
+			hasVolumeControl = 1;
+			focusButton = 0;
+			stateID = EStateIdle; 
+			buttons = 
+				{
+				VR_BUTTON_INFO { commandId = ECmdPlay; state = ENormal; },
+				VR_BUTTON_INFO { commandId = ECmdStop; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdRecord; state = ENormal; },
+				VR_BUTTON_INFO { commandId = ECmdRewind; state = ENormal; },
+				VR_BUTTON_INFO { commandId = ECmdForward; state = ENormal; }
+				};
+			},
+		// memo_deleted
+		VR_VISUAL_STATE
+			{
+			menubar = r_vr_recview_menubar_deleted;
+			cba = r_vr_softkeys_options_exit_select;
+			status = "";
+			labelSetId = 1;
+			focusButton = 2;
+			stateID = EStateDeleted; 
+			buttons = 
+				{
+				VR_BUTTON_INFO { commandId = ECmdPlay; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdStop; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdRecord; state = ENormal; },
+				VR_BUTTON_INFO { commandId = ECmdRewind; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdForward; state = EDimmed; }
+				};
+			},
+		// memo_recording
+		VR_VISUAL_STATE
+			{
+			menubar = r_vr_recview_menubar_empty;
+			cba = r_vr_softkeys_pause_stop_select;
+			status = qtn_vorec_recording;
+			labelSetId = 0;
+			focusButton = 1;
+			stateID = EStateRecording; 
+			buttons = 
+				{
+				VR_BUTTON_INFO { commandId = ECmdPlay; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdStop; state = ENormal; },
+				VR_BUTTON_INFO { commandId = ECmdPause; state = ENormal; },
+				VR_BUTTON_INFO { commandId = ECmdRewind; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdForward; state = EDimmed; }
+				};
+			},
+		// memo_record_embed
+		VR_VISUAL_STATE
+			{
+			menubar = r_vr_recview_menubar_empty;
+			cba = r_vr_softkeys_record_back_select;
+			status = "";
+			labelSetId = 1;
+			focusButton = 2;
+			stateID = EStateRecordEmbedded; 
+			buttons = 
+				{
+				VR_BUTTON_INFO { commandId = ECmdPlay; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdStop; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdRecord; state = ENormal; },
+				VR_BUTTON_INFO { commandId = ECmdRewind; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdForward; state = EDimmed; }
+				};
+			},
+		// memo_playing
+		VR_VISUAL_STATE
+			{
+			menubar = r_vr_recview_menubar_empty;
+			cba = r_vr_softkeys_pause_stop_select;
+			status = qtn_vorec_playback;
+			labelSetId = 0;
+			hasVolumeControl = 1;
+			focusButton = 1;
+			stateID = EStatePlaying; 
+			buttons = 
+				{
+				VR_BUTTON_INFO { commandId = ECmdPause; state = ENormal; },
+				VR_BUTTON_INFO { commandId = ECmdStop; state = ENormal; },
+				VR_BUTTON_INFO { commandId = ECmdRecord; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdRewind; state = ENormal; },
+				VR_BUTTON_INFO { commandId = ECmdForward; state = ENormal; }
+				};
+			},
+		// memo_paused_playback
+		VR_VISUAL_STATE
+			{
+			menubar = r_vr_recview_menubar_empty;
+			cba = r_vr_softkeys_play_stop_select;
+			status = qtn_vorec_paused;
+			labelSetId = 0;
+			hasVolumeControl = 1;
+			focusButton = 0;
+			stateID = EStatePlayingPaused; 
+			buttons = 
+				{
+				VR_BUTTON_INFO { commandId = ECmdPlay; state = ENormal; },
+				VR_BUTTON_INFO { commandId = ECmdStop; state = ENormal; },
+				VR_BUTTON_INFO { commandId = ECmdRecord; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdRewind; state = ENormal; },
+				VR_BUTTON_INFO { commandId = ECmdForward; state = ENormal; }
+				};
+			},
+		// memo_paused_record
+		VR_VISUAL_STATE
+			{
+			menubar = r_vr_recview_menubar_empty;
+			cba = r_vr_softkeys_record_stop_select;
+			status = qtn_vorec_paused;
+			labelSetId = 0;
+			focusButton = 2;
+			stateID = EStateRecordingPaused; 
+			buttons = 
+				{
+				VR_BUTTON_INFO { commandId = ECmdPlay; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdStop; state = ENormal; },
+				VR_BUTTON_INFO { commandId = ECmdRecord; state = ENormal; },
+				VR_BUTTON_INFO { commandId = ECmdRewind; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdForward; state = EDimmed; }
+				};
+			},
+		// memo_open_embed
+		VR_VISUAL_STATE
+			{
+			menubar = r_vr_recview_menubar_viewer;
+			cba = r_vr_softkeys_options_back_select;
+			status = "";
+			labelSetId = 0;
+			hasVolumeControl = 1;
+			focusButton = 0;
+			stateID = EStateIdleEmbedded; 
+			buttons = 
+				{
+				VR_BUTTON_INFO { commandId = ECmdPlay; state = ENormal; },
+				VR_BUTTON_INFO { commandId = ECmdStop; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdRecord; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdRewind; state = ENormal; },
+				VR_BUTTON_INFO { commandId = ECmdForward; state = ENormal; }
+				};
+			},
+		// memo_record_embed_idle
+		VR_VISUAL_STATE
+			{
+			menubar = r_vr_recview_menubar_empty;
+			cba = r_vr_softkeys_ok_cancel_select;
+			status = "";
+			labelSetId = 0;
+			hasVolumeControl = 1;
+			focusButton = 0;
+			stateID = EStateIdleRecordEmbedded; 
+			buttons = 
+				{
+				VR_BUTTON_INFO { commandId = ECmdPlay; state = ENormal; },
+				VR_BUTTON_INFO { commandId = ECmdStop; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdRecord; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdRewind; state = ENormal; },
+				VR_BUTTON_INFO { commandId = ECmdForward; state = ENormal; }
+				};
+			},
+		// nokia_ringing_tone_idle
+		VR_VISUAL_STATE
+			{
+			menubar = r_vr_recview_menubar_viewer;
+			cba = r_vr_softkeys_options_back_select;
+			status = "";
+			labelSetId = 2;
+			hasVolumeControl = 1;
+			hasProgressBar = 0;
+			focusButton = 0;
+			stateID = EStateNRTIdle; 
+			buttons = 
+				{
+				VR_BUTTON_INFO { commandId = ECmdPlay; state = ENormal; },
+				VR_BUTTON_INFO { commandId = ECmdStop; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdRecord; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdRewind; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdForward; state = EDimmed; }
+				};
+			},
+		// nokia_ringing_tone_playing
+		VR_VISUAL_STATE
+			{
+			menubar = r_vr_recview_menubar_viewer;
+			cba = r_vr_softkeys_stop_select;
+			status = "";
+			labelSetId = 2;
+			hasVolumeControl = 1;
+			hasProgressBar = 0;
+			focusButton = 1;
+			stateID = EStateNRTPlaying; 
+			buttons = 
+				{
+				VR_BUTTON_INFO { commandId = ECmdPlay; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdStop; state = ENormal; },
+				VR_BUTTON_INFO { commandId = ECmdRecord; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdRewind; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdForward; state = EDimmed; }
+				};
+			},
+		// disable_buttons
+		VR_VISUAL_STATE
+			{
+			menubar = r_vr_recview_menupane_incall_recording_disabled;
+			cba = R_AVKON_SOFTKEYS_OPTIONS_EXIT;
+			status = "";
+			labelSetId = 0;
+			hasVolumeControl = 0;
+			hasProgressBar = 0;
+			focusButton = 0;
+			stateID = EStateDisableButtons;
+			buttons = 
+				{
+				VR_BUTTON_INFO { commandId = ECmdPlay;	state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdStop;	state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdRecord; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdRewind; state = EDimmed; },
+				VR_BUTTON_INFO { commandId = ECmdForward;state = EDimmed; }
+				};
+			}
+		};
+
+	contexts =
+		{
+		VR_CONTEXT
+			{
+			id = EContextNormal;
+			transition = VR_TRANSITION { next = EStateIdle; };
+			states =
+				{
+				VR_STATE
+					{
+					id = EStateIdle;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdPlay; next = EStatePlaying; function = EFunctionPlay; },
+						VR_TRANSITION { cmd = ECmdRecord; next = EStateRecording; function = EFunctionRecordNew; },
+						VR_TRANSITION { cmd = ECmdForward; next = EStateIdle; function = EFunctionForward; },
+						VR_TRANSITION { cmd = ECmdRewind; next = EStateIdle; function = EFunctionRewind; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStateDeleted; function = EFunctionDelete; }, 
+						VR_TRANSITION { cmd = ECmdRename; next = EStateIdle; function = EFunctionRename; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdAutoStopAtEnd; next = EStateIdle; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStateIdle; function = EFunctionSetNewPosition; }
+						};
+					},
+				VR_STATE
+					{
+					id = EStateDeleted;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdRecord; next = EStateRecording; function = EFunctionRecordNew; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateDeleted; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateDeleted; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStateDeleted; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStateDeleted; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateDeleted; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStateDeleted; function = EFunctionNop; }
+						};
+					},
+				VR_STATE
+					{
+					id = EStateRecording;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdStop; next = EStateIdle; function = EFunctionStopAndSave; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateIdle; function = EFunctionAutoStopAndSave; },
+						VR_TRANSITION { cmd = ECmdAutoStopAtEnd; next = EStateIdle; function = EFunctionStopAndSave; },
+						VR_TRANSITION { cmd = ECmdPause; next = EStateRecordingPaused; function = EFunctionPause; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateIdle; function = EFunctionSilentStopAndSave; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStateRecording; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStateIdle; function = EFunctionAutoStopAndSave; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateIdle; function = EFunctionAutoStopAndSave; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStateRecording; function = EFunctionNop; }
+						};
+					},
+				VR_STATE
+					{
+					id = EStatePlaying;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdPause; next = EStatePlayingPaused; function = EFunctionPause; },
+						VR_TRANSITION { cmd = ECmdStop; next = EStateIdle; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateIdle; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdAutoStopAtEnd; next = EStateIdle; function = EFunctionAutoStop; },
+						VR_TRANSITION { cmd = ECmdForward; next = EStatePlaying; function = EFunctionForward; },
+						VR_TRANSITION { cmd = ECmdRewind; next = EStatePlaying; function = EFunctionRewind; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateIdle; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStatePlaying; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStatePlaying; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateIdle; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStatePlaying; function = EFunctionSetNewPosition; }
+						};
+					},
+				VR_STATE
+					{
+					id = EStatePlayingPaused;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdPlay; next = EStatePlaying; function = EFunctionPlay; },
+						VR_TRANSITION { cmd = ECmdStop; next = EStateIdle; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdForward; next = EStatePlayingPaused; function = EFunctionForward; },
+						VR_TRANSITION { cmd = ECmdRewind; next = EStatePlayingPaused; function = EFunctionRewind; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStatePlayingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateIdle; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdAutoStopAtEnd; next = EStateIdle; function = EFunctionAutoStop; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStatePlayingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStatePlayingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateIdle; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStatePlayingPaused; function = EFunctionSetNewPosition; }
+						};
+					},
+				VR_STATE
+					{
+					id = EStateRecordingPaused;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdStop; next = EStateIdle; function = EFunctionStopAndSave; },
+						VR_TRANSITION { cmd = ECmdRecord; next = EStateRecording; function = EFunctionRecord; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateRecordingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateIdle; function = EFunctionSilentStopAndSave; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStateRecordingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStateRecordingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateIdle; function = EFunctionAutoStopAndSave; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStateRecordingPaused; function = EFunctionSetNewPosition; }
+						};
+					},
+				// Disabled button state
+				VR_STATE	
+					{
+					id = EStateDisableButtons;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdPlay;					next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdStop;					next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdForward;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdRewind;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdRecord;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted;	next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop;			next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDelete;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall;			next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStateDisableButtons; function = EFunctionNop; }
+						};
+
+					}
+				};
+			},
+		VR_CONTEXT
+			{
+			id = EContextEmptyNormal;
+			transition = VR_TRANSITION { next = EStateDeleted; };
+			states =
+				{
+				VR_STATE
+					{
+					id = EStateIdle;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdPlay; next = EStatePlaying; function = EFunctionPlay; },
+						VR_TRANSITION { cmd = ECmdRecord; next = EStateRecording; function = EFunctionRecordNew; },
+						VR_TRANSITION { cmd = ECmdForward; next = EStateIdle; function = EFunctionForward; },
+						VR_TRANSITION { cmd = ECmdRewind; next = EStateIdle; function = EFunctionRewind; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStateDeleted; function = EFunctionDelete; }, 
+						VR_TRANSITION { cmd = ECmdRename; next = EStateIdle; function = EFunctionRename; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdAutoStopAtEnd; next = EStateIdle; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStateIdle; function = EFunctionSetNewPosition; }
+						};
+					},
+				VR_STATE
+					{
+					id = EStateDeleted;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdRecord; next = EStateRecording; function = EFunctionRecordNew; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateDeleted; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateDeleted; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStateDeleted; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateDeleted; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStateDeleted; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdAutoStopAtEnd; next = EStateDeleted; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStateDeleted; function = EFunctionNop; }
+// Bentley
+						};
+					},
+				VR_STATE
+					{
+					id = EStateRecording;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdStop; next = EStateIdle; function = EFunctionStopAndSave; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateIdle; function = EFunctionAutoStopAndSave; },
+						VR_TRANSITION { cmd = ECmdAutoStopAtEnd; next = EStateIdle; function = EFunctionStopAndSave; },
+						VR_TRANSITION { cmd = ECmdPause; next = EStateRecordingPaused; function = EFunctionPause; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateIdle; function = EFunctionSilentStopAndSave; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStateRecording; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStateIdle; function = EFunctionAutoStopAndSave; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateIdle; function = EFunctionSaveBeforeExit; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStateRecording; function = EFunctionNop; }
+						};
+					},
+				VR_STATE
+					{
+					id = EStatePlaying;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdPause; next = EStatePlayingPaused; function = EFunctionPause; },
+						VR_TRANSITION { cmd = ECmdStop; next = EStateIdle; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateIdle; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdAutoStopAtEnd; next = EStateIdle; function = EFunctionAutoStop; },
+						VR_TRANSITION { cmd = ECmdForward; next = EStatePlaying; function = EFunctionForward; },
+						VR_TRANSITION { cmd = ECmdRewind; next = EStatePlaying; function = EFunctionRewind; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateIdle; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStatePlaying; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStatePlaying; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateIdle; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStatePlaying; function = EFunctionSetNewPosition; }
+						};
+					},
+				VR_STATE
+					{
+					id = EStatePlayingPaused;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdPlay; next = EStatePlaying; function = EFunctionPlay; },
+						VR_TRANSITION { cmd = ECmdStop; next = EStateIdle; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdForward; next = EStatePlayingPaused; function = EFunctionForward; },
+						VR_TRANSITION { cmd = ECmdRewind; next = EStatePlayingPaused; function = EFunctionRewind; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStatePlayingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStatePlayingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdAutoStopAtEnd; next = EStateIdle; function = EFunctionAutoStop; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStatePlayingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStatePlayingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateIdle; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStatePlayingPaused; function = EFunctionSetNewPosition; }
+						};
+					},
+				VR_STATE
+					{
+					id = EStateRecordingPaused;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdStop; next = EStateIdle; function = EFunctionStopAndSave; },
+						VR_TRANSITION { cmd = ECmdRecord; next = EStateRecording; function = EFunctionRecord; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateRecordingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateRecordingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStateRecordingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStateRecordingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateIdle; function = EFunctionSaveBeforeExit; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStateRecordingPaused; function = EFunctionNop; }
+						};
+					},
+				// Disabled button state
+				VR_STATE	
+					{
+					id = EStateDisableButtons;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdPlay;					next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdStop;					next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdForward;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdRewind;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdRecord;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted;	next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop;			next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDelete;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall;			next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStateIdle; function = EFunctionNop; }
+						};
+					}
+
+				};
+			},
+		VR_CONTEXT
+			{
+			id = EContextRecordNewNormal;
+			transition = VR_TRANSITION { next = EStateRecording; function = EFunctionRecord; };
+			states =
+				{
+				VR_STATE
+					{
+					id = EStateIdle;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdPlay; next = EStatePlaying; function = EFunctionPlay; },
+						VR_TRANSITION { cmd = ECmdRecord; next = EStateRecording; function = EFunctionRecordNew; },
+						VR_TRANSITION { cmd = ECmdForward; next = EStateIdle; function = EFunctionForward; },
+						VR_TRANSITION { cmd = ECmdRewind; next = EStateIdle; function = EFunctionRewind; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStateDeleted; function = EFunctionDelete; }, 
+						VR_TRANSITION { cmd = ECmdRename; next = EStateIdle; function = EFunctionRename; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdAutoStopAtEnd; next = EStateIdle; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStateIdle; function = EFunctionSetNewPosition; }
+						};
+					},
+				VR_STATE
+					{
+					id = EStateDeleted;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdRecord; next = EStateRecording; function = EFunctionRecordNew; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateDeleted; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateDeleted; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStateDeleted; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateDeleted; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStateDeleted; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdAutoStopAtEnd; next = EStateDeleted; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStateDeleted; function = EFunctionNop; }
+// Bentley
+						};
+					},
+				VR_STATE
+					{
+					id = EStateRecording;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdStop; next = EStateIdle; function = EFunctionStopAndSave; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateIdle; function = EFunctionAutoStopAndSave; },
+						VR_TRANSITION { cmd = ECmdAutoStopAtEnd; next = EStateIdle; function = EFunctionStopAndSave; },
+						VR_TRANSITION { cmd = ECmdPause; next = EStateRecordingPaused; function = EFunctionPause; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateIdle; function = EFunctionSilentStopAndSave; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStateRecording; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStateIdle; function = EFunctionAutoStopAndSave; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateIdle; function = EFunctionSaveBeforeExit; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStateRecording; function = EFunctionNop; }
+						};
+					},
+				VR_STATE
+					{
+					id = EStatePlaying;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdPause; next = EStatePlayingPaused; function = EFunctionPause; },
+						VR_TRANSITION { cmd = ECmdStop; next = EStateIdle; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateIdle; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdAutoStopAtEnd; next = EStateIdle; function = EFunctionAutoStop; },
+						VR_TRANSITION { cmd = ECmdForward; next = EStatePlaying; function = EFunctionForward; },
+						VR_TRANSITION { cmd = ECmdRewind; next = EStatePlaying; function = EFunctionRewind; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateIdle; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStatePlaying; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStatePlaying; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateIdle; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStatePlaying; function = EFunctionSetNewPosition; }
+						};
+					},
+				VR_STATE
+					{
+					id = EStatePlayingPaused;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdPlay; next = EStatePlaying; function = EFunctionPlay; },
+						VR_TRANSITION { cmd = ECmdStop; next = EStateIdle; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdForward; next = EStatePlayingPaused; function = EFunctionForward; },
+						VR_TRANSITION { cmd = ECmdRewind; next = EStatePlayingPaused; function = EFunctionRewind; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStatePlayingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStatePlayingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdAutoStopAtEnd; next = EStateIdle; function = EFunctionAutoStop; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStatePlayingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStatePlayingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateIdle; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStatePlayingPaused; function = EFunctionSetNewPosition; }
+						};
+					},
+				VR_STATE
+					{
+					id = EStateRecordingPaused;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdStop; next = EStateIdle; function = EFunctionStopAndSave; },
+						VR_TRANSITION { cmd = ECmdRecord; next = EStateRecording; function = EFunctionRecord; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateRecordingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateRecordingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStateRecordingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStateRecordingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateIdle; function = EFunctionAutoStopAndSave; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStateRecordingPaused; function = EFunctionNop; }
+						};
+					},
+				// Disabled button state
+				VR_STATE	
+					{
+					id = EStateDisableButtons;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdPlay;					next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdStop;					next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdForward;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdRewind;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdRecord;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted;	next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop;			next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDelete;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall;			next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStateIdle; function = EFunctionNop; }
+						};
+					}
+				};
+			}, 
+		VR_CONTEXT
+			{
+			id = EContextRecordNewForRemote;
+			transition = VR_TRANSITION { next = EStateRecordEmbedded; };
+			states =
+				{
+				VR_STATE
+					{
+					id = EStateRecordEmbedded;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdRecord; next = EStateRecording; function = EFunctionRecord; },
+						VR_TRANSITION { cmd = ECmdCancel; next = EStateRecordEmbedded; function = EFunctionCancel; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateRecordEmbedded; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateRecordEmbedded; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStateRecordEmbedded; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateRecordEmbedded; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStateRecordEmbedded; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdAutoStopAtEnd; next = EStateRecordEmbedded; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStateRecordEmbedded; function = EFunctionNop; }
+// Bentley
+						};
+					},
+				VR_STATE
+					{
+					id = EStateRecording;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdStop; next = EStateIdleRecordEmbedded; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateIdleRecordEmbedded; function = EFunctionStopWithNote; },
+						VR_TRANSITION { cmd = ECmdAutoStopAtEnd; next = EStateIdleRecordEmbedded; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdPause; next = EStateRecordingPaused; function = EFunctionPause; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateIdleRecordEmbedded; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStateRecording; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStateIdleRecordEmbedded; function = EFunctionStopWithNote; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateIdleRecordEmbedded; function = EFunctionStopWithNote; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStateRecording; function = EFunctionNop; }
+						};
+					},
+				VR_STATE
+					{
+					id = EStateIdleRecordEmbedded;
+					transitions = 
+						{
+						VR_TRANSITION { cmd = ECmdPlay; next = EStatePlaying; function = EFunctionPlay; },
+						VR_TRANSITION { cmd = ECmdForward; next = EStateIdleRecordEmbedded; function = EFunctionForward; },
+						VR_TRANSITION { cmd = ECmdRewind; next = EStateIdleRecordEmbedded; function = EFunctionRewind; },
+						VR_TRANSITION { cmd = ECmdOk; next = EStateIdleRecordEmbedded; function = EFunctionOk; },
+						VR_TRANSITION { cmd = ECmdCancel; next = EStateIdleRecordEmbedded; function = EFunctionCancel; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateIdleRecordEmbedded; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateIdleRecordEmbedded; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdAutoStopAtEnd; next = EStateIdleRecordEmbedded; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStateIdleRecordEmbedded; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStateIdleRecordEmbedded; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateIdleRecordEmbedded; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStateIdleRecordEmbedded; function = EFunctionSetNewPosition; }
+						};
+					},
+				VR_STATE
+					{
+					id = EStateRecordingPaused;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdStop; next = EStateIdleRecordEmbedded; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdRecord; next = EStateRecording; function = EFunctionRecord; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateRecordingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateRecordingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStateRecordingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStateRecordingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateIdleRecordEmbedded; function = EFunctionStopWithNote; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStateRecordingPaused; function = EFunctionNop; }
+						};
+					},
+				VR_STATE
+					{
+					id = EStatePlaying;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdPause; next = EStatePlayingPaused; function = EFunctionPause; },
+						VR_TRANSITION { cmd = ECmdStop; next = EStateIdleRecordEmbedded; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateIdleRecordEmbedded; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdAutoStopAtEnd; next = EStateIdleRecordEmbedded; function = EFunctionAutoStop; },
+						VR_TRANSITION { cmd = ECmdForward; next = EStatePlaying; function = EFunctionForward; },
+						VR_TRANSITION { cmd = ECmdRewind; next = EStatePlaying; function = EFunctionRewind; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateIdleRecordEmbedded; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStatePlaying; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStatePlaying; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateIdleRecordEmbedded; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStatePlaying; function = EFunctionSetNewPosition; }
+						};
+					},
+				VR_STATE
+					{
+					id = EStatePlayingPaused;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdPlay; next = EStatePlaying; function = EFunctionPlay; },
+						VR_TRANSITION { cmd = ECmdStop; next = EStateIdleRecordEmbedded; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdForward; next = EStatePlayingPaused; function = EFunctionForward; },
+						VR_TRANSITION { cmd = ECmdRewind; next = EStatePlayingPaused; function = EFunctionRewind; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStatePlayingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStatePlayingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdAutoStopAtEnd; next = EStateIdleRecordEmbedded; function = EFunctionAutoStop; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStatePlayingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStatePlayingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateIdleRecordEmbedded; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStatePlayingPaused; function = EFunctionSetNewPosition; }
+						};
+					},
+				// Disabled button state
+				VR_STATE	
+					{
+					id = EStateDisableButtons;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdPlay;					next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdStop;					next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdForward;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdRewind;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdRecord;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted;	next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop;			next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDelete;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall;			next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStateIdle; function = EFunctionNop; }
+						};
+					}
+				};
+			},
+
+		VR_CONTEXT
+			{
+			id = EContextViewer;
+			transition = VR_TRANSITION { next = EStateIdleEmbedded; };
+			states =
+				{
+				VR_STATE
+					{
+					id = EStateIdleEmbedded;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdPlay; next = EStatePlaying; function = EFunctionPlay; },
+						VR_TRANSITION { cmd = ECmdForward; next = EStateIdleEmbedded; function = EFunctionForward; },
+						VR_TRANSITION { cmd = ECmdRewind; next = EStateIdleEmbedded; function = EFunctionRewind; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateIdleEmbedded; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateIdleEmbedded; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdAutoStopAtEnd; next = EStateIdleEmbedded; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStateIdleEmbedded; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStateIdleEmbedded; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateIdleEmbedded; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStateIdleEmbedded; function = EFunctionSetNewPosition; }
+						};
+					},
+				VR_STATE
+					{
+					id = EStatePlaying;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdPause; next = EStatePlayingPaused; function = EFunctionPause; },
+						VR_TRANSITION { cmd = ECmdStop; next = EStateIdleEmbedded; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateIdleEmbedded; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdAutoStopAtEnd; next = EStateIdleEmbedded; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdForward; next = EStatePlaying; function = EFunctionForward; },
+						VR_TRANSITION { cmd = ECmdRewind; next = EStatePlaying; function = EFunctionRewind; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateIdleEmbedded; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStatePlaying; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStatePlaying; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateIdleEmbedded; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStatePlaying; function = EFunctionSetNewPosition; }
+						};
+					},
+				VR_STATE
+					{
+					id = EStatePlayingPaused;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdPlay; next = EStatePlaying; function = EFunctionPlay; },
+						VR_TRANSITION { cmd = ECmdStop; next = EStateIdleEmbedded; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdForward; next = EStatePlayingPaused; function = EFunctionForward; },
+						VR_TRANSITION { cmd = ECmdRewind; next = EStatePlayingPaused; function = EFunctionRewind; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStatePlayingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStatePlayingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdAutoStopAtEnd; next = EStateIdleEmbedded; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStatePlayingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall; next = EStatePlayingPaused; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateIdleEmbedded; function = EFunctionStop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStatePlayingPaused; function = EFunctionSetNewPosition; }
+						};
+					},
+				// Disabled button state
+				VR_STATE	
+					{
+					id = EStateDisableButtons;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdPlay;					next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdStop;					next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdForward;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdRewind;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdRecord;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted;	next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop;			next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDelete;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDisconnectCall;		next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition;       next = EStateIdle; function = EFunctionNop; }
+						};
+
+					}
+				};
+			},
+			
+			VR_CONTEXT
+			{
+			id = EContextNokiaRingTone;
+			transition = VR_TRANSITION { next = EStateNRTIdle; };
+			states =
+				{
+				VR_STATE
+					{
+					id = EStateNRTIdle;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdPlay; next = EStateNRTPlaying; function = EFunctionPlay; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateNRTIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStateNRTIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateNRTIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateNRTIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStateNRTIdle; function = EFunctionSetNewPosition; }
+						};
+					},
+				VR_STATE
+					{
+					id = EStateNRTPlaying;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdStop; next = EStateNRTIdle; function = EFunctionNRTStop; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted; next = EStateNRTIdle; function = EFunctionNRTStop; },
+						VR_TRANSITION { cmd = ECmdAutoStopAtEnd; next = EStateNRTIdle; function = EFunctionNRTAutoStop; },
+						VR_TRANSITION { cmd = ECmdDelete; next = EStateNRTIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop; next = EStateNRTIdle; function = EFunctionNRTStop; },
+						VR_TRANSITION { cmd = ECmdEndKey; next = EStateNRTIdle; function = EFunctionNRTStop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition; next = EStateNRTPlaying; function = EFunctionSetNewPosition; }
+						};
+					},
+				// Disabled button state
+				VR_STATE	
+					{
+					id = EStateDisableButtons;
+					transitions =
+						{
+						VR_TRANSITION { cmd = ECmdPlay;					next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdStop;					next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdForward;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdRewind;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdRecord;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdAutoStopInterrupted;	next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSilentStop;			next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdDelete;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdEndKey;				next = EStateIdle; function = EFunctionNop; },
+						VR_TRANSITION { cmd = ECmdSetNewPosition;       next = EStateIdle; function = EFunctionNop; }
+						};
+					}
+				};
+			}		
+		};
+	}
+
+
+// ---------------------------------------------------------
+//
+//	New VoiceRecorder Avkon buttons' resources
+//	Each button has as many states as there are visual states	
+// 	in VR
+//
+// ---------------------------------------------------------
+//	
+RESOURCE VR_BUTTONS_NEW r_vr_button_panel_buttons
+	{
+	buttons = 
+		{
+		// PLAY BUTTON
+		AVKON_BUTTON
+			{
+			flags = KAknButtonNoFrame | KAknButtonReportOnKeyDown;
+	    	states =
+	        	{
+				// memo_open
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_play; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_play_mask;
+		            },
+		        // memo_deleted 
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_play_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_play_inactive_mask;
+		            },
+		        // memo_recording    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_play_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_play_inactive_mask;
+		            },
+		        // memo_record_embed    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_play_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_play_inactive_mask;
+		            },
+		        // memo_playing    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_pause; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_pause_mask;
+		            },
+		        // memo_paused_playback
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_play; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_play_mask;
+		            },
+		        // memo_paused_record    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_play_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_play_inactive_mask;
+		            },
+		        // memo_open_embed    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_play; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_play_mask;
+		            },
+		        // memo_record_embed_idle    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_play; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_play_mask;
+		            },
+		        // nokia_ringing_tone_idle    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_play; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_play_mask;
+		            },
+		        // nokia_ringing_tone_playing   
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_play_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_play_inactive_mask;
+		            },
+		        // disable_buttons     
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_play_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_play_inactive_mask;
+		            }                    
+		        };
+			},
+			
+		// STOP BUTTON
+		AVKON_BUTTON
+			{
+			flags = KAknButtonNoFrame | KAknButtonReportOnKeyDown;
+	    	states =
+	        	{
+	        	// memo_open
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_stop_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_stop_inactive_mask;
+		            },
+		        // memo_deleted   
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_stop_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_stop_inactive_mask;
+		            },
+		        // memo_recording    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_stop; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_stop_mask;
+		            },
+		        // memo_record_embed    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_stop_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_stop_inactive_mask;
+		            },
+		        // memo_playing    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_stop; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_stop_mask;
+		            },
+		        // memo_paused_playback
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_stop; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_stop_mask;
+		            },
+		        // memo_paused_record    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_stop; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_stop_mask;
+		            },
+		        // memo_open_embed    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_stop_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_stop_inactive_mask;
+		            },
+		        // memo_record_embed_idle    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_stop_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_stop_inactive_mask;
+		            },
+		        // nokia_ringing_tone_idle    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_stop_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_stop_inactive_mask;
+		            },
+		        // nokia_ringing_tone_playing 
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_stop; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_stop_mask;
+		            },
+		        // disable_buttons       
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_stop_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_stop_inactive_mask;
+		            }                    
+		        };                 
+			},
+			
+		// RECORD BUTTON
+		AVKON_BUTTON
+			{
+			flags = KAknButtonNoFrame | KAknButtonReportOnKeyDown;
+	    	states =
+	        	{
+	        	// memo_open
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_rec; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_rec_mask;
+		            },
+		        // memo_deleted    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_rec; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_rec_mask;
+		            },
+		        // memo_recording    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_pause; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_pause_mask;
+		            },
+		        // memo_record_embed    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_rec; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_rec_mask;
+		            },
+		        // memo_playing    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_rec_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_rec_inactive_mask;
+		            },
+		        // memo_paused_playback
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_rec_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_rec_inactive_mask;
+		            },
+		        // memo_paused_record    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_rec; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_rec_mask;
+		            },
+		        // memo_open_embed    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_rec_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_rec_inactive_mask;
+		            },
+		        // memo_record_embed_idle    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif"; 
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_rec_inactive;
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_rec_mask;
+		            },
+		        // nokia_ringing_tone_idle    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_rec_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_rec_inactive_mask;
+		            },
+		        // nokia_ringing_tone_playing  
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_rec_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_rec_inactive_mask;
+		            },
+		        // disable_buttons      
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_rec_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_rec_inactive_mask;
+		            }   
+		        };                 
+			},
+			
+		// REWIND BUTTON
+		AVKON_BUTTON
+			{
+			flags = KAknButtonNoFrame | KAknButtonReportOnKeyDown;
+	    	states =
+	        	{
+	        	// memo_open
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_rew; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_rew_mask;
+		            },
+		        // memo_deleted    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		           	bmpid = EMbmVoicerecorderQgn_indi_vorec_button_rew_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_rew_inactive_mask;
+		            },
+		        // memo_recording    
+		        AVKON_BUTTON_STATE
+		            {
+		           	bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		           	bmpid = EMbmVoicerecorderQgn_indi_vorec_button_rew_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_rew_inactive_mask;
+		            },
+		        // memo_record_embed    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		           	bmpid = EMbmVoicerecorderQgn_indi_vorec_button_rew_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_rew_inactive_mask;
+		            },
+		        // memo_playing    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_rew; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_rew_mask;				         
+		            },
+		        // memo_paused_playback
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_rew; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_rew_mask;
+		            },
+		        // memo_paused_record    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		           	bmpid = EMbmVoicerecorderQgn_indi_vorec_button_rew_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_rew_inactive_mask;
+		            },
+		        // memo_open_embed  
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_rew; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_rew_mask;
+		            },
+		        // memo_record_embed_idle   
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_rew; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_rew_mask;
+		            },
+		        // nokia_ringing_tone_idle     
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		           	bmpid = EMbmVoicerecorderQgn_indi_vorec_button_rew_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_rew_inactive_mask;
+		            },
+		        // nokia_ringing_tone_playing     
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		           	bmpid = EMbmVoicerecorderQgn_indi_vorec_button_rew_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_rew_inactive_mask;
+		            },
+		        // disable_buttons     
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		           	bmpid = EMbmVoicerecorderQgn_indi_vorec_button_rew_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_rew_inactive_mask;
+		            }             
+		                         
+		        };
+			},
+				
+		// FORWARD BUTTON
+		AVKON_BUTTON
+			{
+			flags = KAknButtonNoFrame | KAknButtonReportOnKeyDown;
+	    	states =
+	        	{
+	        	// memo_open
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_forw; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_forw_mask;
+		            },
+		        // memo_deleted    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		           	bmpid = EMbmVoicerecorderQgn_indi_vorec_button_forw_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_forw_inactive_mask;
+		            },
+		        // memo_recording    
+		        AVKON_BUTTON_STATE
+		            {
+		           	bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		           	bmpid = EMbmVoicerecorderQgn_indi_vorec_button_forw_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_forw_inactive_mask;
+		            },
+		        // memo_record_embed    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		           	bmpid = EMbmVoicerecorderQgn_indi_vorec_button_forw_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_forw_inactive_mask;
+		            },
+		        // memo_playing    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_forw; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_forw_mask;				 
+		            },
+		        // memo_paused_playback
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_forw; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_forw_mask;
+		            },
+		        // memo_paused_record   
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		           	bmpid = EMbmVoicerecorderQgn_indi_vorec_button_forw_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_forw_inactive_mask;
+		            },
+		        // memo_open_embed     
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_forw; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_forw_mask;
+		            },
+		        // memo_record_embed_idle    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		            bmpid = EMbmVoicerecorderQgn_indi_vorec_button_forw; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_forw_mask;
+		            },
+		        // nokia_ringing_tone_idle   
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		           	bmpid = EMbmVoicerecorderQgn_indi_vorec_button_forw_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_forw_inactive_mask;
+		            },
+		        // nokia_ringing_tone_playing     
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		           	bmpid = EMbmVoicerecorderQgn_indi_vorec_button_forw_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_forw_inactive_mask;
+		            },
+		        // disable_buttons    
+		        AVKON_BUTTON_STATE
+		            {
+		            bmpfile = "z:\\Resource\\apps\\voicerecorder.mif";
+		           	bmpid = EMbmVoicerecorderQgn_indi_vorec_button_forw_inactive; 
+		            bmpmask = EMbmVoicerecorderQgn_indi_vorec_button_forw_inactive_mask;
+		            }
+		                         
+		        };	
+			}
+		};	
+	}	
+
+// ELAF variants
+RESOURCE AVKON_LAYOUT_LABEL r_vr_statusinfo_label_1_euro
+	{
+	font = ELatinBold13; C = 215; l = 57; r = 5; B = 23; W = 114; J = ELayoutAlignLeft;
+	}
+RESOURCE AVKON_LAYOUT_LABEL r_vr_statusinfo_label_2_euro
+	{
+	font = ELatinPlain12; C = 215; l = 62; r = 5; B = 39; W = 109; J = ELayoutAlignLeft;
+	}
+RESOURCE AVKON_LAYOUT_LABEL r_vr_statusinfo_label_3_euro
+	{
+	font = ELatinPlain12; C = 215; l = 62; r = 5; B = 54; W = 109; J = ELayoutAlignLeft;
+	}
+RESOURCE AVKON_LAYOUT_LABEL r_vr_statusinfo_label_4_euro
+	{
+	font = ELatinPlain12; C = 215; l = 58; r = 100; B = 115; W = 18; J = ELayoutAlignLeft;
+	}
+RESOURCE AVKON_LAYOUT_LABEL r_vr_statusinfo_label_5_euro
+	{
+	font = ELatinPlain12; C = 215; l = 142; r = 4; B = 115; W = 30; J = ELayoutAlignRight;
+	}
+RESOURCE AVKON_LAYOUT_LABEL r_vr_statusinfo_label_6_euro
+	{
+	font = ELatinBold13; C = 35; l = 57; r = 5; B = 98; W = 114; J = ELayoutAlignLeft;
+	}
+
+
+// APAC variants
+
+RESOURCE AVKON_LAYOUT_LABEL r_vr_statusinfo_label_1_apac
+	{
+	font = EApacPlain16; C = 215; l = 57; r = 5; B = 25; W = 114; J = ELayoutAlignLeft;
+	}
+RESOURCE AVKON_LAYOUT_LABEL r_vr_statusinfo_label_2_apac
+	{
+	font = EApacPlain12; C = 215; l = 64; r = 5; B = 41; W = 107; J = ELayoutAlignLeft;
+	}
+RESOURCE AVKON_LAYOUT_LABEL r_vr_statusinfo_label_3_apac
+	{
+	font = EApacPlain12; C = 215; l = 64; r = 5; B = 56; W = 107; J = ELayoutAlignLeft;
+	}
+RESOURCE AVKON_LAYOUT_LABEL r_vr_statusinfo_label_4_apac
+	{
+	font = EApacPlain12; C = 215; l = 58; r = 100; B = 117; W = 18; J = ELayoutAlignLeft;
+	}
+RESOURCE AVKON_LAYOUT_LABEL r_vr_statusinfo_label_5_apac
+	{
+	font = EApacPlain12; C = 215; l = 142; r = 4; B = 117; W = 30; J = ELayoutAlignRight;
+	}
+RESOURCE AVKON_LAYOUT_LABEL r_vr_statusinfo_label_6_apac
+	{
+	font = EApacPlain16; C = 35; l = 57; r = 5; B = 100; W = 114; J = ELayoutAlignLeft;
+	}
+
+
+// ABRW variants
+RESOURCE AVKON_LAYOUT_LABEL r_vr_statusinfo_label_1_arabic_hebrew
+	{
+	font = ELatinBold13; C = 215; l = 5; r = 57; B = 23; W = 114; J = ELayoutAlignRight;
+	}
+RESOURCE AVKON_LAYOUT_LABEL r_vr_statusinfo_label_2_arabic_hebrew
+	{
+	font = ELatinPlain12; C = 215; l = 5; r = 62; B = 39; W = 109; J = ELayoutAlignRight;
+	}
+RESOURCE AVKON_LAYOUT_LABEL r_vr_statusinfo_label_3_arabic_hebrew
+	{
+	font = ELatinPlain12; C = 215; l = 5; r = 62; B = 54; W = 109; J = ELayoutAlignRight;
+	}
+// l changed from 100 to 90 to make max length label fit
+RESOURCE AVKON_LAYOUT_LABEL r_vr_statusinfo_label_4_arabic_hebrew
+	{
+	font = ELatinPlain12; C = 215; l = 90; r = 58; B = 115; W = 30; J = ELayoutAlignRight;
+	}
+RESOURCE AVKON_LAYOUT_LABEL r_vr_statusinfo_label_5_arabic_hebrew
+	{
+	font = ELatinPlain12; C = 215; l = 4; r = 124; B = 115; W = 30; J = ELayoutAlignLeft;
+	}
+RESOURCE AVKON_LAYOUT_LABEL r_vr_statusinfo_label_6_arabic_hebrew
+	{
+	font = ELatinBold13; C = 35; l = 5; r = 57; B = 98; W = 114; J = ELayoutAlignRight;
+	}
+
+
+
+//---------------------------------------------------------------
+// Old CBA resources
+// Middle Softkey not included
+//---------------------------------------------------------------
+//
+RESOURCE CBA r_vr_softkeys_pause_stop
+	{
+	buttons = 
+		{
+		CBA_BUTTON { id = ECmdPause; txt = qtn_vorec_pause_sk; },
+		CBA_BUTTON { id = ECmdStop; txt = qtn_vorec_stop_sk; }
+		};
+	}
+
+RESOURCE CBA r_vr_softkeys_play_stop
+	{
+	buttons = 
+		{
+		CBA_BUTTON { id = ECmdPlay; txt = text_softkey_play; },
+		CBA_BUTTON { id = ECmdStop; txt = qtn_vorec_stop_sk; }
+		};
+	}
+
+RESOURCE CBA r_vr_softkeys_record_stop
+	{
+	buttons = 
+		{
+		CBA_BUTTON { id = ECmdRecord; txt = qtn_vorec_rec_sk; },
+		CBA_BUTTON { id = ECmdStop; txt = qtn_vorec_stop_sk; }
+		};
+	}
+	
+RESOURCE CBA r_vr_softkeys_record_back
+	{
+	buttons = 
+		{
+		CBA_BUTTON { id = ECmdRecord; txt = qtn_vorec_rec_sk; },
+		CBA_BUTTON { id = ECmdCancel; txt = text_softkey_back; }
+		};
+	}
+
+RESOURCE CBA r_vr_softkeys_ok_cancel
+	{
+	buttons = 
+		{
+		CBA_BUTTON {id=ECmdOk; txt=text_softkey_select;},
+		CBA_BUTTON {id=ECmdCancel; txt= text_softkey_cancel;}
+		};
+	}
+
+RESOURCE CBA r_vr_softkeys_stop
+	{
+	buttons = 
+		{
+		CBA_BUTTON { txt =" "; },
+		CBA_BUTTON {id=ECmdStop; txt= qtn_vorec_stop_sk;}
+		};
+	}
+
+
+//---------------------------------------------------------------
+// New CBA resources
+// Middle Softkey included
+//---------------------------------------------------------------
+//
+RESOURCE CBA r_vr_softkeys_pause_stop_select
+	{
+	buttons = 
+		{
+		CBA_BUTTON { id = ECmdPause; txt = qtn_vorec_pause_sk; },
+		CBA_BUTTON { id = ECmdStop; txt = qtn_vorec_stop_sk; },
+		CBA_BUTTON { id = ECmdMSK; txt = qtn_msk_select;}
+		};
+	}
+
+RESOURCE CBA r_vr_softkeys_play_stop_select
+	{
+	buttons = 
+		{
+		CBA_BUTTON { id = ECmdPlay; txt = text_softkey_play; },
+		CBA_BUTTON { id = ECmdStop; txt = qtn_vorec_stop_sk; },
+		CBA_BUTTON { id = ECmdMSK; txt = qtn_msk_select;}
+		};
+	}
+
+RESOURCE CBA r_vr_softkeys_record_stop_select
+	{
+	buttons = 
+		{
+		CBA_BUTTON { id = ECmdRecord; txt = qtn_vorec_rec_sk; },
+		CBA_BUTTON { id = ECmdStop; txt = qtn_vorec_stop_sk; },
+		CBA_BUTTON { id = ECmdMSK; txt = qtn_msk_select;}
+		};
+	}
+	
+RESOURCE CBA r_vr_softkeys_record_back_select
+	{
+	buttons = 
+		{
+		CBA_BUTTON { id = ECmdRecord; txt = qtn_vorec_rec_sk; },
+		CBA_BUTTON { id = ECmdCancel; txt = text_softkey_back; },
+		CBA_BUTTON { id = ECmdMSK; txt = qtn_msk_select;}
+		};
+	}
+
+
+#ifdef __SERIES60_31__
+// LSK in 3.1 is "Select"
+RESOURCE CBA r_vr_softkeys_ok_cancel_select
+	{
+	buttons = 
+		{
+		CBA_BUTTON { id = ECmdOk; txt = text_softkey_select;},
+		CBA_BUTTON { id = ECmdCancel; txt = text_softkey_cancel;},
+		CBA_BUTTON { id = ECmdMSK; txt = qtn_msk_select;}
+		};
+	}
+#else
+// LSK in 3.2 is "Insert"
+RESOURCE CBA r_vr_softkeys_ok_cancel_select
+	{
+	buttons = 
+		{
+		CBA_BUTTON { id = ECmdOk; txt = qtn_vorec_insert_sk;},
+		CBA_BUTTON { id = ECmdCancel; txt = text_softkey_cancel;},
+		CBA_BUTTON { id = ECmdMSK; txt = qtn_msk_select;}
+		};
+	}
+#endif
+
+
+RESOURCE CBA r_vr_softkeys_stop_select
+	{
+	buttons = 
+		{
+		CBA_BUTTON { txt =" "; },
+		CBA_BUTTON { id = ECmdStop; txt= qtn_vorec_stop_sk;},
+		CBA_BUTTON { id = ECmdMSK; txt = qtn_msk_select;}
+		};
+	}
+
+// A new CBA resource with MSK. Replaces R_AVKON_SOFTKEYS_OPTIONS_BACK
+RESOURCE CBA r_vr_softkeys_options_back_select
+	{
+	buttons = 
+		{
+		CBA_BUTTON { id = EAknSoftkeyOptions; txt = text_softkey_option; },
+		CBA_BUTTON { id = EAknCmdExit; txt = text_softkey_back;},
+		CBA_BUTTON { id = ECmdMSK; txt = qtn_msk_select;}
+		};
+	}
+
+// A new CBA resource with MSK. Replaces R_AVKON_SOFTKEYS_OPTIONS_EXIT	
+RESOURCE CBA r_vr_softkeys_options_exit_select
+	{
+	buttons = 
+		{
+		CBA_BUTTON { id = EAknSoftkeyOptions; txt = text_softkey_option; },
+		CBA_BUTTON { id = EAknCmdExit; txt = text_softkey_exit;},
+		CBA_BUTTON { id = ECmdMSK; txt = qtn_msk_select;}
+		};
+	}	
+	
+// A CBA resource for disabling CBA use. The texts are shown but LSK and RSK
+// cause no operation.
+RESOURCE CBA r_vr_softkeys_options_exit_select_no_command
+	{
+	buttons = 
+		{
+		CBA_BUTTON { id = ECmdNOP; txt = text_softkey_option; },
+		CBA_BUTTON { id = ECmdNOP; txt = text_softkey_exit;},
+		CBA_BUTTON { id = ECmdMSK; txt = qtn_msk_select;}
+		};
+	}	
+		
+// A new CBA resource for settings dialog	
+RESOURCE CBA r_vr_softkeys_options_back_change
+	{
+	buttons = 
+		{
+		CBA_BUTTON { id = EAknSoftkeyOptions; txt = text_softkey_option; },
+		CBA_BUTTON { id = EAknCmdExit; txt = text_softkey_back;},
+		CBA_BUTTON { id = ECmdMSK; txt = qtn_msk_change;}
+		};
+	}
+	
+// A new CBA resource for General Settings dialog	
+RESOURCE CBA r_vr_softkeys_gs_options_back_change
+	{
+	buttons = 
+		{
+		CBA_BUTTON { id = EAknSoftkeyOptions; txt = text_softkey_option; },
+		CBA_BUTTON { id = ECmdCancel; txt = text_softkey_back;},
+		CBA_BUTTON { id = ECmdMSK; txt = qtn_msk_change;}
+		};
+	}		
+			
+// Resources for General Settings plugin
+
+//----------------------------------------------------
+//   
+//    r_vorec_gs_setting_list_view
+//    Main settings view
+//
+//----------------------------------------------------
+//
+RESOURCE AVKON_VIEW r_vorec_gs_setting_list_view
+    {
+    menubar = r_vorec_gs_settings_menubar;
+    cba = r_vr_softkeys_gs_options_back_change;    
+    }
+
+//----------------------------------------------------
+//   
+//    r_vorec_gs_settings_title_name
+//    Title name used as name of plugin
+//
+//----------------------------------------------------
+//
+RESOURCE TBUF r_vorec_gs_settings_title
+    {
+    buf = qtn_vorec_app_title;
+    }
+
+//----------------------------------------------------
+//   
+//    r_vorec_gs_view_title
+//    Setting view's title.
+//
+//----------------------------------------------------
+//
+RESOURCE TITLE_PANE r_vorec_gs_view_title
+    {
+    txt = qtn_vorec_app_title;
+    }    
+
+//----------------------------------------------------
+//   
+//    r_vorec_gs_settings_menupane
+//    GS Plugin options menu, EEikCmdExit replaced with
+//    ECmdOk to ensure that we can save the settings
+//
+//----------------------------------------------------
+//    
+RESOURCE MENU_PANE r_vorec_gs_settings_menupane
+	{
+	items=
+		{
+		MENU_ITEM { command = ECmdChange;		txt = qtn_vorec_settings_change; },
+		MENU_ITEM { command = EAknCmdHelp; 		txt = qtn_options_help; },
+		MENU_ITEM { command = ECmdOk; 		txt = qtn_options_exit; }
+		};
+	}
+
+RESOURCE MENU_BAR r_vorec_gs_settings_menubar
+	{
+	titles=
+		{
+		MENU_TITLE { menu_pane = r_vorec_gs_settings_menupane; }
+		};
+	}
+
+// ---------------------------------------------------------
+//
+//    r_vorec_memory_selection_dialog
+//    Memory selection dialog, setting page resource
+//
+// ---------------------------------------------------------
+//
+RESOURCE MEMORYSELECTIONDIALOG r_vorec_memory_selection_dialog
+    {
+    title = qtn_vorec_set_store;
+    softkey_1 = text_softkey_ok;
+    softkey_2 = text_softkey_cancel;
+
+    locations =
+        {
+        LOCATION
+            { 
+            root_path = text_phone_memory_root_path;
+            default_folder = text_digital_sounds_path;
+            },
+        LOCATION 
+            { 
+            root_path = text_memory_card_root_path;
+            }
+        };
+    }

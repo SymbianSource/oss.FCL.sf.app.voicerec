@@ -1,0 +1,29 @@
+/*
+* Copyright (c) 2005 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+* The iby file contains files that must be included in image
+*	  
+*
+*/
+
+#ifndef __VOICERECORDERRESOURCES_IBY__
+#define __VOICERECORDERRESOURCES_IBY__
+
+S60_APP_CAPTION(Voicerecorder)
+
+data=DATAZ_\APP_RESOURCE_DIR\Voicerecorder.rsc                       			  APP_RESOURCE_DIR\Voicerecorder.rsc
+//data=ZSYSTEM\Data\voicerecview.rsc                                    System\Data\voicerecview.rsc
+
+#endif
+

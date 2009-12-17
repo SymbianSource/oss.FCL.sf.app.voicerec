@@ -1,0 +1,78 @@
+/*
+* Copyright (c) 2002-2006 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+*     This file provides the information required for building
+*     Voice Recorder.
+*
+*/
+
+
+#include <platform_paths.hrh>
+
+PRJ_PLATFORMS
+  DEFAULT
+
+//  Help exports
+#include "../help/group/bld.inf"
+
+PRJ_EXPORTS
+../sis/VoiceRecorder_stub.sis   /epoc32/data/z/system/install/VoiceRecorder_stub.SIS
+../rom/Voicerecorder.iby                     CORE_APP_LAYER_IBY_EXPORT_PATH(Voicerecorder.iby)
+../rom/VoicerecorderResources.iby      LANGUAGE_APP_LAYER_IBY_EXPORT_PATH(VoicerecorderResources.iby)
+../loc/voicerecorder.loc                 APP_LAYER_LOC_EXPORT_PATH(voicerecorder.loc)
+
+// Generic configuration interface for component cenrep settings  
+// voicerecorder_101F87A3 implementation specifics for cenrep data
+../Conf/voicerecorder.confml             APP_LAYER_CONFML(voicerecorder.confml)
+../Conf/voicerecorder_101F87A3.crml 	 APP_LAYER_CRML(voicerecorder_101F87A3.crml)
+
+// Backup registration file
+backup_registration.xml z:/private/100058CA/backup_registration.xml
+
+PRJ_EXTENSIONS
+START EXTENSION s60/mifconv
+OPTION TARGETFILE voicerecorder_aif.mif
+OPTION SOURCES  -c8,8 qgn_menu_voirec
+END
+
+START EXTENSION s60/mifconv
+OPTION TARGETFILE voicerecorder.mif
+OPTION HEADERFILE voicerecorder.mbg
+OPTION SOURCES  -c8,1 qgn_indi_vorec_button_forw\
+		-c8,8 qgn_indi_vorec_button_forw_inactive\
+		-c8,1 qgn_indi_vorec_button_pause\
+		-c8,8 qgn_indi_vorec_button_pause_inactive\
+		-c8,1 qgn_indi_vorec_button_play\
+		-c8,8 qgn_indi_vorec_button_play_inactive\
+		-c8,1 qgn_indi_vorec_button_rec\
+		-c8,8 qgn_indi_vorec_button_rec_inactive\
+		-c8,1 qgn_indi_vorec_button_rew\
+		-c8,8 qgn_indi_vorec_button_rew_inactive\
+		-c8,1 qgn_indi_vorec_button_stop\
+		-c8,8 qgn_indi_vorec_button_stop_inactive
+END
+
+START EXTENSION s60/mifconv
+OPTION TARGETFILE gsvoicerecorderplugin.mif
+OPTION HEADERFILE gsvoicerecorderplugin.mbg
+OPTION SOURCES  -c8,8 qgn_prop_set_apps_voirec
+END
+
+PRJ_MMPFILES
+Utils.mmp
+RecView.mmp
+NewService.mmp
+VoiceRecorderApp.mmp
+../gsplugin/group/GSVoiceRecorderPlugin.mmp
+

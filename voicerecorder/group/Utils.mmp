@@ -1,0 +1,74 @@
+/*
+* Copyright (c) 2002-2006 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+*     This is project specification file for the Voice Recorder utils
+*     
+*
+*/
+
+
+#include <platform_paths.hrh>
+#include <bldvariant.hrh>
+
+TARGET          VoiceRecorderUtils.dll
+TARGETTYPE      DLL
+
+// the following UIDs are exported to system include by VoiceRecorderUID.h
+UID             0x1000008d 0x100058CA
+
+VERSION         10.0
+
+CAPABILITY CAP_GENERAL_DLL
+VENDORID        VID_DEFAULT
+
+SOURCEPATH	../UtilsSrc
+SOURCE      TVRRename.cpp
+SOURCE		DllMain.cpp
+SOURCE		VRUtils.cpp
+
+USERINCLUDE     ../UtilsInc ../group
+APP_LAYER_SYSTEMINCLUDE
+
+LIBRARY		euser.lib
+LIBRARY		avkon.lib
+LIBRARY		efsrv.lib
+LIBRARY		bafl.lib
+LIBRARY		cone.lib
+LIBRARY		apparc.lib
+LIBRARY		apgrfx.lib
+LIBRARY		apmime.lib
+LIBRARY		aknnotify.lib
+LIBRARY		platformenv.lib  // PathInfo
+LIBRARY		featmgr.lib
+LIBRARY		commonengine.lib
+LIBRARY		centralrepository.lib
+
+#ifdef RD_MULTIPLE_DRIVE
+LIBRARY     PlatformEnv.lib
+#if defined(ARMCC)
+deffile      ../EABI/VoiceRecorderUtilsU.DEF
+#elif defined( WINS )
+deffile      ../BWINS/VoiceRecorderUtilsU.DEF
+#endif
+
+#else
+#if defined(ARMCC)
+deffile      ../EABI/VoiceRecorderUtils.DEF
+#elif defined( WINS )
+deffile      ../BWINS/VoiceRecorderUtils.def
+#endif
+
+#endif
+
+

@@ -1,0 +1,100 @@
+/*
+* Copyright (c) 2002-2006 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+*    RecView mmp file
+*	  
+*
+*/
+
+
+#include <platform_paths.hrh>
+
+TARGET		VoiceRecorderRecView.dll
+TARGETTYPE	dll
+
+// the following UIDs are exported to system include by VoiceRecorderUID.h
+UID			0x1000008d 0x100058CA
+
+VERSION         10.0
+
+LANG SC
+CAPABILITY CAP_GENERAL_DLL
+VENDORID        VID_DEFAULT
+
+SOURCEPATH	../RecViewSrc
+SOURCE		DllMain.cpp
+SOURCE		CVRButtonPanel.cpp
+SOURCE		CVRLabel.cpp
+SOURCE		CVRRecViewContainer.cpp
+SOURCE		CVRRecViewActivationContainer.cpp
+SOURCE		CVRRecViewModel.cpp
+SOURCE		CVRRecView.cpp
+SOURCE		CVRMdaRecorder.cpp 
+SOURCE		CVRSystemEventHandler.cpp
+SOURCE		CVRMemo.cpp
+SOURCE		CVRStateInfoPanel.cpp
+SOURCE		TVRState.cpp
+SOURCE		CVRRemConObserver.cpp
+SOURCE		CVRTonePlayer.cpp
+SOURCE      CVRDiskSpaceWatcher.cpp
+SOURCE		CVRUSBEventHandler.cpp
+
+USERINCLUDE	 ../RecViewSrc
+USERINCLUDE	 ../RecViewInc
+USERINCLUDE	 ../group
+USERINCLUDE	 ../UtilsInc
+USERINCLUDE	 ../../inc      // ADo level inc dir
+
+APP_LAYER_SYSTEMINCLUDE
+
+LIBRARY		apparc.lib
+LIBRARY		avkon.lib
+LIBRARY		bafl.lib
+LIBRARY		cone.lib
+LIBRARY		efsrv.lib
+LIBRARY		eikcoctl.lib
+LIBRARY		eikcore.lib
+LIBRARY		eikctl.lib
+LIBRARY		euser.lib
+LIBRARY		featmgr.lib
+
+LIBRARY		aknnotify.lib
+LIBRARY		commonengine.lib
+LIBRARY		commonui.lib 	// CErrorUI
+LIBRARY		mediaclientaudio.lib
+LIBRARY		sendui.lib		// CSendAppUi
+
+LIBRARY		sysutil.lib	
+LIBRARY		voicerecorderutils.lib
+LIBRARY		aknskins.lib
+LIBRARY		platformenv.lib	// PathInfo
+LIBRARY		apgrfx.lib // RApaLsSession
+LIBRARY		apmime.lib  // TDataType
+
+LIBRARY		CdlEngine.lib
+LIBRARY		AknIcon.lib
+LIBRARY		centralrepository.lib
+LIBRARY		RemConCoreApi.lib // CRemConCoreApiTarget
+LIBRARY		RemConInterfaceBase.lib // CRemConInterfaceSelector
+LIBRARY		aknlayout2scalable.lib
+LIBRARY         HWRMLightClient.lib  // for light control
+
+LIBRARY     	ServiceHandler.lib // For AIW
+
+#ifdef RD_MULTIPLE_DRIVE
+LIBRARY     PlatformEnv.lib
+#endif
+
+LIBRARY     AudioInputRouting.lib
+// End of File

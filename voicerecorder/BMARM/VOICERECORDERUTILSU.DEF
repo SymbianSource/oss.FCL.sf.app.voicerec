@@ -1,0 +1,15 @@
+EXPORTS
+	__9TVRRenameR3RFs @ 1 NONAME R3UNUSED ; TVRRename::TVRRename(RFs &)
+	GetMMCInfo__7VRUtilsR12TVRDriveInfo @ 2 NONAME R3UNUSED ; VRUtils::GetMMCInfo(TVRDriveInfo &)
+	GetNewNameL__9TVRRenameRC7TDesC16R6TDes16i @ 3 NONAME ; TVRRename::GetNewNameL(TDesC16 const &, TDes16 &, int)
+	MemoStoreDirectoryL__7VRUtils @ 4 NONAME R3UNUSED ; VRUtils::MemoStoreDirectoryL(void)
+	MemoStoreL__7VRUtils @ 5 NONAME R3UNUSED ; VRUtils::MemoStoreL(void)
+	NewL__17CVRFileRecognizer @ 6 NONAME R3UNUSED ; CVRFileRecognizer::NewL(void)
+	RecognizeL__17CVRFileRecognizerRC7TDesC16 @ 7 NONAME R3UNUSED ; CVRFileRecognizer::RecognizeL(TDesC16 const &)
+	RenameL__9TVRRenameR6TDes16i @ 8 NONAME R3UNUSED ; TVRRename::RenameL(TDes16 &, int)
+	SetDefaultSpeakerL__7VRUtils10TVRSpeaker @ 9 NONAME R3UNUSED ; VRUtils::SetDefaultSpeakerL(TVRSpeaker)
+	SetMemoStoreL__7VRUtils12TVRMemoStore @ 10 NONAME R3UNUSED ; VRUtils::SetMemoStoreL(TVRMemoStore)
+	"_._17CVRFileRecognizer" @ 11 NONAME R3UNUSED ; CVRFileRecognizer::~CVRFileRecognizer(void)
+	"_._9TVRRename" @ 12 NONAME R3UNUSED ; TVRRename::~TVRRename(void)
+	DefaultSpeakerL__7VRUtils @ 13 NONAME R3UNUSED ; VRUtils::DefaultSpeakerL(void)
+

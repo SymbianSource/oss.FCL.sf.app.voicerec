@@ -1,0 +1,37 @@
+/*
+* Copyright (c) 2002 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+*     This file contains declarations for resources of VoiceRecorder
+*     The file can be included only in resource file.
+*     
+*
+*/
+
+
+#include "voicerecorder.hrh"
+
+//  STRUCTURE DEFINITIONS
+
+STRUCT VR_FILETYPE
+	{
+	BYTE typeid;
+	LTEXT mimetype;
+	}
+
+STRUCT VR_FILETYPE_ARRAY
+    {
+    STRUCT filetypes[];		// VR_FILETYPE array
+    }
+            
+// End of File

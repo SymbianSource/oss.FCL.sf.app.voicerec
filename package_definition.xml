@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SystemDefinition schema="3.0.0">
+  <package id="voicerec" name="Voice Recorder Apps">
+    <collection id="voicerecorder" name="Voice Recorder">
+      <component id="voicerecordergsplugin" filter="s60" name="Voice Recorder GS Plugin" class="plugin">
+        <!-- <unit bldFile="voicerecorder/gsplugin/group"/> -->
+      </component>
+      <component id="voicerecorder_help" filter="s60" name="Voice Recorder Help">
+        <unit bldFile="voicerecorder/help/group"/>
+      </component>
+      <component id="voicerecorder_build" filter="s60" name="Voice Recorder Build">
+        <unit bldFile="voicerecorder/group"/>
+      </component>
+    </collection>
+    <collection id="voicerec_info" name="Voice Recorder Apps Info">
+      <component id="voicerec_test" filter="s60" purpose="development" name="Voice Recorder Apps Test">
+		<!-- should this be uncommented? -->
+        <!-- <unit bldFile="tsrc/group"/> -->
+      </component>
+      <component id="voicerec_plat" filter="s60" name="Voice Recorder Apps Platform Interfaces" class="api">
+        <unit bldFile="voicerec_plat/group"/>
+			<!-- can only have one unit, need to #include the latter from the former -->
+        <unit bldFile="voicerec_plat/new_file_service_api/tsrc/group"/>
+      </component>
+    </collection>
+  </package>
+</SystemDefinition>
