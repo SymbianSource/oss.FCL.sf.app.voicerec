@@ -90,7 +90,11 @@ CVRAppUi::~CVRAppUi()
 //
 void CVRAppUi::ConstructL()
     {
-    BaseConstructL( EAknEnableSkin | EAknEnableMSK );
+    BaseConstructL( EAknEnableSkin | EAknEnableMSK 
+#ifdef SINGLE_CLICK_INCLUDED
+    | EAknSingleClickCompatible
+#endif
+	);
 
 	iErrorUI = CErrorUI::NewL();
 
