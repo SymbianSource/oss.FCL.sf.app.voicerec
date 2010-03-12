@@ -68,6 +68,7 @@ LIBRARY 	avkon.lib
 LIBRARY 	cone.lib 
 LIBRARY 	euser.lib
 LIBRARY		commonui.lib
+LIBRARY		sysutil.lib
 
 LIBRARY		VoiceRecorderRecView.lib
 LIBRARY		VoiceRecorderUtils.lib

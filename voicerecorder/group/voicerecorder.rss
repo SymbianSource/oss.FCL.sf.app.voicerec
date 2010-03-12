@@ -326,6 +326,7 @@ RESOURCE TBUF r_vr_unsupported_infonote_label { buf = qtn_vorec_info_memo_unsupp
 RESOURCE TBUF r_vr_server_error_infonote_label { buf = qtn_vorec_info_server_error; }
 RESOURCE TBUF r_vr_memory_warning { buf = qtn_memlo_memory_running_out; }
 RESOURCE TBUF r_vr_memory_mmc_warning { buf = qtn_memlo_mmc_memory_running_out; }
+RESOURCE TBUF r_vr_memory_low_stop_warning { buf = qtn_memlo_not_enough_memory; }
 
 // Quality strings for UI
 RESOURCE TBUF r_vorec_quality_mms_optimized { buf = qtn_vorec_quality_mms_optimized; }

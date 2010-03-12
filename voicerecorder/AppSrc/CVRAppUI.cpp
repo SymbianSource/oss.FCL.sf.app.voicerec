@@ -28,6 +28,8 @@
 #include "CVRRecView.h"
 #include "MVRSelectionProvider.h"
 #include "CVRAppUi.h"
+#include <sysutil.h>
+#include <StringLoader.h>
 #include "CVRDocument.h"
 #include <featmgr.h>
 #include "VRConsts.h"
@@ -206,6 +208,17 @@ void CVRAppUi::ConstructL()
 			}
 
 
+    /***** check if memory is below min value, if yes, close app*****/	
+		RFs& fs( CEikonEnv::Static()->FsSession() );
+		if (SysUtil::DiskSpaceBelowCriticalLevelL( &fs, 0, VRUtils::MemoDriveL()))
+		{			
+	        HBufC* errorText = StringLoader::LoadLC( R_VR_MEMORY_LOW_STOP_WARNING );
+	        CAknErrorNote* dlg = new( ELeave ) CAknErrorNote( ETrue );
+	        dlg->ExecuteLD( *errorText );
+	        CleanupStack::PopAndDestroy( errorText );
+			Exit();
+		}
+	 // check memory size end
 #endif
 
 		}

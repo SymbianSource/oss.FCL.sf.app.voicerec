@@ -552,6 +552,11 @@ void CVRRecView::ViewActivatedL(const TVwsViewId& aPrevViewId,
 								TUid aCustomMessageId,
 								const TDesC8& aCustomMessage)
     {
+    // dismiss sound player / file manager if it was active so that recording
+    // view becomes visible
+    delete iLaunchService;
+    iLaunchService = NULL;
+
 	iModel->ActivateL();
 
 	CAknView::ViewActivatedL(aPrevViewId, aCustomMessageId, aCustomMessage);
