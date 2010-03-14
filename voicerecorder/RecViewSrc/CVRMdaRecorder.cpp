@@ -192,7 +192,10 @@ void CVRMdaRecorder::MoscoStateChangeEvent( CBase* /*aObject*/,
         if (aPreviousState == CMdaAudioClipUtility::ERecording || aPreviousState == CMdaAudioClipUtility::EPlaying )
         	{ 	
 
-			if ( iMediaServerError != KErrDied &&  iMediaServerError != KErrAccessDenied )
+        	//if ( iMediaServerError != KErrDied &&  iMediaServerError != KErrAccessDenied )
+        	if ( iMediaServerError != KErrDied &&  
+        		 iMediaServerError != KErrAccessDenied &&  
+        		 iMediaServerError != KErrInUse )
 				{
 				TBuf< KVRMaxNoteLabelLength > label;
 

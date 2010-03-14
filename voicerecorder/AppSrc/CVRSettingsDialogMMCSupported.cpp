@@ -219,6 +219,9 @@ void CVRSettingsDialog::HandleListBoxEventL( CEikListBox* aListBox, TListBoxEven
 
 	switch ( aEventType )
 		{
+#ifdef SINGLE_CLICK_INCLUDED
+        case EEventItemSingleClicked:
+#endif
 		case EEventItemDoubleClicked: // Pointer events (highlighted item before pressing) 
 		case EEventEnterKeyPressed:	// Normal button presses
 		case EEventEditingStarted: // From ProcessCommand->ECmdChange

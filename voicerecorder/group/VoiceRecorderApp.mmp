@@ -20,6 +20,7 @@
 
 #include <data_caging_paths.hrh>
 #include <platform_paths.hrh>
+#include "VoiceRecorderSingleClick.hrh"
 
 TARGET	VoiceRecorder.exe
 TARGETTYPE    exe
@@ -32,6 +33,11 @@ VERSION         10.0
 
 CAPABILITY	CAP_APPLICATION
 VENDORID	VID_DEFAULT
+
+#ifdef IAD_INCLUDE_SINGLE_CLICK 
+MACRO SINGLE_CLICK_INCLUDED
+#endif
+
 SOURCEPATH	../AppSrc
 
 SOURCE	CVRApplication.cpp 
