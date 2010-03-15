@@ -275,7 +275,30 @@ void CVRMemo::SetTemporaryNameL( TBool aEmbedded )
 		}
 
 #endif
+	
+    TFileName memoNameTemp;  
+    memoNameTemp = memoName;
+    memoNameTemp.Delete(memoName.Length()-1, 1);
 
+    TBool boolTemp = EFalse;
+
+    TInt intTemp = BaflUtils::IsFolder( iFs, memoNameTemp, boolTemp );
+    
+    if( ! boolTemp )
+        {
+        if( BaflUtils::FileExists( iFs, memoNameTemp ) )
+            {
+            if( intTemp != KErrNone )
+            	{
+            	User::LeaveIfError(intTemp);
+            	}
+            else
+            	{
+            	User::LeaveIfError(iFs.Delete( memoNameTemp ));
+            	}
+            }
+        }
+    
 	// Generate unique final file name
     VRUtils::GenerateUniqueFilenameL( iFs, memoName, type );
 

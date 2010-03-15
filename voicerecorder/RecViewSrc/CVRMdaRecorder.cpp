@@ -180,10 +180,19 @@ void CVRMdaRecorder::MoscoStateChangeEvent( CBase* /*aObject*/,
 		{
         
         // when mmc card is used and unpluged, this error returned
-        if (iMediaServerError == KErrCorrupt)
+        if (iMediaServerError == KErrCorrupt || iMediaServerError == KErrNotReady)
         	{
-        	iAudioRecorder->Close();
-        	dynamic_cast <CVRRecViewModel*>(iAutoStopObserver)->HandleCommandL(EEikCmdExit);
+        	CVRRecViewModel* iViewModel = NULL;
+        	//iAudioRecorder->Close();
+        	iViewModel = dynamic_cast <CVRRecViewModel*>(iAutoStopObserver);
+        	if(iViewModel != NULL)
+        		{
+        		iViewModel->HandleCommandL(EEikCmdExit);
+        		}
+        	else
+        		{
+        		CEikonEnv::Static()->EikAppUi()->HandleCommandL( EAknSoftkeyExit);
+        		}
         	}
  		
 		// Media server reports KErrDied if the playing was interrupted

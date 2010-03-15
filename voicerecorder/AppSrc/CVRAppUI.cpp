@@ -269,7 +269,12 @@ void CVRAppUi::HandleCommandL( TInt aCommand )
 			// The file service needs to abort if it's still going on
 			if ( iEmbeddedObserver )
 				{
-				dynamic_cast<CNewFileServiceBase*>(iEmbeddedObserver)->SetErrorCode(KErrAbort);
+				CNewFileServiceBase * iNewFileService = NULL;
+				iNewFileService = dynamic_cast<CNewFileServiceBase*>(iEmbeddedObserver);
+				if(iNewFileService != NULL)
+					{
+					iNewFileService->SetErrorCode(KErrAbort);
+					}
 				iEmbeddedObserver->AbortL();
 				}
 
@@ -286,7 +291,12 @@ void CVRAppUi::HandleCommandL( TInt aCommand )
 			// The file service needs to abort if it's still going on
 			if ( iEmbeddedObserver )
 				{
-				dynamic_cast<CNewFileServiceBase*>(iEmbeddedObserver)->SetErrorCode(KErrAbort);
+				CNewFileServiceBase * iNewFileService = NULL;
+				iNewFileService = dynamic_cast<CNewFileServiceBase*>(iEmbeddedObserver);
+				if(iNewFileService != NULL)
+					{
+					iNewFileService->SetErrorCode(KErrAbort);
+					}
 				iEmbeddedObserver->AbortL();
 				}
 			

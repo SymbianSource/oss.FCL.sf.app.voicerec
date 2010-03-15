@@ -1394,7 +1394,9 @@ TBool CVRRecViewModel::CallFunctionByIdL( TInt aFunctionId )
 		{
 		case EFunctionPlay:
 			{
-			if ( VRUtils::UnsupportedCallTypeOngoing( ETrue ) || !dynamic_cast<CVRMdaRecorder*>(iRecorder)->IsAttachedToMemo())
+			CVRMdaRecorder* iRecorderUtility = NULL;
+			iRecorderUtility = dynamic_cast<CVRMdaRecorder*>(iRecorder);
+			if ( VRUtils::UnsupportedCallTypeOngoing( ETrue ) || iRecorderUtility == NULL || !iRecorderUtility->IsAttachedToMemo())
 				{
 				return EFalse;
 				}
@@ -1481,6 +1483,7 @@ TBool CVRRecViewModel::CallFunctionByIdL( TInt aFunctionId )
 			}
 		case EFunctionRecord:
 			{
+			CVRMdaRecorder* iRecorderUtility = NULL;
 			if ( VRUtils::UnsupportedCallTypeOngoing( ETrue ) )
 				{
 				return EFalse;
@@ -1493,8 +1496,12 @@ TBool CVRRecViewModel::CallFunctionByIdL( TInt aFunctionId )
 			
 			if(iCurrentCallHandler->StateL(KPSUidCtsyCallInformation,KCTsyCallState )==EPSCTsyCallStateConnected)
 				{
-				dynamic_cast<CVRMdaRecorder*>(iRecorder)->SetAudioInputL(CAudioInput::EVoiceCall);
-				dynamic_cast<CVRMdaRecorder*>(iRecorder)->ConfigSampleRateOfVoiceCallL();
+				iRecorderUtility = dynamic_cast<CVRMdaRecorder*>(iRecorder);
+				if(iRecorderUtility != NULL)
+					{
+					iRecorderUtility->SetAudioInputL(CAudioInput::EVoiceCall);	
+					iRecorderUtility->ConfigSampleRateOfVoiceCallL();
+					}
 				}
 			//Audioinput can't be changed after Record
 			if ( iRecorder->RecordL() != KErrNone )
@@ -1540,12 +1547,17 @@ TBool CVRRecViewModel::CallFunctionByIdL( TInt aFunctionId )
 			}
 		case EFunctionRecordNew:
 			{
+			CVRMdaRecorder* iRecorderUtility = NULL;
 			if ( VRUtils::UnsupportedCallTypeOngoing( ETrue ) )
 				{
 				return EFalse;
 				}
-
-            dynamic_cast<CVRMdaRecorder*>(iRecorder)->SetInRecordingFlag(ETrue);
+			iRecorderUtility = dynamic_cast<CVRMdaRecorder*>(iRecorder);
+			if(iRecorderUtility == NULL)
+				{
+				return EFalse;
+				}
+			iRecorderUtility->SetInRecordingFlag(ETrue);
             
 			iCanHandleCommands = EFalse;
 			// Don't accept CBA commands
@@ -1565,7 +1577,7 @@ TBool CVRRecViewModel::CallFunctionByIdL( TInt aFunctionId )
 				TRAP( leaveErr2, iRecorder->AttachToMemoL( iMemo ) );	
 				}
 			
-			TBool ifAttach = dynamic_cast <CVRMdaRecorder*>(iRecorder)->IsAttachedToMemo();		
+			TBool ifAttach = iRecorderUtility->IsAttachedToMemo();		
 	
 			if ( leaveErr1 || leaveErr2 || !ifAttach)
 				{
@@ -1600,15 +1612,15 @@ TBool CVRRecViewModel::CallFunctionByIdL( TInt aFunctionId )
 			//TRAPD( recLeaveErr, recError = iRecorder->RecordL() );
 			if(iCurrentCallHandler->StateL(KPSUidCtsyCallInformation,KCTsyCallState )==EPSCTsyCallStateConnected)
 				{
-				dynamic_cast<CVRMdaRecorder*>(iRecorder)->SetAudioInputL(CAudioInput::EVoiceCall);
-				dynamic_cast<CVRMdaRecorder*>(iRecorder)->ConfigSampleRateOfVoiceCallL();
+				iRecorderUtility->SetAudioInputL(CAudioInput::EVoiceCall);
+				iRecorderUtility->ConfigSampleRateOfVoiceCallL();
 				}
 			//Change for CS call:Audio input can't be changed after Record
             TRAPD( recLeaveErr, recError = iRecorder->RecordL() );
             
             if (GetInRecordingFlag())
             	{
-            		dynamic_cast<CVRMdaRecorder*>(iRecorder)->SetInRecordingFlag(EFalse);
+            	iRecorderUtility->SetInRecordingFlag(EFalse);
             	}
             	
 			if ( recError != KErrNone || recLeaveErr )
@@ -1953,7 +1965,12 @@ void CVRRecViewModel::HandleSystemEventL()
 				{
 				if( iPreviousCallState == EPSCTsyCallStateConnected )
 					{
-					dynamic_cast<CVRMdaRecorder*>(iRecorder)->SetAudioInputL(CAudioInput::EDefaultMic);
+					CVRMdaRecorder* iRecorderUtility = NULL;
+					iRecorderUtility = dynamic_cast<CVRMdaRecorder*>(iRecorder);
+					if(iRecorderUtility != NULL)
+						{
+						iRecorderUtility->SetAudioInputL(CAudioInput::EDefaultMic);					
+						}
 					HandleCommandL( ECmdAutoStopAtEnd );
 					}
 				break;										
@@ -2330,7 +2347,13 @@ TBool CVRRecViewModel::GetInRecordingFlag()
 	{
 	if(iRecorder)
 		{
-		return 	dynamic_cast<CVRMdaRecorder*>(iRecorder)->GetInRecordingFlag();			
+		CVRMdaRecorder* iRecorderUtility = NULL;
+		iRecorderUtility = dynamic_cast<CVRMdaRecorder*>(iRecorder);	
+		if(iRecorderUtility != NULL)
+			{
+			return iRecorderUtility->GetInRecordingFlag();
+			}
+		return EFalse;
 		}
 	else
 		{
@@ -2349,7 +2372,13 @@ TBool CVRRecViewModel::GetIfStopCalled()
 	{
 	if(iRecorder)
 		{
-		return 	dynamic_cast<CVRMdaRecorder*>(iRecorder)->GetIfStopCalled();			
+		CVRMdaRecorder* iRecorderUtility = NULL;
+		iRecorderUtility = dynamic_cast<CVRMdaRecorder*>(iRecorder);	
+		if(iRecorderUtility != NULL)
+			{
+			return iRecorderUtility->GetIfStopCalled();
+			}
+		return EFalse;
 		}
 	else
 		{
@@ -2367,7 +2396,12 @@ void CVRRecViewModel::SetInRecordingFlag(TBool aFlag)
 	{
 	if(iRecorder)
 		{
-		return 	dynamic_cast<CVRMdaRecorder*>(iRecorder)->SetInRecordingFlag(aFlag);			
+		CVRMdaRecorder* iRecorderUtility = NULL;
+		iRecorderUtility = dynamic_cast<CVRMdaRecorder*>(iRecorder);	
+		if(iRecorderUtility != NULL)
+			{
+			return iRecorderUtility->SetInRecordingFlag(aFlag);
+			}		
 		}
 	}
 

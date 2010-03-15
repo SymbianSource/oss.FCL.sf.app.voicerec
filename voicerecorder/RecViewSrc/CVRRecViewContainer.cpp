@@ -478,6 +478,7 @@ void CVRRecViewContainer::UpdateVolumeControlL()
         }
 
     if ( state != EDisabled )
+        if(iActiveVolumeControl != NULL)
 	    {
 	    iNaviPane->PushL( *iActiveVolumeControl );
 	    CAknVolumeControl* control = static_cast< CAknVolumeControl* >(
@@ -551,7 +552,7 @@ TInt CVRRecViewContainer::HandleVolumeChangeL( const TKeyEvent& aKeyEvent,
 											   TEventCode aType )
 	{
 	
-	if( !iActiveVolumeControl || !iVolumeChangeObserver->CanSetVolume() )
+	if( iActiveVolumeControl == NULL || iVolumeChangeObserver == NULL || !iVolumeChangeObserver->CanSetVolume() )
 		{
 		// Can't process volume change yet
 		return KErrNotReady;
@@ -659,9 +660,9 @@ void CVRRecViewContainer::HandleControlEventL( CCoeControl* aControl, TCoeEvent 
 			{
 			case EEventStateChanged:
 				{
-				if ( aControl == static_cast< CAknVolumeControl*>(iActiveVolumeControl->DecoratedControl()))
+				if ( iActiveVolumeControl && aControl == static_cast< CAknVolumeControl*>(iActiveVolumeControl->DecoratedControl()))
  				    {
-						if( !iActiveVolumeControl || !iVolumeChangeObserver->CanSetVolume() )
+						if(iVolumeChangeObserver == NULL || !iVolumeChangeObserver->CanSetVolume() )
 						{
 						// Can't process volume change yet
 						User::Leave(KErrNotReady);
@@ -694,6 +695,10 @@ void CVRRecViewContainer::HandleControlEventL( CCoeControl* aControl, TCoeEvent 
 							User::Leave(KErrTooBig);
 							}	
  				    }
+				else if(iActiveVolumeControl == NULL)
+					{
+						User::Leave(KErrNotReady);
+					}
                 }
 			default:
 				break;                
