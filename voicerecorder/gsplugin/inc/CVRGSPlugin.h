@@ -192,7 +192,7 @@ class CVRGSPlugin : public CGSBaseView
         */
         void NewContainerL();
  
-        void CVRGSPlugin::DynInitMenuPaneL( TInt aResourceId, CEikMenuPane* aMenuPane );
+        void DynInitMenuPaneL( TInt aResourceId, CEikMenuPane* aMenuPane );
 
         
     protected: //Data        
