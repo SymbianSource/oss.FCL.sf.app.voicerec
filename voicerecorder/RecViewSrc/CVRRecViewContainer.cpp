@@ -681,19 +681,19 @@ void CVRRecViewContainer::HandleControlEventL( CCoeControl* aControl, TCoeEvent 
 							iVolumeChangeObserver->SetVolume( newValue, KVRMaxVolumeSteps );
 							}
 
-						// determine if the volume was already at either end
-						// (of the scale)
-						// play a system sound in that case.
-						if ( prevLevel == control->Value() )
+						TInt sid( EAvkonSIDStandardKeyClick );
+
+						if ( prevLevel <= KVRVolumeControlMin )
 							{
-							TInt sid( EAvkonSIDVolumeMaxTone );
-							if ( prevLevel == 1 )
-								{
-								sid = EAvkonSIDVolumeMinTone;
-								}
-							appUi->KeySounds()->PlaySound( sid );
-							User::Leave(KErrTooBig);
-							}	
+							sid = EAvkonSIDVolumeMinTone;
+							}
+						else if ( prevLevel >= KVRVolumeControlMax )
+							{
+							sid = EAvkonSIDVolumeMaxTone;
+							}
+						appUi->KeySounds()->PlaySound( sid );
+						User::Leave(KErrTooBig);
+						
  				    }
 				else if(iActiveVolumeControl == NULL)
 					{
