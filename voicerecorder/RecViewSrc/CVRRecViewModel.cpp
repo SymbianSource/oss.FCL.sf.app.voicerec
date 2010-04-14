@@ -54,6 +54,7 @@
 #include "VRConsts.h"
 #include "CVRSystemEventHandler.h"
 #include "CVRUSBEventHandler.h"
+#include "CVRMediaRemovalMonitor.h"
 #include "VRUtils.h"
 #include "CVRRecViewModel.h"
 #include <csxhelp/vorec.hlp.hrh>
@@ -115,6 +116,8 @@ CVRRecViewModel::~CVRRecViewModel()
 
 	delete iCurrentUSBHandler;
 	
+	delete iCurrentMMCEjectHandler;
+	
 	}
 
 
@@ -135,6 +138,8 @@ void CVRRecViewModel::ConstructFromResourceL( TResourceReader& aReader )
 	iCurrentUSBHandler->Listen( KPSUidUsbWatcher, KUsbWatcherSelectedPersonality,
 								 this );
 
+	//listen MMC eject
+	iCurrentMMCEjectHandler = CVRMediaRemovalMonitor::NewL(EDriveF, CEikonEnv::Static()->FsSession(), this);
 
 	if ( FeatureManager::FeatureSupported( KFeatureIdKeypadNoVoiceKey ) &&
 		FeatureManager::FeatureSupported( 
@@ -2441,6 +2446,32 @@ void CVRRecViewModel::HandleUSBEventL()
 #endif			
 		}
 
+	}
+
+
+// End of file
+
+
+// ---------------------------------------------------------------------------
+// CVRRecViewModel::HandleMMCEjectEventL
+// 
+// ---------------------------------------------------------------------------
+//
+void CVRRecViewModel::HandleMMCEjectEventL()
+	{
+	
+	// Actions to take when recording
+	TInt storageDrive = VRUtils::MemoDriveL();   	 
+    if ( storageDrive == EDriveF)
+		{
+        //exit for mmc dismount	
+        TWsEvent event;
+        event.SetType( EAknSoftkeyExit );
+        event.SetTimeNow();
+        event.SetHandle( CCoeEnv::Static()->WsSession().WsHandle() );
+        CCoeEnv::Static()->WsSession().SendEventToWindowGroup( CEikonEnv::Static()->RootWin().Identifier(), event );
+        return;       
+		}
 	}
 
 

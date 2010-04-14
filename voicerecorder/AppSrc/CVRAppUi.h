@@ -98,6 +98,13 @@ class CVRAppUi
 		TBool ProcessCommandParametersL( TApaCommand aCommand,
 		    TFileName& aDocumentName, const TDesC8& aTail );
 
+		/**
+		* Handles events from window group  
+		* @param aType The type of event
+		*/
+		
+		void HandleApplicationSpecificEventL(TInt aType, const TWsEvent& aEvent);
+		
 	private: // new methods
 
 		/**

@@ -466,6 +466,19 @@ TBool CVRAppUi::ProcessCommandParametersL( TApaCommand /*aCommand*/,
 	return ConeUtils::FileExists( aDocumentName );
     }
 
+// ---------------------------------------------------------------------------
+// CVRAppUi::HandleApplicationSpecificEventL
+// 
+// ---------------------------------------------------------------------------
+//
+void CVRAppUi::HandleApplicationSpecificEventL(TInt aType,const TWsEvent& aEvent)
+    {
+    if( aType == EAknSoftkeyExit )
+    	{
+    	Exit();
+    	}
+    	CEikAppUi::HandleApplicationSpecificEventL(aType, aEvent);
+    }
 
 // ---------------------------------------------------------------------------
 // CVRAppUi::SetEmbeddedObserver

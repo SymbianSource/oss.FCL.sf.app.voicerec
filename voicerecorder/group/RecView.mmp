@@ -48,7 +48,8 @@ SOURCE		TVRState.cpp
 SOURCE		CVRRemConObserver.cpp
 SOURCE		CVRTonePlayer.cpp
 SOURCE      CVRDiskSpaceWatcher.cpp
-SOURCE		CVRUSBEventHandler.cpp
+SOURCE		CVRUSBEventHandler.cpp 
+SOURCE      CVRMediaRemovalMonitor.cpp
 
 USERINCLUDE	 ../RecViewSrc
 USERINCLUDE	 ../RecViewInc
@@ -81,6 +82,7 @@ LIBRARY		aknskins.lib
 LIBRARY		platformenv.lib	// PathInfo
 LIBRARY		apgrfx.lib // RApaLsSession
 LIBRARY		apmime.lib  // TDataType
+LIBRARY		ws32.lib 
 
 LIBRARY		CdlEngine.lib
 LIBRARY		AknIcon.lib
