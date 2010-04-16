@@ -1,5 +1,0 @@
-EXPORTS
-	_Z9LibEntryLR13CTestModuleIf @ 1 NONAME
-	_ZTI24CDummyNewFileServiceBase @ 2 NONAME ; #<TI>#
-	_ZTV24CDummyNewFileServiceBase @ 3 NONAME ; #<VT>#
-
