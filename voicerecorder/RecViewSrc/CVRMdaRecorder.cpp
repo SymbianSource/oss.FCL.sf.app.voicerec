@@ -233,7 +233,20 @@ void CVRMdaRecorder::MoscoStateChangeEvent( CBase* /*aObject*/,
 					}
 
 				}
-				StopAndNotify();
+        	    if(iMediaServerError == KErrInUse && aPreviousState == CMdaAudioClipUtility::EPlaying)
+        	    	{
+					CVRRecViewModel* iViewModel = NULL;
+					iViewModel = dynamic_cast <CVRRecViewModel*>(iAutoStopObserver);
+					if(iViewModel != NULL)
+            		{
+            		iViewModel->HandleCommandL(ECmdPause);
+            		}
+        	        return;
+        	    	}
+        	    else
+        	    	{
+					StopAndNotify();
+        	    	}
         	}
         
         //it will happen when the openfile fails
@@ -982,7 +995,6 @@ void CVRMdaRecorder::Pause()
 		EPanicNotAttached ) );
 
 	iPause = ETrue;
-	iPosition = iAudioRecorder->Position();
 
 #ifdef _DEBUG
 	RDebug::Print( _L("VoiceRecorder: Pause called. Position: %d:%d"),
@@ -1288,16 +1300,11 @@ void CVRMdaRecorder::StopTimer()
 //
 void CVRMdaRecorder::SyncAndNotify()
 	{
-	if (iPause)
+	if(!iPause)
 		{
-		iMemo->SetPosition( iPosition );
+		iPosition = iAudioRecorder->Position();
 		}
-	// Not sure if iPosition value is valid other than when paused, so do as 
-	// previous for all other states:	
-	else 
-		{
-		iMemo->SetPosition( iAudioRecorder->Position() );
-		}
+	iMemo->SetPosition( iPosition );
 
 	iMemo->SetDuration( iAudioRecorder->Duration() );
 
