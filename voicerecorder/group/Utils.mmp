@@ -35,9 +35,11 @@ VENDORID        VID_DEFAULT
 SOURCEPATH	../UtilsSrc
 SOURCE      TVRRename.cpp
 SOURCE		DllMain.cpp
-SOURCE		VRUtils.cpp
+SOURCE		VRUtils.cpp  VRUSBStateHanlder.cpp
 
-USERINCLUDE     ../UtilsInc ../group
+USERINCLUDE     ../UtilsInc ../group ../../inc ..
+USERINCLUDE     ../RecViewInc
+
 APP_LAYER_SYSTEMINCLUDE
 
 LIBRARY		euser.lib

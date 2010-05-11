@@ -45,6 +45,9 @@
 #include "MessagingDomainCRKeys.h" // Disable e-mail variation flag
 
 #include <centralrepository.h> // link against centralrepository.lib
+#ifdef RD_MULTIPLE_DRIVE
+#include <driveinfo.h>
+#endif
 #include "VoiceRecorderInternalCRKeys.h"
 
 #include <voicerecorder.rsg>
@@ -53,11 +56,12 @@
 #include "CVRMdaRecorder.h"
 #include "VRConsts.h"
 #include "CVRSystemEventHandler.h"
-#include "CVRUSBEventHandler.h"
 #include "CVRMediaRemovalMonitor.h"
 #include "VRUtils.h"
 #include "CVRRecViewModel.h"
 #include <csxhelp/vorec.hlp.hrh>
+
+#include "VRUSBStateHanlder.h"
 
 
 // CONSTANTS
@@ -113,9 +117,6 @@ CVRRecViewModel::~CVRRecViewModel()
 		{
 		delete iCurrentCallHandler;
 		}
-
-	delete iCurrentUSBHandler;
-	
 	delete iCurrentMMCEjectHandler;
 	
 	}
@@ -132,12 +133,6 @@ void CVRRecViewModel::ConstructFromResourceL( TResourceReader& aReader )
 	TRAP_IGNORE( iCurrentCallHandler = CVRSystemEventHandler::NewL() );
 	iCurrentCallHandler->Listen( KPSUidCtsyCallInformation, KCTsyCallState, 
 								 this );
-
-    // for USB
-    iCurrentUSBHandler = CVRUSBEventHandler::NewL();
-	iCurrentUSBHandler->Listen( KPSUidUsbWatcher, KUsbWatcherSelectedPersonality,
-								 this );
-
 	//listen MMC eject
 	iCurrentMMCEjectHandler = CVRMediaRemovalMonitor::NewL(EDriveF, CEikonEnv::Static()->FsSession(), this);
 
@@ -808,6 +803,10 @@ TBool CVRRecViewModel::CBAEnabled() const
 //	
 TInt CVRRecViewModel::ButtonState( TInt aButtonId ) const
 	{
+    if(CVRUSBStateHanlder::IsUsbActive())
+        {
+            return EDimmed;
+        }
 	// Disable rewind button if there's nothing to rewind
 	if ( aButtonId == EButtonRewind &&
 		( Position().Int64() / KVRSecondAsMicroSeconds ) < 1 )
@@ -2209,8 +2208,12 @@ void CVRRecViewModel::HandleUpdateErrorL( TInt aErr )
 			
 //multiple drive
 #else
-		if (VRUtils::MemoDriveL() == VRUtils::DefaultMemoDriveL())
-			{
+		TInt memoDrive = VRUtils::MemoDriveL();
+		TUint status( 0 );
+		VRUtils::GetDriveInfo( memoDrive, status );
+		        
+		if ( status & DriveInfo::EDriveInternal )
+		    {
 			ShowNoteL( R_VR_MEMORY_WARNING, EAknGlobalWarningNote );
 			}
 		else
@@ -2411,45 +2414,6 @@ void CVRRecViewModel::SetInRecordingFlag(TBool aFlag)
 	}
 
 
-// ---------------------------------------------------------------------------
-// CVRRecViewModel::HandleUSBEventL
-// 
-// ---------------------------------------------------------------------------
-//
-void CVRRecViewModel::HandleUSBEventL()
-	{
-	// Fetch the changed value from Pubsub
-    TInt usbState( 0 );
-    RProperty::Get(KPSUidUsbWatcher, KUsbWatcherSelectedPersonality, usbState );
-	if ( !iActive )
-		{
-		return;
-		}
-
-	// Actions to take when playing
-    if ( usbState == KUsbPersonalityIdMS )
-		{
-		ShowNoteL( R_QTN_MEMC_VOREC_NOTE1, EAknGlobalInformationNote );		
-//  when not support multiple drives
-#ifndef RD_MULTIPLE_DRIVE    
-		if (iMemo->MemoStore() != EMemoStorePhoneMemory) 
-			{
-            HandleCommandL( EEikCmdExit);
-			}		
-//multiple drive
-#else
-		if (iMemo->StorageDrive() != VRUtils::DefaultMemoDriveL()) 
-			{
-			
-	        HandleCommandL( EEikCmdExit );
-			}
-#endif			
-		}
-
-	}
-
-
-// End of file
 
 
 // ---------------------------------------------------------------------------
@@ -2462,7 +2426,7 @@ void CVRRecViewModel::HandleMMCEjectEventL()
 	
 	// Actions to take when recording
 	TInt storageDrive = VRUtils::MemoDriveL();   	 
-    if ( storageDrive == EDriveF)
+    if ( storageDrive == EDriveF && !CVRUSBStateHanlder::IsUsbActive())
 		{
         //exit for mmc dismount	
         TWsEvent event;

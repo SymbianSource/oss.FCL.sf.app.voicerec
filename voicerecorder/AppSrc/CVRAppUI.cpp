@@ -51,7 +51,7 @@
 #ifdef RD_MULTIPLE_DRIVE
 #include <driveinfo.h>
 #endif
-
+#include <aknwaitdialog.h>
 _LIT( KVRCommandRecord, "record" );
 
 // ---------------------------------------------------------------------------
@@ -71,15 +71,15 @@ CVRAppUi::CVRAppUi()
 //
 CVRAppUi::~CVRAppUi()
     {
-    if ( iActiveWait.IsStarted() )
-    	{
-    	iActiveWait.AsyncStop();
-    	}
-    
-    if ( iDoorObserver )
-         {
-         iDoorObserver->NotifyExit( MApaEmbeddedDocObserver::EEmpty );
-         }
+    if (iActiveWait.IsStarted())
+        {
+        iActiveWait.AsyncStop();
+        }
+
+    if (iDoorObserver)
+        {
+        iDoorObserver->NotifyExit(MApaEmbeddedDocObserver::EEmpty);
+        }
 
 	delete iErrorUI;
 	FeatureManager::UnInitializeLib();
@@ -119,16 +119,16 @@ void CVRAppUi::ConstructL()
 		if ( memoStore == EMemoStoreMMC )
 			{
             // check if USB is connected, if so, then need to switch to phone memory
-			if (IsUsbActive())
-				{
-				HBufC* noteText = iCoeEnv->AllocReadResourceLC(
-														 R_QTN_MEMC_VOREC_NOTE1 );
-				CAknInformationNote* infoNote =
-									   new( ELeave ) CAknInformationNote( ETrue );
-				infoNote->ExecuteLD( *noteText );
-				CleanupStack::PopAndDestroy( noteText );
-				VRUtils::SetMemoStoreL( EMemoStorePhoneMemory );				
-				}
+            if (CVRUSBStateHanlder::IsUsbActive())
+                {
+                HBufC* noteText = iCoeEnv->AllocReadResourceLC(
+                        R_QTN_MEMC_VOREC_NOTE1 );
+                CAknInformationNote* infoNote =
+                new( ELeave ) CAknInformationNote( ETrue );
+                infoNote->ExecuteLD( *noteText );
+                CleanupStack::PopAndDestroy( noteText );
+                VRUtils::SetMemoStoreL( EMemoStorePhoneMemory );
+                }
 
 			// MMC not available or locked
 			else if ( memoStore && ( mmcInfo.iDriveLocked || !mmcInfo.iDrivePresent ) )
@@ -160,71 +160,51 @@ void CVRAppUi::ConstructL()
 			}
 // for multiple drives
 #else
-		TInt memoDrive = VRUtils::MemoDriveL();
-        TInt defaultDrive = VRUtils::DefaultMemoDriveL();
- 
-        //not default phone memory
-		if ( memoDrive != defaultDrive )
-			{
-             // check if USB is connected, if so, then need to switch to phone memory
-			if (IsUsbActive())
-				{
-				HBufC* noteText = iCoeEnv->AllocReadResourceLC(
-														 R_QTN_MEMC_VOREC_NOTE1 );
-				CAknInformationNote* infoNote =
-									   new( ELeave ) CAknInformationNote( ETrue );
-				infoNote->ExecuteLD( *noteText );
-				CleanupStack::PopAndDestroy( noteText );
-				VRUtils::SetMemoDriveL((TDriveNumber)defaultDrive );
-				}
-			else
-				{
-            	TUint status( 0 );
-	        	VRUtils::GetDriveInfo(memoDrive, status);
-				
-				// Drive not available or locked
-				if ((status & DriveInfo::EDriveLocked) || !(status & DriveInfo::EDrivePresent))
-			    	{
-			    	HBufC* noteText = iCoeEnv->AllocReadResourceLC(R_QTN_MEMC_VOREC_NOTE1 );
-					CAknInformationNote* infoNote = new( ELeave ) CAknInformationNote( ETrue );
-					infoNote->ExecuteLD( *noteText );
-					CleanupStack::PopAndDestroy( noteText );
-					VRUtils::SetMemoDriveL((TDriveNumber)defaultDrive );
-					}
-				else if ( status & DriveInfo::EDriveReadOnly )
-			    	{
-			    	HBufC* noteText = iCoeEnv->AllocReadResourceLC(R_QTN_MEMC_VOREC_NOTE2 );
-					CAknInformationNote* infoNote = new( ELeave ) CAknInformationNote( ETrue );
-					infoNote->ExecuteLD( *noteText );
-					CleanupStack::PopAndDestroy( noteText );				
-					VRUtils::SetMemoDriveL((TDriveNumber)defaultDrive );
-					}
-		    	else if ( status & DriveInfo::EDriveCorrupt )
-			    	{
-			    	// Drive corrupted -> use phone memory
-			    	VRUtils::SetMemoDriveL((TDriveNumber)defaultDrive );
-			    	}
-				}
-			}
 
+        TInt memoDrive = VRUtils::MemoDriveL();
+        if (VRUtils::DriveValid(memoDrive))
+            {
+            VRUtils::SetMemoDriveL((TDriveNumber) memoDrive);
+            }
+        else
+            {
+            TInt defaultDrive = VRUtils::DefaultMemoDriveL(); //eMMC
+            if (defaultDrive == memoDrive)
+                {
+                SetDriveL();
+                }
+            else
+                {
+                if (VRUtils::DriveValid(defaultDrive))
+                    {
+                    VRUtils::SetMemoDriveL((TDriveNumber) defaultDrive);
+                    }
+                else
+                    {
+                    SetDriveL();
+                    }
+                }
+            }
 
-    /***** check if memory is below min value, if yes, close app*****/	
-		RFs& fs( CEikonEnv::Static()->FsSession() );
-		if (SysUtil::DiskSpaceBelowCriticalLevelL( &fs, 0, VRUtils::MemoDriveL()))
-		{			
-	        HBufC* errorText = StringLoader::LoadLC( R_VR_MEMORY_LOW_STOP_WARNING );
-	        CAknErrorNote* dlg = new( ELeave ) CAknErrorNote( ETrue );
-	        dlg->ExecuteLD( *errorText );
-	        CleanupStack::PopAndDestroy( errorText );
-			Exit();
-		}
-	 // check memory size end
+        /***** check if memory is below min value, if yes, close app*****/
+        RFs& fs(CEikonEnv::Static()->FsSession());
+        if (SysUtil::DiskSpaceBelowCriticalLevelL(&fs, 0,
+                VRUtils::MemoDriveL()))
+            {
+            HBufC* errorText = StringLoader::LoadLC(
+                    R_VR_MEMORY_LOW_STOP_WARNING);
+            CAknErrorNote* dlg = new (ELeave) CAknErrorNote(ETrue);
+            dlg->ExecuteLD(*errorText);
+            CleanupStack::PopAndDestroy(errorText);
+            Exit();
+            }
+        // check memory size end
 #endif
 
 		}
 
-	CVRRecView* view = CVRRecView::NewLC(
-									R_VR_RECORDER_VIEW, R_VR_RECVIEW_STATES );
+    CVRRecView* view = CVRRecView::NewLC(R_VR_RECORDER_VIEW,
+            R_VR_RECVIEW_STATES);
 
 	AddViewL( view );
 	iLayoutChangeObserver = view;
@@ -233,13 +213,76 @@ void CVRAppUi::ConstructL()
 	SetDefaultViewL( *view );
 
     // Activate view straight away, if started through new file service	
-	if ( iEikonEnv->StartedAsServerApp() )
-		{
-    	ActivateLocalViewL( TUid::Uid( KVRRecorderViewUID ),
-        	TUid::Uid( EContextRecordNewForRemote ), KNullDesC8 );        	
-		}        
+    if (iEikonEnv->StartedAsServerApp())
+        {
+        ActivateLocalViewL(TUid::Uid(KVRRecorderViewUID), TUid::Uid(
+                EContextRecordNewForRemote), KNullDesC8);
+        }
 
 	}
+
+// ---------------------------------------------------------------------------
+// Make user insert the SD card, and choose SD card as the memo storage
+// ---------------------------------------------------------------------------
+//
+void CVRAppUi::SetDriveL()
+    {
+    if ( VRUtils::DriveValid( EDriveF ) )
+    	{
+    	VRUtils::SetMemoDriveL((TDriveNumber)EDriveF );
+    	}
+    else
+        {
+        if (CVRUSBStateHanlder::IsUsbActive())
+            {
+            ShowDialogForWaitUSBPluggingOutL();
+            Exit();
+
+            }
+        while (!VRUtils::DriveValid(EDriveF))
+            {
+            if (!ShowDialogForWaitStorageCardL())
+                {
+                Exit();
+                }
+            }
+        // Come to here when drive F is valid
+        VRUtils::SetMemoDriveL((TDriveNumber) EDriveF);
+        }
+    }
+
+// ---------------------------------------------------------------------------
+// This method show a dialog to warn user to insert the SD card.
+// ---------------------------------------------------------------------------
+//
+TBool CVRAppUi::ShowDialogForWaitStorageCardL()
+    {
+    HBufC* text = StringLoader::LoadLC( R_QTN_CCOR_INSERT_MMC );
+    CAknQueryDialog* dlg = CAknQueryDialog::NewL();
+    TInt result( dlg->ExecuteLD( R_INSERT_F_CARD_DIALOG, *text ) );
+    CleanupStack::PopAndDestroy( text );
+
+    if ( result )
+    	{
+    	return ETrue;
+    	}
+
+    return EFalse;
+    }
+
+
+TBool CVRAppUi::ShowDialogForWaitUSBPluggingOutL()
+{
+    HBufC* text = StringLoader::LoadLC(R_QTN_USB_MODE_NOTE_MODE);
+    CAknQueryDialog* dlg = CAknQueryDialog::NewL();
+    TInt result(dlg->ExecuteLD(R_INSERT_F_USB_PLUG_IN_DIALOG, *text));
+    CleanupStack::PopAndDestroy(text);
+    if (result)
+        {
+        return ETrue;
+        }
+    return EFalse;    
+}
 
 // ---------------------------------------------------------------------------
 // CVRAppUi::HandleCommandL
@@ -266,17 +309,18 @@ void CVRAppUi::HandleCommandL( TInt aCommand )
 				iView->HandleCommandL( ECmdCancelNote );				
 				}
 
-			// The file service needs to abort if it's still going on
-			if ( iEmbeddedObserver )
-				{
-				CNewFileServiceBase * iNewFileService = NULL;
-				iNewFileService = dynamic_cast<CNewFileServiceBase*>(iEmbeddedObserver);
-				if(iNewFileService != NULL)
-					{
-					iNewFileService->SetErrorCode(KErrAbort);
-					}
-				iEmbeddedObserver->AbortL();
-				}
+            // The file service needs to abort if it's still going on
+            if (iEmbeddedObserver)
+                {
+                CNewFileServiceBase * iNewFileService = NULL;
+                iNewFileService
+                        = dynamic_cast<CNewFileServiceBase*> (iEmbeddedObserver);
+                if (iNewFileService != NULL)
+                    {
+                    iNewFileService->SetErrorCode(KErrAbort);
+                    }
+                iEmbeddedObserver->AbortL();
+                }
 
             Exit();
 			break;
@@ -288,75 +332,75 @@ void CVRAppUi::HandleCommandL( TInt aCommand )
 				iView->HandleCommandL( ECmdCancelNote );				
 				}
 
-			// The file service needs to abort if it's still going on
-			if ( iEmbeddedObserver )
-				{
-				CNewFileServiceBase * iNewFileService = NULL;
-				iNewFileService = dynamic_cast<CNewFileServiceBase*>(iEmbeddedObserver);
-				if(iNewFileService != NULL)
-					{
-					iNewFileService->SetErrorCode(KErrAbort);
-					}
-				iEmbeddedObserver->AbortL();
-				}
-			
-			Exit();
+            // The file service needs to abort if it's still going on
+            if (iEmbeddedObserver)
+                {
+                CNewFileServiceBase * iNewFileService = NULL;
+                iNewFileService
+                        = dynamic_cast<CNewFileServiceBase*> (iEmbeddedObserver);
+                if (iNewFileService != NULL)
+                    {
+                    iNewFileService->SetErrorCode(KErrAbort);
+                    }
+                iEmbeddedObserver->AbortL();
+                }
+
+            Exit();
             break;
-			}
-		case ECmdHelp:
-			{
-			if ( FeatureManager::FeatureSupported( KFeatureIdHelp ) )
-				{
-				if ( iIsSettingsOpen )
-					{
-					CArrayFix<TCoeHelpContext>* contexts = AppHelpContextL();
-					contexts->At(0).iContext = KVOREC_HLP_SETTINGS;
-					HlpLauncher::LaunchHelpApplicationL( iEikonEnv->WsSession(),
-													contexts );
-					}
-				else
-					{
-					HlpLauncher::LaunchHelpApplicationL( iEikonEnv->WsSession(),
-													AppHelpContextL() );
-					}
-				}
-			break;
-			}
-		case ECmdSettings:
-			{
-			if ( FeatureManager::FeatureSupported( KFeatureIdMmc ) ||
-                 VRUtils::FeatureEnabled( EVRFeatureShowQualitySetting ) )
-				{
-				iIsSettingsOpen = ETrue;
-				CVRSettingsDialog* settingsDlg = CVRSettingsDialog::NewL();
-				settingsDlg->ExecuteLD( R_VR_SETTINGS_DIALOG );
-				iIsSettingsOpen = EFalse;
-				}
-			break;
-			}
-       	case ECmdNewFileServiceNotify:
-   			{
-			if ( iActiveWait.IsStarted() )
-				{
-				iActiveWait.AsyncStop();
-				}
-			break;
-   			}
-       	case ECmdEmbeddedRecordingReady:
-   			{
-   			if ( iEmbeddedObserver )
-   				{
-   				TBool canExit( ETrue );
-   				
-				TVRSelectionStyle selStyle;
-				TPtrC memoFile( SelectionProviderL()->
-								GetSelectedFilesLC( selStyle )->
-								MdcaPoint( 0 ) );
-				if ( memoFile.Length() > 0 )
-					{   		
-					TFileName myFilename( memoFile );
-					canExit = iEmbeddedObserver->FileCompleteL( myFilename );
-					}
+            }
+        case ECmdHelp:
+            {
+            if (FeatureManager::FeatureSupported(KFeatureIdHelp))
+                {
+                if (iIsSettingsOpen)
+                    {
+                    CArrayFix<TCoeHelpContext>* contexts = AppHelpContextL();
+                    contexts->At(0).iContext = KVOREC_HLP_SETTINGS;
+                    HlpLauncher::LaunchHelpApplicationL(
+                            iEikonEnv->WsSession(), contexts);
+                    }
+                else
+                    {
+                    HlpLauncher::LaunchHelpApplicationL(
+                            iEikonEnv->WsSession(), AppHelpContextL());
+                    }
+                }
+            break;
+            }
+        case ECmdSettings:
+            {
+            if (FeatureManager::FeatureSupported(KFeatureIdMmc)
+                    || VRUtils::FeatureEnabled(EVRFeatureShowQualitySetting))
+                {
+                iIsSettingsOpen = ETrue;
+                CVRSettingsDialog* settingsDlg = CVRSettingsDialog::NewL();
+                settingsDlg->ExecuteLD(R_VR_SETTINGS_DIALOG);
+                iIsSettingsOpen = EFalse;
+                }
+            break;
+            }
+        case ECmdNewFileServiceNotify:
+            {
+            if (iActiveWait.IsStarted())
+                {
+                iActiveWait.AsyncStop();
+                }
+            break;
+            }
+        case ECmdEmbeddedRecordingReady:
+            {
+            if (iEmbeddedObserver)
+                {
+                TBool canExit(ETrue);
+
+                TVRSelectionStyle selStyle;
+                TPtrC memoFile(SelectionProviderL()-> GetSelectedFilesLC(
+                        selStyle)-> MdcaPoint(0));
+                if (memoFile.Length() > 0)
+                    {
+                    TFileName myFilename(memoFile);
+                    canExit = iEmbeddedObserver->FileCompleteL(myFilename);
+                    }
 
 				// destroy array from GetSelectedFilesLC()
 				CleanupStack::PopAndDestroy();
@@ -404,12 +448,12 @@ void CVRAppUi::HandleResourceChangeL( TInt aType )
 	{
 	CAknViewAppUi::HandleResourceChangeL( aType );
 
-	if ( aType == KEikDynamicLayoutVariantSwitch ||
-		 aType == KAknsMessageSkinChange )
-		{
-		iLayoutChangeObserver->LayoutChangedL( aType );
-		}
-	}
+    if (aType == KEikDynamicLayoutVariantSwitch || aType
+            == KAknsMessageSkinChange)
+        {
+        iLayoutChangeObserver->LayoutChangedL(aType);
+        }
+    }
 
 // ---------------------------------------------------------------------------
 // CVRAppUi::RecordNewFileL
@@ -439,24 +483,23 @@ TBool CVRAppUi::ProcessCommandParametersL( TApaCommand /*aCommand*/,
     TFileName& aDocumentName, const TDesC8& aTail )
     {
 
-	// Check if we got "-record" as command line parameter
-	// convert 8-bit descriptor to a 16-bit one without altering data.
-	const TUint16* ptr16 = reinterpret_cast< const TUint16* >(
-												   aTail.Ptr() );
-	TPtrC16 tail( ptr16, aTail.Size() >> 1);	
+    // Check if we got "-record" as command line parameter
+    // convert 8-bit descriptor to a 16-bit one without altering data.
+    const TUint16* ptr16 = reinterpret_cast<const TUint16*> (aTail.Ptr());
+    TPtrC16 tail(ptr16, aTail.Size() >> 1);
 
-	if ( aDocumentName.Compare( KVRCommandRecord ) == 0
-		|| tail.Compare( KVRCommandRecord ) == 0 )
-		{
-		// Enter recording context
-		ActivateLocalViewL( TUid::Uid( KVRRecorderViewUID ),
-				TUid::Uid( EContextRecordNewNormal ), KNullDesC8 );
-		return EFalse;
-		}
+    if (aDocumentName.Compare(KVRCommandRecord) == 0 || tail.Compare(
+            KVRCommandRecord) == 0)
+        {
+        // Enter recording context
+        ActivateLocalViewL(TUid::Uid(KVRRecorderViewUID), TUid::Uid(
+                EContextRecordNewNormal), KNullDesC8);
+        return EFalse;
+        }
     else // No record parameter, start normally
         {
-    	ActivateLocalViewL( TUid::Uid( KVRRecorderViewUID ),
-	    	TUid::Uid( EContextEmptyNormal ), KNullDesC8 );        
+        ActivateLocalViewL(TUid::Uid(KVRRecorderViewUID), TUid::Uid(
+                EContextEmptyNormal), KNullDesC8);
         }
         
 	if ( !ConeUtils::FileExists( aDocumentName ) )
@@ -471,9 +514,10 @@ TBool CVRAppUi::ProcessCommandParametersL( TApaCommand /*aCommand*/,
 // 
 // ---------------------------------------------------------------------------
 //
-void CVRAppUi::HandleApplicationSpecificEventL(TInt aType,const TWsEvent& aEvent)
+void CVRAppUi::HandleApplicationSpecificEventL(TInt aType,
+        const TWsEvent& aEvent)
     {
-    if( aType == EAknSoftkeyExit )
+    if( aType == EAknSoftkeyExit || aType == KAknShutOrHideApp)
     	{
     	Exit();
     	}
@@ -489,16 +533,5 @@ void CVRAppUi::SetEmbeddedObserver( MVREmbeddedObserver* aObserver )
     {
     iEmbeddedObserver = aObserver;
     }
-    
-    
-// ---------------------------------------------------------------------------
-// CVRAppUi::IsUsbActive  
-// ---------------------------------------------------------------------------
-//
-TBool CVRAppUi::IsUsbActive()
-    {
-    TInt usbState;
-    TInt err = RProperty::Get(  KPSUidUsbWatcher, KUsbWatcherSelectedPersonality,usbState);
-    return !err && usbState == KUsbPersonalityIdMS;
-    }
+
 // End of file

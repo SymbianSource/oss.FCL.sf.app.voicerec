@@ -25,10 +25,14 @@
 
 // INCLUDES
 #include <aknview.h>
+#include <VoiceRecorderContexts.h>
+#include <voicerecorder.rsg>
+#include <aknwaitdialog.h>
+
 #include "MVRSelectionProvider.h"
 #include "MVRLayoutChangeObserver.h"
-#include <VoiceRecorderContexts.h>
 #include "voicerecorder.hrh"
+#include "VRUSBStateHanlder.h"
 
 // FORWARD DECLARATIONS
 class CAknLaunchAppService;
@@ -39,16 +43,19 @@ class CVRRecViewModel;
 
 // CLASS DEFINITION
 /**
-* CVRRecView is an CAknView inherited view class that implements
-* the recorder view functionality of Voicer Recorder.
-* It owns the view container (which, in turn, owns all the ui controls)
-* and the view model.
-*/
-class CVRRecView 
-	: public CAknView, public MVRSelectionProvider, 
-	  public MVRLayoutChangeObserver
-	{
-	private:	// nested classes
+ * CVRRecView is an CAknView inherited view class that implements
+ * the recorder view functionality of Voicer Recorder.
+ * It owns the view container (which, in turn, owns all the ui controls)
+ * and the view model.
+ */
+class CVRRecView : public CAknView,
+        public MVRSelectionProvider,
+        public MVRLayoutChangeObserver,
+        public MVRUSBStateObserver,
+        public MProgressDialogCallback
+    {
+private:
+    // nested classes
 
         /*
         * One shot class for model activation. Receives a pointer to
@@ -265,32 +272,39 @@ class CVRRecView
 								  TUid aCustomMessageId,
 								  const TDesC8& aCustomMessage );
 
-		/*
-		* Called by iModelActivator object after model has been
-		* fully activated.
-		* @param aRecView Always a valid pointer to CVRRecView object
-		* @return Return value required by TCallBack, not used.
-		*/
-		static TInt ActivationCallBack( TAny* aRecView );
-		
-		/*
-		* Non-static method called by ActivationCallBack. Activates
-		* the actual UI container and deletes the empty one.
-		*/
-		void ActivateContainerL();
-								  
-	private: // data
-		
-		/**
-		* Pointer to the UI control container. Owned.
-		*/
-		CVRRecViewContainer* iContainer;
-		
-		/**
-		* Pointer to the container that is displayed during
-		* model construction. Owned
-		*/
-		CVRRecViewActivationContainer* iActivationContainer;		
+    /*
+     * Called by iModelActivator object after model has been
+     * fully activated.
+     * @param aRecView Always a valid pointer to CVRRecView object
+     * @return Return value required by TCallBack, not used.
+     */
+    static TInt ActivationCallBack(TAny* aRecView);
+
+    /*
+     * Non-static method called by ActivationCallBack. Activates
+     * the actual UI container and deletes the empty one.
+     */
+    void ActivateContainerL();    
+   
+public:
+    virtual TInt HandleUsbPlugInL();
+    virtual TInt HandleUsbPlugOutL();
+    
+    virtual void DialogDismissedL( TInt aButtonId );
+
+private:
+    // data
+
+    /**
+     * Pointer to the UI control container. Owned.
+     */
+    CVRRecViewContainer* iContainer;
+
+    /**
+     * Pointer to the container that is displayed during
+     * model construction. Owned
+     */
+    CVRRecViewActivationContainer* iActivationContainer;
 
 		/**
 		* Pointer to the view model (statemachine). Owned.
@@ -308,14 +322,19 @@ class CVRRecView
 		*/
 		CVRRecViewModelActivator* iModelActivator;
 
-		/**
-		* The command that passed to Handlecommand
-		* 
-		*/
-        TInt iCommand;
-        
-        CAknLaunchAppService* iLaunchService;
-	};
+    /**
+     * The command that passed to Handlecommand
+     * 
+     */
+    TInt iCommand;
+
+    CAknLaunchAppService* iLaunchService;
+    
+    CAknWaitDialog* iUsbWaitDialog;
+    
+    CVRUSBStateHanlder* iUSBStateHandler;
+    
+    };
 
 #endif // __CVRRECVIEW_H__
 

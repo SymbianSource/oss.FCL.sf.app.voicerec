@@ -38,7 +38,6 @@
 #include "MVRVolumeChangeObserver.h"
 
 #include "MVRSystemEventObserver.h"
-#include "MVRUSBEventObserver.h"
 #include "MVRMediaRemovalObserver.h"
 
 
@@ -56,7 +55,6 @@ class MVRObserver;
 class TResourceReader;
 class TVRState;
 class CVRSystemEventHandler;
-class CVRUSBEventHandler;
 class CVRMediaRemovalMonitor;
 
 
@@ -71,7 +69,7 @@ NONSHARABLE_CLASS( CVRRecViewModel ):
 	  public MVRStateInfoModel, public MVRObserver,
 	  public MVRKeyObserver, public MVRVolumeChangeObserver,
       public MVRSystemEventObserver,
-      public MVRUSBEventObserver, public MVRMediaRemovalObserver      
+      public MVRMediaRemovalObserver      
 	{
 	private:	// nested classes
 
@@ -315,10 +313,6 @@ NONSHARABLE_CLASS( CVRRecViewModel ):
 	
 		void HandleSystemEventL();
 
-
-		void HandleUSBEventL();
-		
-		
 		void HandleMMCEjectEventL();
 		
 	public: // new methods
@@ -656,11 +650,6 @@ NONSHARABLE_CLASS( CVRRecViewModel ):
 		*/
 		CVRSystemEventHandler* iCurrentCallHandler;
 
-		/**
-		* For listening USB events. Owned.
-		*/
-		CVRUSBEventHandler* iCurrentUSBHandler;
-		
 		CVRMediaRemovalMonitor* iCurrentMMCEjectHandler;
 
 

@@ -27,11 +27,12 @@
 #include <apparc.h>			// MApaEmbeddedDocObserver
 
 #include "MVREmbeddedObserver.h"
-
+#include "VRUSBStateHanlder.h"
 // FORWARD DECLARATIONS
 class MVRSelectionProvider;
 class CErrorUI;
 class MVRLayoutChangeObserver;
+class CAknWaitDialog;
 
 // CLASS DECLARATION
 /**
@@ -104,7 +105,10 @@ class CVRAppUi
 		*/
 		
 		void HandleApplicationSpecificEventL(TInt aType, const TWsEvent& aEvent);
-		
+
+	private: // from MVRUSBEventObserver
+		void HandleUSBEventL();
+	
 	private: // new methods
 
 		/**
@@ -114,12 +118,23 @@ class CVRAppUi
 		*/
 		MVRSelectionProvider* SelectionProviderL();
 
-		/**
-		* Check USB connection state
-		* interface.
-		* @return True/False
-		*/        
-        TBool IsUsbActive();
+       	
+       	/**
+       	* This method show a dialog to warn user to insert the SD card.
+       	* @return if user insert the SD card or not
+       	*/
+       	static TBool ShowDialogForWaitStorageCardL();
+       	
+        /**
+        * This method show a dialog to warn user to plug the usb cable.
+        * @return if user plug the usb cable or not
+        */
+        static TBool ShowDialogForWaitUSBPluggingOutL();       	
+       	
+       	/**
+       	 * Make user insert the SD card, and choose SD card as the memo storage
+       	 */
+       	void SetDriveL();
 
 	private: // data
 		/**
@@ -148,7 +163,8 @@ class CVRAppUi
 		/*
 		* For help context, whether settings page is active.
 		*/
-		TBool iIsSettingsOpen;
+		TBool iIsSettingsOpen;		
+
 
 	};
 

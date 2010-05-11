@@ -189,6 +189,14 @@ class VRUtils
 		*/		
        	IMPORT_C static TInt AACAudioModeL();
 
+		/**
+		* This method checks the drive is valid or not
+		* @param aDrive is the drive id
+		* @param aNoteId store the note id
+	    * @return The default memo store
+		*/
+       	IMPORT_C static TBool DriveValid( const TInt aDrive );
+       	
 #ifdef RD_MULTIPLE_DRIVE    	
        	/**
         * This method sets the default memo store setting (to support multipledrives)
@@ -208,7 +216,7 @@ class VRUtils
 		* This method returns the current status of Drive (inserted/locked/etc...)
 		* @param aDriveInfo MMC status
 		*/
-		IMPORT_C static void GetDriveInfo( TInt aDrive, TUint& aDriveInfo );
+		IMPORT_C static TInt GetDriveInfo( TInt aDrive, TUint& aDriveInfo );
 
         /**
         * This method returns the default memo drive setting

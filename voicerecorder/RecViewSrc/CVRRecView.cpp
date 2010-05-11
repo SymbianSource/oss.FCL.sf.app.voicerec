@@ -50,11 +50,38 @@
 #include "CVRRecViewActivationContainer.h"
 #include "CVRRecViewModel.h"
 #include "VRUtils.h"
+#include "VRUSBStateHanlder.h"
 
 // CONSTANTS
-const TUid KUidMmsEditor = { 0x100058DE };
-const TUid KUidMailEditor = { 0x101F4CD6 };
+const TUid KUidMmsEditor =
+    {
+    0x100058DE
+    };
+const TUid KUidMailEditor =
+    {
+    0x101F4CD6
+    };
 
+inline TBool ShowDialogForWaitUSBPluggingOutL()
+    {
+    HBufC* text = StringLoader::LoadLC(R_QTN_USB_MODE_NOTE_MODE);
+    CAknQueryDialog* dlg = CAknQueryDialog::NewL();
+    TInt result(dlg->ExecuteLD(R_INSERT_F_USB_PLUG_IN_DIALOG, *text));
+    CleanupStack::PopAndDestroy(text);
+    if (result)
+        {
+        return ETrue;
+        }
+    return EFalse;
+    }
+
+inline TInt WaitDialogForUSBPluggingOut(CAknWaitDialog*& aDialog)
+    {
+    aDialog = new (ELeave) CAknWaitDialog(
+            (REINTERPRET_CAST(CEikDialog**,&aDialog)));
+    aDialog->SetTone(CAknNoteDialog::EConfirmationTone);
+    return aDialog->ExecuteLD(R_VOREC_USB_CONNECTED_DIALOG);
+    }
 
 // ================= MEMBER FUNCTIONS ========================================
 
@@ -63,12 +90,12 @@ const TUid KUidMailEditor = { 0x101F4CD6 };
 // 
 // ---------------------------------------------------------------------------
 //
-CVRRecView::CVRRecViewModelActivator::CVRRecViewModelActivator( 
-	CVRRecViewModel* aModel )
-	: CAsyncOneShot( EPriorityNormal ), iModel( aModel ),
-	  iContext( EContextEmptyNormal )
-	{
-	}
+CVRRecView::CVRRecViewModelActivator::CVRRecViewModelActivator(
+        CVRRecViewModel* aModel) :
+    CAsyncOneShot(EPriorityNormal), iModel(aModel), iContext(
+            EContextEmptyNormal)
+    {
+    }
 
 
 // ---------------------------------------------------------------------------
@@ -157,14 +184,19 @@ CVRRecView::~CVRRecView()
 		AppUi()->RemoveFromViewStack( *this, iActivationContainer );
 		}
 
-	delete iContainer;
-	delete iActivationContainer;
-	delete iModel;
-	delete iSendUi;
-	delete iModelActivator;
-	delete iLaunchService;
-	}
+    delete iContainer;
+    delete iActivationContainer;
+    delete iModel;
+    delete iSendUi;
+    delete iModelActivator;
+    delete iLaunchService;
+    delete iUSBStateHandler;
 
+    if (iUsbWaitDialog)
+        {
+        TRAP_IGNORE(iUsbWaitDialog->ProcessFinishedL());
+        }
+    }
 
 // ---------------------------------------------------------------------------
 // CVRRecView::ConstructL
@@ -181,13 +213,19 @@ void CVRRecView::ConstructL( TInt aViewResourceId, TInt aModelResourceId )
 	iModel->ConstructFromResourceL( reader );
 	CleanupStack::PopAndDestroy(); // reader;
 
-	// Create SendUi (Send as MMS, E-Mail, etc...)
-	iSendUi = CSendUi::NewL();
-	
-	iModelActivator = new(ELeave) CVRRecViewModelActivator( iModel );
- //       iCommand = 0;
-	}
+    // Create SendUi (Send as MMS, E-Mail, etc...)
+    iSendUi = CSendUi::NewL();
 
+    iModelActivator = new (ELeave) CVRRecViewModelActivator(iModel);
+
+    iUSBStateHandler = CVRUSBStateHanlder::NewL(this);
+
+    if (CVRUSBStateHanlder::IsUsbActive())
+        {
+        ShowDialogForWaitUSBPluggingOutL();
+        AppUi()->Exit();
+        }
+    }
 
 // ---------------------------------------------------------------------------
 // CVRRecView::Id
@@ -195,8 +233,11 @@ void CVRRecView::ConstructL( TInt aViewResourceId, TInt aModelResourceId )
 // ---------------------------------------------------------------------------
 //
 TUid CVRRecView::Id() const
-	{
-	const TUid KVRRecViewUID = { KVRRecorderViewUID };
+    {
+    const TUid KVRRecViewUID =
+        {
+        KVRRecorderViewUID
+        };
 
 	return KVRRecViewUID;
 	}
@@ -267,52 +308,57 @@ void CVRRecView::HandleCommandL( TInt aCommandId )
 	        VRUtils::MemoStoreDirectoryL( path );
 	        TInt sortMode = 0;
 
-	        CAiwGenericParamList* inParams = CAiwGenericParamList::NewLC();
-            inParams->AppendL(TAiwGenericParam(
-                EGenericParamDir, TAiwVariant( path ) ) );
-            inParams->AppendL(TAiwGenericParam(
-                EGenericParamDir, TAiwVariant( sortMode ) ) );
+            CAiwGenericParamList* inParams = CAiwGenericParamList::NewLC();
+            inParams->AppendL(TAiwGenericParam(EGenericParamDir, TAiwVariant(
+                    path)));
+            inParams->AppendL(TAiwGenericParam(EGenericParamDir, TAiwVariant(
+                    sortMode)));
             iLaunchService = CAknLaunchAppService::NewL(
-                TUid::Uid( 0x101F84EB ), NULL, inParams );
-            CleanupStack::PopAndDestroy( inParams );
-			break;
-			}
-		case ECmdSendVia:
-			{
-			iModel->SendViaL( iSendUi );
-			break;
-			}
-					
-		// Handles Middle SoftKey presses in this view
-		case ECmdMSK:
-			{
-			// Don't forward the command if dimmed button was clicked or 
-			// if model can't handle commands
-			if ( iModel->ButtonState( iContainer->FocusedButton() ) == EDimmed ||
-				!iModel->CanHandleCommands() )
-				{
-				break;
-				}
-			
-			// Fetch the command to execute 
-			TInt commandId( iModel->CommandId( iContainer->FocusedButton() ) );
-			
-			iModel->HandleCommandL( commandId );
-			AppUi()->HandleCommandL( commandId );
-			
-			iContainer->UpdateButtonPanel( EVRUpdateStateChange );
-			break;
-			}
-		
-		default:
-			{
-			iModel->HandleCommandL( aCommandId );
-			AppUi()->HandleCommandL( aCommandId );
-			break;
-			}
-		}
-	}
+                    TUid::Uid(0x101F84EB), NULL, inParams);
+            CleanupStack::PopAndDestroy(inParams);
+            break;
+            }
+        case ECmdSendVia:
+            {
+            iModel->SendViaL(iSendUi);
+            break;
+            }
 
+            // Handles Middle SoftKey presses in this view
+        case ECmdMSK:
+            {
+            // Don't forward the command if dimmed button was clicked or 
+            // if model can't handle commands
+            if (iModel->ButtonState(iContainer->FocusedButton()) == EDimmed
+                    || !iModel->CanHandleCommands())
+                {
+                break;
+                }
+
+            // Fetch the command to execute 
+            TInt commandId(iModel->CommandId(iContainer->FocusedButton()));
+
+            iModel->HandleCommandL(commandId);
+            AppUi()->HandleCommandL(commandId);
+
+            iContainer->UpdateButtonPanel(EVRUpdateStateChange);
+            break;
+            }
+        case ECmdUSBChange:
+            if (iUsbWaitDialog)
+                {
+                iUsbWaitDialog->ProcessFinishedL();
+                }
+            iContainer->UpdateButtonPanel(EVRUpdateStateChange);
+            break;
+        default:
+            {
+            iModel->HandleCommandL(aCommandId);
+            AppUi()->HandleCommandL(aCommandId);
+            break;
+            }
+        }
+    }
 
 // ---------------------------------------------------------------------------
 // CVRRecView::DynInitMenuPaneL
@@ -328,9 +374,16 @@ void CVRRecView::DynInitMenuPaneL( TInt aResourceId, CEikMenuPane* aMenuPane )
 			{
             // Check if HELP is enabled in FeatureManager, if not, disable the Help menu item
             if (!FeatureManager::FeatureSupported(KFeatureIdHelp))
-              {
-                  aMenuPane->SetItemDimmed(ECmdHelp, ETrue);
-              }
+                {
+                aMenuPane->SetItemDimmed(ECmdHelp, ETrue);
+                }
+            if (CVRUSBStateHanlder::IsUsbActive())
+                {
+                aMenuPane->SetItemDimmed(ECmdRecord, ETrue);
+                aMenuPane->SetItemDimmed(ECmdDelete, ETrue);
+                aMenuPane->SetItemDimmed(ECmdRename, ETrue);
+                aMenuPane->SetItemDimmed(ECmdGoToMyClips, ETrue);
+                }
 
 			AddSendToMenuL( aResourceId, aMenuPane );
 			break;
@@ -348,17 +401,21 @@ void CVRRecView::DynInitMenuPaneL( TInt aResourceId, CEikMenuPane* aMenuPane )
                   aMenuPane->SetItemDimmed(ECmdHelp, ETrue);
                   }
 
-				appuid = container->Application()->AppDllUid();
-				if ( ( appuid == KUidMmsEditor ) ||
-					 ( appuid == KUidMailEditor ) )
-					{
-					aMenuPane->SetItemDimmed( ECmdSaveAttachment, ETrue );
-					}
-				else
-					{
-					AddSendToMenuL( aResourceId, aMenuPane );
-					}
-				}
+                if (CVRUSBStateHanlder::IsUsbActive())
+                    {
+                    aMenuPane->SetItemDimmed(ECmdSaveAttachment, ETrue);
+                    }
+
+                appuid = container->Application()->AppDllUid();
+                if ((appuid == KUidMmsEditor) || (appuid == KUidMailEditor))
+                    {
+                    aMenuPane->SetItemDimmed(ECmdSaveAttachment, ETrue);
+                    }
+                else
+                    {
+                    AddSendToMenuL(aResourceId, aMenuPane);
+                    }
+                }
 
 			break;
 			}
@@ -380,26 +437,44 @@ void CVRRecView::DynInitMenuPaneL( TInt aResourceId, CEikMenuPane* aMenuPane )
 				aMenuPane->SetItemDimmed(ECmdHelp, ETrue);
 				}
 
-			// if recording already started, not allow to start recording again.	
-  			if (iModel->GetInRecordingFlag())
-				{
-				aMenuPane->SetItemDimmed(ECmdRecord, ETrue);
-				aMenuPane->SetItemDimmed(ECmdSettings, ETrue);
-                iModel->SetInRecordingFlag(EFalse);
-				}
-   
-         break; 
-			}
+            if (CVRUSBStateHanlder::IsUsbActive())
+                {
+                aMenuPane->SetItemDimmed(ECmdRecord, ETrue);
+                aMenuPane->SetItemDimmed(ECmdGoToMyClips, ETrue);
 
-		case R_VR_REC_MENUPANE_INCALL_RECORDING_DISABLED:
-			{
-			// Check if HELP is enabled in FeatureManager, if not, disable the Help menu item
-			if (!FeatureManager::FeatureSupported(KFeatureIdHelp))
-				{
-				aMenuPane->SetItemDimmed(ECmdHelp, ETrue);
-				}
-            break; 
-			}
+                }
+
+            // if recording already started, not allow to start recording again.    
+            if (iModel->GetInRecordingFlag())
+                {
+                aMenuPane->SetItemDimmed(ECmdRecord, ETrue);
+                aMenuPane->SetItemDimmed(ECmdSettings, ETrue);
+                iModel->SetInRecordingFlag(EFalse);
+                }
+
+            if (CVRUSBStateHanlder::IsUsbActive())
+                {
+                aMenuPane->SetItemDimmed(ECmdRecord, ETrue);
+                aMenuPane->SetItemDimmed(ECmdGoToMyClips, ETrue);
+                }
+
+            break;
+            }
+
+        case R_VR_REC_MENUPANE_INCALL_RECORDING_DISABLED:
+            {
+            // Check if HELP is enabled in FeatureManager, if not, disable the Help menu item
+            if (!FeatureManager::FeatureSupported(KFeatureIdHelp))
+                {
+                aMenuPane->SetItemDimmed(ECmdHelp, ETrue);
+                }
+
+            if (CVRUSBStateHanlder::IsUsbActive())
+                {
+                aMenuPane->SetItemDimmed(ECmdGoToMyClips, ETrue);
+                }
+            break;
+            }
 
 		case R_VOREC_GS_SETTINGS_MENUPANE:
 			{
@@ -436,15 +511,14 @@ MDesCArray* CVRRecView::GetSelectedFilesLC( TVRSelectionStyle& aStyle ) const
 // 
 // ---------------------------------------------------------------------------
 //
-void CVRRecView::DoActivateL( const TVwsViewId& aPrevViewId,
-							 TUid aCustomMessageId,
-							 const TDesC8& aCustomMessage )
-	{
-	TRAP_IGNORE( ReallyDoActivateL( aPrevViewId, 
-									aCustomMessageId, 
-									aCustomMessage ) );
-	}
+void CVRRecView::DoActivateL(const TVwsViewId& aPrevViewId,
+        TUid aCustomMessageId, const TDesC8& aCustomMessage)
+    {
+    TRAP_IGNORE( ReallyDoActivateL( aPrevViewId,
+                    aCustomMessageId,
+                    aCustomMessage ) );
 
+    }
 
 // ---------------------------------------------------------------------------
 // CVRRecView::DoDeactivate
@@ -487,16 +561,17 @@ void CVRRecView::ViewDeactivated()
 #endif
 
     TInt err = 0;
-    
-	if ( !iModel->IncomingCall() && ( iModel->VisualStateId() == EStatePlaying ||
-         iModel->VisualStateId() == EStateRecording ) )
-		{
-        
-        if (iModel->VisualStateId() == EStateRecording && iCommand ==  ECmdCancelNote )
-        	{
-		    TRAP_IGNORE (iModel->HandleCommandL( ECmdSaveAttachment ));	
-        	}
-        
+
+    if (!iModel->IncomingCall() && (iModel->VisualStateId() == EStatePlaying
+            || iModel->VisualStateId() == EStateRecording))
+        {
+
+        if (iModel->VisualStateId() == EStateRecording && iCommand
+                == ECmdCancelNote)
+            {
+            TRAP_IGNORE (iModel->HandleCommandL( ECmdSaveAttachment ));
+            }
+
         // Is autolock activating? 
         RProperty prop;
         TInt val;
@@ -508,14 +583,15 @@ void CVRRecView::ViewDeactivated()
     		
 		//messy, if it is ACC format, stop it. in the future when Pause is supported, it needs change 
 #ifdef    __AAC_ENCODER_PLUGIN 
-    			if  ((iModel->Quality() == EQualityHigh) && (GetStateId() == EStateRecording))
-					{
-					TRAP_IGNORE (iModel->HandleCommandL( ECmdAutoStopInterrupted ));
-					}
-    			else
-    				{
-					TRAP( err, iModel->HandleCommandL( ECmdPause ) );	    		
-    				}
+            if ((iModel->Quality() == EQualityHigh) && (GetStateId()
+                    == EStateRecording))
+                {
+                TRAP_IGNORE (iModel->HandleCommandL( ECmdAutoStopInterrupted ));
+                }
+            else
+                {
+                TRAP( err, iModel->HandleCommandL( ECmdPause ) );
+                }
 
 #else			
 	    		TRAP( err, iModel->HandleCommandL( ECmdPause ) );	
@@ -525,11 +601,12 @@ void CVRRecView::ViewDeactivated()
 				if( err )
 					{	
 #ifdef _DEBUG
-					RDebug::Print( _L("CVRRecView::ViewDeactivated, PauseError Id: %d"), 
-					err );
-#endif		
-					}	
-    		}
+                RDebug::Print(
+                        _L("CVRRecView::ViewDeactivated, PauseError Id: %d"),
+                        err);
+#endif      
+                }
+            }
 
 		}
 	else
@@ -549,8 +626,7 @@ void CVRRecView::ViewDeactivated()
 // ---------------------------------------------------------------------------
 //
 void CVRRecView::ViewActivatedL(const TVwsViewId& aPrevViewId,
-								TUid aCustomMessageId,
-								const TDesC8& aCustomMessage)
+        TUid aCustomMessageId, const TDesC8& aCustomMessage)
     {
     // dismiss sound player / file manager if it was active so that recording
     // view becomes visible
@@ -579,39 +655,38 @@ CEikButtonGroupContainer* CVRRecView::Cba() const
 // Use CSendAppUi to display the Send cascade
 // ---------------------------------------------------------------------------
 //
-void CVRRecView::AddSendToMenuL( TInt aResourceId, CEikMenuPane* aMenuPane )
-	{
-	// If the focused file is closed content (e.g. a DRM file or a protected
-	// MIDI file), the whole Send option mustn't be shown.
-	CCommonContentPolicy* ccp = CCommonContentPolicy::NewLC();
-	MDesCArray* filenames = iModel->GetSelectedFilesLC();
-	if ( filenames->MdcaCount() > 0 &&
-		!ccp->IsClosedFileL( filenames->MdcaPoint( 0 ) ) )
-		{
-		// Set proper capabilities
-		TSendingCapabilities capabilities( 0, KVRSendUiMsgSize,
-								TSendingCapabilities::ESupportsAttachments );
+void CVRRecView::AddSendToMenuL(TInt aResourceId, CEikMenuPane* aMenuPane)
+    {
+    // If the focused file is closed content (e.g. a DRM file or a protected
+    // MIDI file), the whole Send option mustn't be shown.
+    CCommonContentPolicy* ccp = CCommonContentPolicy::NewLC();
+    MDesCArray* filenames = iModel->GetSelectedFilesLC();
+    if (filenames->MdcaCount() > 0 && !ccp->IsClosedFileL(
+            filenames->MdcaPoint(0)))
+        {
+        // Set proper capabilities
+        TSendingCapabilities capabilities(0, KVRSendUiMsgSize,
+                TSendingCapabilities::ESupportsAttachments);
 
-		// We want the send menuitem after a specific item
-		TInt itemPosForSend( 0 );
-		if ( aResourceId == R_VR_REC_MENUPANE_DEFAULT )
-			{
-			aMenuPane->ItemAndPos( ECmdRename, itemPosForSend );
-			}
-		else if ( aResourceId == R_VR_REC_MENUPANE_VIEWER )
-			{
-			aMenuPane->ItemAndPos( ECmdSaveAttachment, itemPosForSend );
-			}
-		itemPosForSend++;
-
-		iSendUi->AddSendMenuItemL( *aMenuPane, 
-								   itemPosForSend, 
-								   ECmdSendVia, 
-								   capabilities );
-		}
-	CleanupStack::PopAndDestroy( 2 ); // ccp, filenames
-	}
-
+        // We want the send menuitem after a specific item
+        TInt itemPosForSend(0);
+        if (aResourceId == R_VR_REC_MENUPANE_DEFAULT)
+            {
+            aMenuPane->ItemAndPos(ECmdRename, itemPosForSend);
+            }
+        else if (aResourceId == R_VR_REC_MENUPANE_VIEWER)
+            {
+            aMenuPane->ItemAndPos(ECmdSaveAttachment, itemPosForSend);
+            }
+        itemPosForSend++;
+        if (!CVRUSBStateHanlder::IsUsbActive())
+            {
+            iSendUi->AddSendMenuItemL(*aMenuPane, itemPosForSend,
+                    ECmdSendVia, capabilities);
+            }
+        }
+    CleanupStack::PopAndDestroy(2); // ccp, filenames
+    }
 
 // ---------------------------------------------------------------------------
 // CVRRecView::LayoutChangedL
@@ -633,22 +708,21 @@ void CVRRecView::LayoutChangedL( TInt aType )
 // 
 // ---------------------------------------------------------------------------
 //
-void CVRRecView::ReallyDoActivateL( const TVwsViewId& /*aPrevViewId*/,
-									TUid aCustomMessageId,
-									const TDesC8& /*aCustomMessage*/ )
-	{
-	// Don't do anything if activation is ongoing
-	if ( iActivationContainer )
-	    {
-	    return;
-	    }
-	
-	// If container exists, we have already been activated
-	// Deactivate needed before new activation.
-	if ( iContainer )
-		{
-		DoDeactivate();
-		}
+void CVRRecView::ReallyDoActivateL(const TVwsViewId& /*aPrevViewId*/,
+        TUid aCustomMessageId, const TDesC8& /*aCustomMessage*/)
+    {
+    // Don't do anything if activation is ongoing
+    if (iActivationContainer)
+        {
+        return;
+        }
+
+    // If container exists, we have already been activated
+    // Deactivate needed before new activation.
+    if (iContainer)
+        {
+        DoDeactivate();
+        }
 
 	// Display an empty UI container until model has been fully activated
 	iActivationContainer = new( ELeave ) CVRRecViewActivationContainer;
@@ -657,18 +731,18 @@ void CVRRecView::ReallyDoActivateL( const TVwsViewId& /*aPrevViewId*/,
 	appUi->AddToViewStackL( *this, iActivationContainer );
 	iActivationContainer->ActivateL();
 
-	// Activate model in correct context asynchronically.
-	// iContainer will be activated trough callback after model activation
-	TCallBack cb( ActivationCallBack, this );
-	iModelActivator->Activate( static_cast< TVRRecViewContexts >(
-									aCustomMessageId.iUid ), cb );
-									
-	// Construct the real container
-	iContainer = new( ELeave ) CVRRecViewContainer;
-	iContainer->ConstructL( ClientRect(), iModel, iModel, iModel, this );	
-	iContainer->SetKeyObserver( iModel );
-	iContainer->SetVolumeChangeObserver( iModel );									
-	}
+    // Activate model in correct context asynchronically.
+    // iContainer will be activated trough callback after model activation
+    TCallBack cb(ActivationCallBack, this);
+    iModelActivator->Activate(
+            static_cast<TVRRecViewContexts> (aCustomMessageId.iUid), cb);
+
+    // Construct the real container
+    iContainer = new (ELeave) CVRRecViewContainer;
+    iContainer->ConstructL(ClientRect(), iModel, iModel, iModel, this);
+    iContainer->SetKeyObserver(iModel);
+    iContainer->SetVolumeChangeObserver(iModel);
+    }
 
 
 // ---------------------------------------------------------------------------
@@ -757,6 +831,45 @@ TVRQuality CVRRecView::Quality() const
 	{
 		return iModel->Quality();
 	}
+
+TInt CVRRecView::HandleUsbPlugInL()
+    {
+    if (EStateRecording == iModel->VisualStateId() || EStateRecordingPaused
+            == iModel->VisualStateId() || EStatePlaying
+            == iModel->VisualStateId() || EStatePlayingPaused
+            == iModel->VisualStateId())
+        {
+        HandleCommandL(ECmdStop);
+        }
+
+    if (EStateIdleEmbedded == iModel->VisualStateId() || EStateRecordEmbedded
+            == iModel->VisualStateId() || EStateIdleRecordEmbedded
+            == iModel->VisualStateId())
+        {
+        ShowDialogForWaitUSBPluggingOutL();
+        AppUi()->Exit();
+        }
+
+    HandleCommandL(ECmdUSBChange);
+    WaitDialogForUSBPluggingOut(iUsbWaitDialog);
+    return KErrNone;
+    }
+
+TInt CVRRecView::HandleUsbPlugOutL()
+    {
+    if (iUsbWaitDialog)
+        {
+        iUsbWaitDialog->ProcessFinishedL();
+        }
+
+    HandleCommandL(ECmdUSBChange);
+    return KErrNone;
+    }
+
+void CVRRecView::DialogDismissedL(TInt /*aButtonId*/)
+    {
+    HandleCommandL(ECmdUSBChange);
+    }
 
 // ---------------------------------------------------------------------------
 // Called by UI Framework when view switches to and from foreground

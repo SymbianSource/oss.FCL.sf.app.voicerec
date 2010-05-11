@@ -171,12 +171,36 @@ void CVRStateInfoPanel::CreateProgressBarL()
 // ----------------------------------------------------------------------------
 //		
 void CVRStateInfoPanel::SizeChanged()
-	{
-	
-	for ( TInt i = 0; i < ENumLabels; i++ )
-		{
-		TAknTextComponentLayout layoutText = AknLayoutScalable_Apps::vorec_t(
-			KVRLabelMap[i] );
+    {
+    TAknTextComponentLayout layoutText;
+    
+    for ( TInt i = 0; i < ENumLabels; i++ )
+        {
+        switch ( KVRLabelMap[i] )
+            {
+            case 0: 
+                layoutText = AknLayoutScalable_Apps::vorec_t1();
+                break;
+            case 1:
+                layoutText = AknLayoutScalable_Apps::vorec_t2();
+                break;
+            case 2: 
+                layoutText = AknLayoutScalable_Apps::vorec_t3();
+                break;
+            case 3:
+                layoutText = AknLayoutScalable_Apps::vorec_t4();
+                break;
+            case 4: 
+                layoutText = AknLayoutScalable_Apps::vorec_t5();
+                break;
+            case 5:
+                layoutText = AknLayoutScalable_Apps::vorec_t6();
+                break;
+            case 6:
+                layoutText = AknLayoutScalable_Apps::vorec_t7();
+                break;          
+            }
+        
 		AknLayoutUtils::LayoutLabel( iLabels.At( i ), Rect(), layoutText.LayoutLine() );
 		
 		if ( i != ELabelStatus )

@@ -138,9 +138,9 @@ EXPORT_C void VRUtils::MemoStoreDirectoryL( TDes &aPath )
 		else
 			{			
             TUint status( 0 );
-	        VRUtils::GetDriveInfo(memoDrive, status);
+            TInt err = VRUtils::GetDriveInfo(memoDrive, status);
             // check if drive status is ok 
-			if ( (status & DriveInfo::EDrivePresent) && !(status & DriveInfo::EDriveLocked) &&
+			if ( ( err == KErrNone ) && (status & DriveInfo::EDrivePresent) && !(status & DriveInfo::EDriveLocked) &&
 				!( status & DriveInfo::EDriveCorrupt ) && !( status & DriveInfo::EDriveReadOnly ) )
 				{
 				// Drive usage is OK.
@@ -1053,6 +1053,29 @@ EXPORT_C TInt VRUtils::AACAudioModeL()
 	return mode;    
     }
 
+// ---------------------------------------------------------------------------
+// DriveValid checks the drive is valid or not
+// ---------------------------------------------------------------------------
+//
+EXPORT_C TBool VRUtils::DriveValid( const TInt aDrive )
+    {
+    TUint status( 0 );
+    TBool flag( ETrue );
+    TInt err = VRUtils::GetDriveInfo( aDrive, status );
+    if ( err != KErrNone )
+    	{ flag = EFalse; }
+    else 
+    	{
+    	if ( !(status & DriveInfo::EDrivePresent) ||
+    			(status & DriveInfo::EDriveLocked) ||
+    			(status & DriveInfo::EDriveReadOnly) ||
+    			(status & DriveInfo::EDriveCorrupt) ||
+    			(status & DriveInfo::EDriveInUse) )
+    		{ flag = EFalse; }
+    	}
+    return flag;
+    
+    }
 
 #ifdef RD_MULTIPLE_DRIVE
 // ---------------------------------------------------------------------------
@@ -1103,7 +1126,7 @@ EXPORT_C TInt VRUtils::MemoDriveL()
 EXPORT_C TInt VRUtils::DefaultMemoDriveL()
 	{
     TInt drive(0);
-    User::LeaveIfError( DriveInfo::GetDefaultDrive(DriveInfo::EDefaultPhoneMemory, drive ) );
+    User::LeaveIfError( DriveInfo::GetDefaultDrive(DriveInfo::EDefaultMassStorage, drive ) );
     return drive;
 	}
 
@@ -1113,10 +1136,11 @@ EXPORT_C TInt VRUtils::DefaultMemoDriveL()
 // it is for multiple drive feature
 // ---------------------------------------------------------------------------
 //
-EXPORT_C void VRUtils::GetDriveInfo( TInt aDrive, TUint& aDriveInfo )
+EXPORT_C TInt VRUtils::GetDriveInfo( TInt aDrive, TUint& aDriveInfo )
     {
 	RFs& iFs = CCoeEnv::Static()->FsSession() ;
-	DriveInfo::GetDriveStatus( iFs, aDrive, aDriveInfo ); 
+	TInt err = DriveInfo::GetDriveStatus( iFs, aDrive, aDriveInfo ); 
+	return err;
     }
 #endif
 

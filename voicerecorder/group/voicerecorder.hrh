@@ -68,7 +68,8 @@ enum TVRCommands
 	ECmdMSK,			// When Middle Softkey is pressed
 	ECmdSetNewPosition,		// Progress Bar Touch	
 	ECmdNOP,			// No operation
-	ECmdGoToMyClips,
+	ECmdGoToMyClips,	
+	ECmdUSBChange,
 	
 	ECmdSendVia			// This MUST be the last entry
 	};

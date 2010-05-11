@@ -27,5 +27,8 @@ EXPORTS
 	?SetQualityL@VRUtils@@SAXW4TVRQuality@@@Z @ 26 NONAME ; void VRUtils::SetQualityL(enum TVRQuality)
 	?ShowMemoryFullConfirmationQuery@VRUtils@@SAXH@Z @ 27 NONAME ; void VRUtils::ShowMemoryFullConfirmationQuery(int)
 	?UnsupportedCallTypeOngoing@VRUtils@@SAHH@Z @ 28 NONAME ; int VRUtils::UnsupportedCallTypeOngoing(int)
-	?GetDriveInfo@VRUtils@@SAXHAAI@Z @ 29 NONAME ; void VRUtils::GetDriveInfo(int, unsigned int &)
+	?GetDriveInfo@VRUtils@@SAHHAAI@Z @ 29 NONAME ; int VRUtils::GetDriveInfo(int, unsigned int &)
+	?IsUsbActive@CVRUSBStateHanlder@@SAHXZ @ 30 NONAME ; int CVRUSBStateHanlder::IsUsbActive(void)
+	?NewL@CVRUSBStateHanlder@@SAPAV1@PAVMVRUSBStateObserver@@@Z @ 31 NONAME ; class CVRUSBStateHanlder * CVRUSBStateHanlder::NewL(class MVRUSBStateObserver *)
+	?DriveValid@VRUtils@@SAHH@Z @ 32 NONAME ; int VRUtils::DriveValid(int)
 

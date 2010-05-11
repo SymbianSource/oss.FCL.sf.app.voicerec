@@ -187,11 +187,11 @@ void CVRMdaRecorder::MoscoStateChangeEvent( CBase* /*aObject*/,
         	iViewModel = dynamic_cast <CVRRecViewModel*>(iAutoStopObserver);
         	if(iViewModel != NULL)
         		{
-        		iViewModel->HandleCommandL(EEikCmdExit);
+        		TRAP_IGNORE( iViewModel->HandleCommandL(EEikCmdExit) );
         		}
         	else
         		{
-        		CEikonEnv::Static()->EikAppUi()->HandleCommandL( EAknSoftkeyExit);
+        		TRAP_IGNORE( CEikonEnv::Static()->EikAppUi()->HandleCommandL( EAknSoftkeyExit) );
         		}
         	}
  		
@@ -934,10 +934,15 @@ void CVRMdaRecorder::Stop()
         iPropVRState.Set( KPSUidVoiceRecorder, KVoiceRecorderMode, EVRIdle );
         // Used to check the state of a phone call if any
        
-        if ( iCurrentCallHandler ) delete iCurrentCallHandler;
+        if ( iCurrentCallHandler ) 
+        	{
+        	delete iCurrentCallHandler;
+        	iCurrentCallHandler = NULL;
+        	}
         
     	TRAP_IGNORE( iCurrentCallHandler = CVRSystemEventHandler::NewL() );
-    	TInt currentState( iCurrentCallHandler->StateL(	KPSUidCtsyCallInformation, KCTsyCallState ) );
+    	TInt currentState( 0 );
+    	TRAP_IGNORE( currentState = iCurrentCallHandler->StateL( KPSUidCtsyCallInformation, KCTsyCallState ) );
     	
     	// Do not allow screen saver if there is an active phone call
     	if(currentState == EPSCTsyCallStateRinging)

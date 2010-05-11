@@ -40,6 +40,7 @@
 #ifdef RD_MULTIPLE_DRIVE
 #include <driveinfo.h>
 #include <CAknMemorySelectionSettingItemMultiDrive.h>
+#include <AknCommonDialogsDynMem.h>
 #endif
 
 const TUid KVRAppUID = { KVoiceRecorderAppUID3 };
@@ -195,6 +196,9 @@ void CVRGSPluginContainer::CreateListBoxItemsL()
 #else
     settingItem =
                 new( ELeave ) CAknMemorySelectionSettingItemMultiDrive(0, iDrive );
+       TInt includedMedias = AknCommonDialogsDynMem::EMemoryTypeInternalMassStorage |
+                          AknCommonDialogsDynMem::EMemoryTypeMMCExternal;
+       static_cast< CAknMemorySelectionSettingItemMultiDrive *> ( settingItem )->SetIncludedMediasL( includedMedias );
 #endif
 
 	CleanupStack::PushL( settingItem );

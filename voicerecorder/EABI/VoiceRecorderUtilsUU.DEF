@@ -29,4 +29,9 @@ EXPORTS
 	_ZN7VRUtils12GetDriveInfoEiRj @ 28 NONAME
 	_ZN7VRUtils13SetMemoDriveLE12TDriveNumber @ 29 NONAME
 	_ZN7VRUtils17DefaultMemoDriveLEv @ 30 NONAME
+	_ZN18CVRUSBStateHanlder11IsUsbActiveEv @ 31 NONAME
+	_ZN18CVRUSBStateHanlder4NewLEP19MVRUSBStateObserver @ 32 NONAME
+	_ZN7VRUtils10DriveValidEi @ 33 NONAME
+	_ZTI18CVRUSBStateHanlder @ 34 NONAME
+	_ZTV18CVRUSBStateHanlder @ 35 NONAME
 

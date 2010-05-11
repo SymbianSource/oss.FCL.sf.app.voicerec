@@ -48,7 +48,6 @@ SOURCE		TVRState.cpp
 SOURCE		CVRRemConObserver.cpp
 SOURCE		CVRTonePlayer.cpp
 SOURCE      CVRDiskSpaceWatcher.cpp
-SOURCE		CVRUSBEventHandler.cpp 
 SOURCE      CVRMediaRemovalMonitor.cpp
 
 USERINCLUDE	 ../RecViewSrc

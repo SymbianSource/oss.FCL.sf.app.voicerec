@@ -54,6 +54,7 @@ SOURCE		CVRSettingsDialogMMCSupported.cpp
 SOURCE		CVRSettingsDialog.cpp
 #endif
 
+
 USERINCLUDE     ../AppSrc
 USERINCLUDE     ../group
 USERINCLUDE	    ../UtilsInc

@@ -39,6 +39,7 @@
 #include "voicerecorder.hrh"
 #include "VoiceRecorder.rh"
 #include <voicerecorder.loc>
+#include <mpxwaitnotedialog.loc>
 
 NAME VREC
 
@@ -201,6 +202,44 @@ RESOURCE TBUF r_qtn_memc_vorec_note2 { buf = qtn_memc_vorec_note2; }
 RESOURCE TBUF r_qtn_memc_unlock_query1 { buf = qtn_memc_unlock_query1; }
 RESOURCE TBUF r_qtn_memc_set_password_error { buf = qtn_memc_set_password_error; }
 RESOURCE TBUF r_qtn_memc_readonly { buf = qtn_memc_memorycard_read_only; }
+RESOURCE TBUF r_qtn_ccor_insert_mmc { buf = qtn_ccor_insert_mmc; }
+RESOURCE TBUF r_qtn_usb_mode_note_mode { buf = qtn_usb_mode_note_mode_activated; }
+
+RESOURCE DIALOG r_insert_f_card_dialog
+    {
+    flags = EGeneralQueryFlags | EEikDialogFlagWait | EEikDialogFlagNoBackgroundFade;
+    buttons = R_AVKON_SOFTKEYS_OK_CANCEL__OK;
+    items =
+    		{
+    		DLG_LINE
+    			{
+    			type = EAknCtQuery;
+    			id = EGeneralQuery;
+    			control = AVKON_CONFIRMATION_QUERY 
+    				{ 
+    				layout = EConfirmationLayout;
+    				};
+    			}
+    		};
+    } 
+
+RESOURCE DIALOG r_insert_f_usb_plug_in_dialog
+    {
+    flags = EGeneralQueryFlags | EEikDialogFlagWait | EEikDialogFlagNoBackgroundFade;
+    buttons = R_AVKON_SOFTKEYS_OK_EMPTY;
+    items =
+    		{
+    		DLG_LINE
+    			{
+    			type = EAknCtQuery;
+    			id = EGeneralQuery;
+    			control = AVKON_CONFIRMATION_QUERY 
+    				{ 
+    				layout = EConfirmationLayout;
+    				};
+    			}
+    		};
+    } 
 
 // Settings dialog stuff needed when there's an MMC (default store setting)
 // or the voice key is missing (defauly speaker setting)
@@ -2191,6 +2230,26 @@ RESOURCE MEMORYSELECTIONDIALOG r_vorec_memory_selection_dialog
         LOCATION 
             { 
             root_path = text_memory_card_root_path;
+            }
+        };
+    }
+
+RESOURCE DIALOG r_vorec_usb_connected_dialog
+    {
+    flags = EAknWaitNoteFlags|EEikDialogFlagModeless;
+    buttons = R_AVKON_SOFTKEYS_BACK;
+    items=
+        {
+        DLG_LINE
+            {
+            type = EAknCtNote;
+            id = EGeneralQuery;
+            control= AVKON_NOTE 
+                { 
+                layout = EWaitLayout;
+                singular_label = qtn_usb_mode_note_mode_activated;
+                animation = R_QGN_GRAF_WAIT_BAR_ANIM;
+                };
             }
         };
     }

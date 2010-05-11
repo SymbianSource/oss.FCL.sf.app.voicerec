@@ -27,7 +27,7 @@
  *  @lib Harvester
  *  @since S60 3.0
  */
-class CVRMediaRemovalMonitor : public CActive
+NONSHARABLE_CLASS( CVRMediaRemovalMonitor ) : public CActive
     {
 
 public:

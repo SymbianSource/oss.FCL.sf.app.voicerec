@@ -177,7 +177,6 @@ void CVRSettingsDialog::PreLayoutDynInitL()
     ECFDDialogTypeNormal, 
     R_VOREC_MEMORY_SELECTION_DIALOG, // Default resource Id
     EFalse,
-    AknCommonDialogsDynMem::EMemoryTypePhone |
     AknCommonDialogsDynMem::EMemoryTypeInternalMassStorage |
     AknCommonDialogsDynMem::EMemoryTypeMMCExternal);
 

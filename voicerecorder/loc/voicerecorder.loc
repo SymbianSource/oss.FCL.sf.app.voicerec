@@ -269,6 +269,20 @@
 // l: popup_note_window
 #define qtn_memc_unlock_query1		"The selected memory store is locked, it can't be used. Do you want to unlock it?"
 
+// d: Information note
+// d: Shown when VR is started and the SD card is not inserted
+// l: popup_note_window
+// w: 
+// r: 3.1
+#define qtn_ccor_insert_mmc            "Please insert memory card."
+
+// d: Information note
+// d: Shown when VR is started and the USB is inserted in Mass Storage mode
+// l: popup_note_window
+// w: 
+// r: 3.1
+#define qtn_usb_mode_note_mode_activated            "USB connected in Mass storage mode"
+
 // ---------------------------------------------------------------------------
 // No voice key specific strings
 
