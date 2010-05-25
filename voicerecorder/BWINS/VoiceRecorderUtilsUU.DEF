@@ -31,4 +31,6 @@ EXPORTS
 	?IsUsbActive@CVRUSBStateHanlder@@SAHXZ @ 30 NONAME ; int CVRUSBStateHanlder::IsUsbActive(void)
 	?NewL@CVRUSBStateHanlder@@SAPAV1@PAVMVRUSBStateObserver@@@Z @ 31 NONAME ; class CVRUSBStateHanlder * CVRUSBStateHanlder::NewL(class MVRUSBStateObserver *)
 	?DriveValid@VRUtils@@SAHH@Z @ 32 NONAME ; int VRUtils::DriveValid(int)
+	?MultipleMassStorageAvailable@VRUtils@@SAHXZ @ 33 NONAME ; int VRUtils::MultipleMassStorageAvailable(void)
+	?GetRemovableMassStorageL@VRUtils@@SAHXZ @ 34 NONAME ; int VRUtils::GetRemovableMassStorageL(void)
 

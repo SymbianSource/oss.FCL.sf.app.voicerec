@@ -34,4 +34,6 @@ EXPORTS
 	_ZN7VRUtils10DriveValidEi @ 33 NONAME
 	_ZTI18CVRUSBStateHanlder @ 34 NONAME
 	_ZTV18CVRUSBStateHanlder @ 35 NONAME
+	_ZN7VRUtils28MultipleMassStorageAvailableEv @ 36 NONAME
+	_ZN7VRUtils24GetRemovableMassStorageLEv @ 37 NONAME
 

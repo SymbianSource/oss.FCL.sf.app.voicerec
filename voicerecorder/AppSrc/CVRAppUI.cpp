@@ -51,7 +51,7 @@
 #ifdef RD_MULTIPLE_DRIVE
 #include <driveinfo.h>
 #endif
-#include <aknwaitdialog.h>
+#include <AknWaitDialog.h>
 _LIT( KVRCommandRecord, "record" );
 
 // ---------------------------------------------------------------------------
@@ -227,9 +227,10 @@ void CVRAppUi::ConstructL()
 //
 void CVRAppUi::SetDriveL()
     {
-    if ( VRUtils::DriveValid( EDriveF ) )
+    TInt driveRemovableMassStorage = VRUtils::GetRemovableMassStorageL();
+    if ( VRUtils::DriveValid( (TDriveNumber) driveRemovableMassStorage ) )
     	{
-    	VRUtils::SetMemoDriveL((TDriveNumber)EDriveF );
+    	VRUtils::SetMemoDriveL( (TDriveNumber) driveRemovableMassStorage );
     	}
     else
         {
@@ -239,15 +240,15 @@ void CVRAppUi::SetDriveL()
             Exit();
 
             }
-        while (!VRUtils::DriveValid(EDriveF))
+        while ( !VRUtils::DriveValid( (TDriveNumber) driveRemovableMassStorage ) )
             {
             if (!ShowDialogForWaitStorageCardL())
                 {
                 Exit();
                 }
             }
-        // Come to here when drive F is valid
-        VRUtils::SetMemoDriveL((TDriveNumber) EDriveF);
+        // Come to here when driveRemovableMassStorage is valid
+        VRUtils::SetMemoDriveL( (TDriveNumber) driveRemovableMassStorage );
         }
     }
 
@@ -448,8 +449,8 @@ void CVRAppUi::HandleResourceChangeL( TInt aType )
 	{
 	CAknViewAppUi::HandleResourceChangeL( aType );
 
-    if (aType == KEikDynamicLayoutVariantSwitch || aType
-            == KAknsMessageSkinChange)
+    if (iLayoutChangeObserver != NULL && (aType == KEikDynamicLayoutVariantSwitch || aType
+            == KAknsMessageSkinChange))
         {
         iLayoutChangeObserver->LayoutChangedL(aType);
         }

@@ -248,7 +248,7 @@ RESOURCE MENU_PANE r_vr_settings_menupane
 	{
 	items=
 		{
-		MENU_ITEM { command = ECmdChange;		txt = qtn_vorec_settings_change; flags = EEikMenuItemSpecific; },
+		MENU_ITEM { command = ECmdChange;		txt = qtn_vorec_settings_change; flags = EEikMenuItemAction ; },
 		MENU_ITEM { command = ECmdHelp; 		txt = qtn_options_help; },
 		MENU_ITEM { command = EEikCmdExit; 		txt = qtn_options_exit; }
 		};
@@ -2193,7 +2193,7 @@ RESOURCE MENU_PANE r_vorec_gs_settings_menupane
 	{
 	items=
 		{
-		MENU_ITEM { command = ECmdChange;		txt = qtn_vorec_settings_change; flags = EEikMenuItemSpecific; },
+		MENU_ITEM { command = ECmdChange;		txt = qtn_vorec_settings_change; flags = EEikMenuItemAction ; },
 		MENU_ITEM { command = EAknCmdHelp; 		txt = qtn_options_help; },
 		MENU_ITEM { command = ECmdOk; 		txt = qtn_options_exit; }
 		};

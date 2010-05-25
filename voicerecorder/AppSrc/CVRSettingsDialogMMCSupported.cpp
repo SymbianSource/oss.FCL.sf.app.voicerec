@@ -156,11 +156,12 @@ void CVRSettingsDialog::PreLayoutDynInitL()
     	id++;
         }
 
+    if ( VRUtils::MultipleMassStorageAvailable() )
+    	{
+    	// Create the memo store item
+    	// Set memo store item's title
 
-	// Create the memo store item
-	// Set memo store item's title
-	itemTitle = iCoeEnv->AllocReadResourceLC( R_QTN_VOREC_SET_STORE );
-
+    	itemTitle = iCoeEnv->AllocReadResourceLC( R_QTN_VOREC_SET_STORE );
 #ifndef RD_MULTIPLE_DRIVE
 	settingItem = new( ELeave ) CAknMemorySelectionSettingItem( 0, iMemoStore );
 	CleanupStack::PushL( settingItem ); 
@@ -190,9 +191,8 @@ void CVRSettingsDialog::PreLayoutDynInitL()
  
 #endif
 
-
-	CleanupStack::PopAndDestroy();	// itemTitle
-
+		CleanupStack::PopAndDestroy();	// itemTitle
+	}
 	CTextListBoxModel* model = listBox->Model();
 	model->SetItemTextArray( &iSettingItemArray );
 	// Ownership retained by us

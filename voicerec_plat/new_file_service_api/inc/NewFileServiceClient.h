@@ -24,7 +24,7 @@
 #include <NewFileService.hrh>
 #include <e32std.h>
 #include <badesca.h>
-#include <aknserverapp.h>
+#include <AknServerApp.h>
 
 // FORWARD DECLARATIONS
 class RFile;

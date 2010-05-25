@@ -197,6 +197,18 @@ class VRUtils
 		*/
        	IMPORT_C static TBool DriveValid( const TInt aDrive );
        	
+		/**
+		* This method checks which MassStorage is/are valid
+	    * @return The MassStorage is multi (ETrue) or only one (EFlase)
+		*/
+       	IMPORT_C static TBool MultipleMassStorageAvailable();
+
+		/**
+		* This wrapper method return the removable MassStorage drive
+	    * @return the drive
+		*/
+       	IMPORT_C static TInt GetRemovableMassStorageL();
+
 #ifdef RD_MULTIPLE_DRIVE    	
        	/**
         * This method sets the default memo store setting (to support multipledrives)

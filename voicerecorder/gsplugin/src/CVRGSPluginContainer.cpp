@@ -186,7 +186,8 @@ void CVRGSPluginContainer::CreateListBoxItemsL()
       	CleanupStack::Pop();	// settingItem        
       	id++;
         }
-
+    if ( VRUtils::MultipleMassStorageAvailable() )
+        {
     // Add memo store setting
 	// Create the memo store item
 #ifndef RD_MULTIPLE_DRIVE	
@@ -215,11 +216,11 @@ void CVRGSPluginContainer::CreateListBoxItemsL()
 	    
 	CleanupStack::PopAndDestroy();	// itemTitle
 
-	// Add memo store item to the settings array
-	iSettingItemArray->AppendL( settingItem );
-	CleanupStack::Pop();	// settingItem
-	id++;
-
+        // Add memo store item to the settings array
+        iSettingItemArray->AppendL( settingItem );
+        CleanupStack::Pop();	// settingItem
+        id++;
+    	}
     }
 
 

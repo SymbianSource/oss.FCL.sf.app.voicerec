@@ -22,7 +22,7 @@
 #define CNEWFILESERVICEBASE_H
 
 //  INCLUDES
-#include <aknserverapp.h>
+#include <AknServerApp.h>
 #include <badesca.h>
 #include <f32file.h>
 #include <NewFileService.hrh>

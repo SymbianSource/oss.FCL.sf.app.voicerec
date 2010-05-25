@@ -27,7 +27,7 @@
 #include <aknview.h>
 #include <VoiceRecorderContexts.h>
 #include <voicerecorder.rsg>
-#include <aknwaitdialog.h>
+#include <AknWaitDialog.h>
 
 #include "MVRSelectionProvider.h"
 #include "MVRLayoutChangeObserver.h"

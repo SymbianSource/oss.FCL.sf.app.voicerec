@@ -134,7 +134,8 @@ void CVRRecViewModel::ConstructFromResourceL( TResourceReader& aReader )
 	iCurrentCallHandler->Listen( KPSUidCtsyCallInformation, KCTsyCallState, 
 								 this );
 	//listen MMC eject
-	iCurrentMMCEjectHandler = CVRMediaRemovalMonitor::NewL(EDriveF, CEikonEnv::Static()->FsSession(), this);
+	TInt driveRemovableMassStorage = VRUtils::GetRemovableMassStorageL();
+	iCurrentMMCEjectHandler = CVRMediaRemovalMonitor::NewL(driveRemovableMassStorage, CEikonEnv::Static()->FsSession(), this);
 
 	if ( FeatureManager::FeatureSupported( KFeatureIdKeypadNoVoiceKey ) &&
 		FeatureManager::FeatureSupported( 
@@ -1589,7 +1590,7 @@ TBool CVRRecViewModel::CallFunctionByIdL( TInt aFunctionId )
 				iCBAEnabled = ETrue;
 				if ( leaveErr1 == KErrDiskFull || leaveErr2 == KErrDiskFull )	
 					{
-					if ( iMemo->StorageDrive() == EDriveF)
+					if ( iMemo->StorageDrive() == VRUtils::GetRemovableMassStorageL())
 						{
 		 				VRUtils::ShowMemoryFullConfirmationQuery(ETrue);
 						}
@@ -2426,7 +2427,7 @@ void CVRRecViewModel::HandleMMCEjectEventL()
 	
 	// Actions to take when recording
 	TInt storageDrive = VRUtils::MemoDriveL();   	 
-    if ( storageDrive == EDriveF && !CVRUSBStateHanlder::IsUsbActive())
+    if ( storageDrive == VRUtils::GetRemovableMassStorageL() && !CVRUSBStateHanlder::IsUsbActive())
 		{
         //exit for mmc dismount	
         TWsEvent event;

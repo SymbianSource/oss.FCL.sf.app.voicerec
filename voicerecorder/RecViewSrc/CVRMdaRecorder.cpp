@@ -431,7 +431,7 @@ void CVRMdaRecorder::AttachToMemoL( CVRMemo* aMemo )
 
 			{
 			//mmc card			
-			if ( iMemo->StorageDrive() == EDriveF)
+			if ( iMemo->StorageDrive() == VRUtils::GetRemovableMassStorageL())
 				{
  				VRUtils::ShowMemoryFullConfirmationQuery(ETrue);
 				}
@@ -801,7 +801,7 @@ TInt CVRMdaRecorder::RecordL()
         if (SysUtil::DiskSpaceBelowCriticalLevelL( &fs, KVRRecStartMemBuf, iMemo->StorageDrive()))
 #endif 
 			{
-			if ( iMemo->StorageDrive() == EDriveF)
+			if ( iMemo->StorageDrive() == VRUtils::GetRemovableMassStorageL())
 				{
  				VRUtils::ShowMemoryFullConfirmationQuery(ETrue);
 				}

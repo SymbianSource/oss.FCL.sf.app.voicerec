@@ -14,8 +14,8 @@
 #include <UsbWatcherInternalPSKeys.h>
 #include <usbpersonalityids.h>
 
-#include <aknwaitdialog.h>
-#include <EIKENV.H> 
+#include <AknWaitDialog.h>
+#include <eikenv.h> 
 
 #include "VRUSBStateHanlder.h"
 #include "CVRRecView.h"

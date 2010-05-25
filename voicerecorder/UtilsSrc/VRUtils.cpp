@@ -1077,6 +1077,31 @@ EXPORT_C TBool VRUtils::DriveValid( const TInt aDrive )
     
     }
 
+EXPORT_C TBool VRUtils::MultipleMassStorageAvailable()
+	{
+	TBool flag( ETrue );
+	TInt driveDefaultMassStorage(0);
+	TInt driveRemovableMassStorage(0);
+	TInt defaultStorageErr = DriveInfo::GetDefaultDrive(
+			DriveInfo::EDefaultMassStorage, driveDefaultMassStorage );
+	TInt removableStorageErr = DriveInfo::GetDefaultDrive(
+			DriveInfo::EDefaultRemovableMassStorage,    driveRemovableMassStorage );
+	if ( (defaultStorageErr) || (removableStorageErr) ||
+			( driveDefaultMassStorage == driveRemovableMassStorage ) ||
+			!DriveValid(driveDefaultMassStorage) || !DriveValid(driveRemovableMassStorage) )
+		{ flag = EFalse; }
+	
+	return flag;
+	}
+
+EXPORT_C TInt VRUtils::GetRemovableMassStorageL()
+	{
+    TInt drive(0);
+    User::LeaveIfError( DriveInfo::GetDefaultDrive(
+    			DriveInfo::EDefaultRemovableMassStorage , drive ) );
+	return drive;
+	}
+
 #ifdef RD_MULTIPLE_DRIVE
 // ---------------------------------------------------------------------------
 // VRUtils::SetMemoDriveL

@@ -200,26 +200,20 @@ void CVRStateInfoPanel::SizeChanged()
                 layoutText = AknLayoutScalable_Apps::vorec_t7();
                 break;          
             }
+        AknLayoutUtils::LayoutLabel( iLabels.At( i ), Rect(), layoutText.LayoutLine() );
         
-		AknLayoutUtils::LayoutLabel( iLabels.At( i ), Rect(), layoutText.LayoutLine() );
-		
-		if ( i != ELabelStatus )
-			{
-			// Get the correct text color from skin and override it
-			// The status label is always red, i guess
-			CCoeControl* label( iLabels.At( i ) );
-			TRgb color( KRgbBlack );
-			AknsUtils::GetCachedColor( iSkin, color, KAknsIIDQsnTextColors,
-				EAknsCIQsnTextColorsCG6 );		
-			// We can ignore the error, it only means we will have wrong color
-			TRAP_IGNORE( AknLayoutUtils::OverrideControlColorL( *label,
-				EColorLabelText, color ) );
-			}
-		}
-
-	// There's nothing rational to do here if it leaves
-	TRAP_IGNORE( CreateProgressBarL() );	
-	}
+        CCoeControl* label( iLabels.At( i ) );
+        TRgb color( KRgbBlack );
+        AknsUtils::GetCachedColor( iSkin, color, KAknsIIDQsnTextColors,
+        		EAknsCIQsnTextColorsCG6 );
+        // We can ignore the error, it only means we will have wrong color
+        TRAP_IGNORE( AknLayoutUtils::OverrideControlColorL( *label,
+        		EColorLabelText, color ) );
+        }
+    
+    // There's nothing rational to do here if it leaves
+    TRAP_IGNORE( CreateProgressBarL() );
+    }
 
 
 // ----------------------------------------------------------------------------
