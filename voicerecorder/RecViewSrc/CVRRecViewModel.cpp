@@ -2427,7 +2427,9 @@ void CVRRecViewModel::HandleMMCEjectEventL()
 	
 	// Actions to take when recording
 	TInt storageDrive = VRUtils::MemoDriveL();   	 
-    if ( storageDrive == VRUtils::GetRemovableMassStorageL() && !CVRUSBStateHanlder::IsUsbActive())
+    if ( ( ( storageDrive == VRUtils::GetRemovableMassStorageL()) ||
+            ( iMemo != NULL && iMemo->StorageDrive() == VRUtils::GetRemovableMassStorageL() ) ) && 
+            ( !CVRUSBStateHanlder::IsUsbActive() ) )
 		{
         //exit for mmc dismount	
         TWsEvent event;

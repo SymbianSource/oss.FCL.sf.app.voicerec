@@ -186,6 +186,12 @@ void CVRAppUi::ConstructL()
                 }
             }
 
+	    if (CVRUSBStateHanlder::IsUsbActive())
+	        {
+	        ShowDialogForWaitUSBPluggingOutL();
+	        Exit();
+	        }
+        
         /***** check if memory is below min value, if yes, close app*****/
         RFs& fs(CEikonEnv::Static()->FsSession());
         if (SysUtil::DiskSpaceBelowCriticalLevelL(&fs, 0,

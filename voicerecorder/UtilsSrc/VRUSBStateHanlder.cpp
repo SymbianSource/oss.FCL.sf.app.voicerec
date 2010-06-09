@@ -22,7 +22,8 @@
 
 CVRUSBStateHanlder::CVRUSBStateHanlder(MVRUSBStateObserver* aObserver) :
     CActive(EPriorityStandard), // Standard priority
-            iObserver(aObserver)
+            iObserver(aObserver),
+            iConnectionStatus(EStateUninitialized)
     {
     }
 
@@ -83,22 +84,39 @@ void CVRUSBStateHanlder::RunL()
     {
 #ifdef DUMMY_USB_TESTING
     CDummyUSBState::HandleUSBEventL();
+#else
+    StartL();
 #endif
-    if (IsUsbActive())
+    
+ 
+    TBool isUsbActive (IsUsbActive());
+    
+    if (isUsbActive)
         {
-        iObserver->HandleUsbPlugInL();
+        if(iConnectionStatus != EStateConnected)
+            {
+            iObserver->HandleUsbPlugInL();
+            iConnectionStatus = EStateConnected;
+            }
         }
     else
         {
-        iObserver->HandleUsbPlugOutL();
+        if(iConnectionStatus != EStateDisConnected)
+            {
+            iObserver->HandleUsbPlugOutL();
+            iConnectionStatus = EStateDisConnected;
+            } 
         }
+
 #ifdef DUMMY_USB_TESTING    
     //    iStatus = KRequestPending;
     SetActive(); // Tell scheduler a request is active    
     iTimer.After(iStatus, 10000000); // Set for later
-#else
-    StartL();
+
+    
 #endif
+
+
     }
 
 TInt CVRUSBStateHanlder::RunError(TInt aError)

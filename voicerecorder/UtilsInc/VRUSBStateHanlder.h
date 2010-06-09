@@ -68,6 +68,13 @@ private:
     RProperty iProperty;
 #endif
     MVRUSBStateObserver* iObserver;    
+    enum TUSBConnectionStatus 
+        { 
+        EStateUninitialized, 
+        EStateConnected, 
+        EStateDisConnected
+        }; 
+    TUSBConnectionStatus iConnectionStatus;
     };
 
 #endif // VRUSBSTATEHANLDER_H

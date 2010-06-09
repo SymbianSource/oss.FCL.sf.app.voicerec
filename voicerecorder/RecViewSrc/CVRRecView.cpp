@@ -219,12 +219,6 @@ void CVRRecView::ConstructL( TInt aViewResourceId, TInt aModelResourceId )
     iModelActivator = new (ELeave) CVRRecViewModelActivator(iModel);
 
     iUSBStateHandler = CVRUSBStateHanlder::NewL(this);
-
-    if (CVRUSBStateHanlder::IsUsbActive())
-        {
-        ShowDialogForWaitUSBPluggingOutL();
-        AppUi()->Exit();
-        }
     }
 
 // ---------------------------------------------------------------------------
@@ -385,7 +379,8 @@ void CVRRecView::DynInitMenuPaneL( TInt aResourceId, CEikMenuPane* aMenuPane )
                 aMenuPane->SetItemDimmed(ECmdGoToMyClips, ETrue);
                 }
 
-			AddSendToMenuL( aResourceId, aMenuPane );
+			TRAP_IGNORE(AddSendToMenuL( aResourceId, aMenuPane ));
+			
 			break;
 			}
 
@@ -413,7 +408,7 @@ void CVRRecView::DynInitMenuPaneL( TInt aResourceId, CEikMenuPane* aMenuPane )
                     }
                 else
                     {
-                    AddSendToMenuL(aResourceId, aMenuPane);
+					TRAP_IGNORE(AddSendToMenuL(aResourceId, aMenuPane));
                     }
                 }
 
@@ -834,6 +829,12 @@ TVRQuality CVRRecView::Quality() const
 
 TInt CVRRecView::HandleUsbPlugInL()
     {
+	if(MenuBar()->IsDisplayed())
+		{
+		MenuBar()->StopDisplayingMenuBar();
+		MenuBar()->TryDisplayMenuBarL();
+		}
+	
     if (EStateRecording == iModel->VisualStateId() || EStateRecordingPaused
             == iModel->VisualStateId() || EStatePlaying
             == iModel->VisualStateId() || EStatePlayingPaused
@@ -851,16 +852,19 @@ TInt CVRRecView::HandleUsbPlugInL()
         }
 
     HandleCommandL(ECmdUSBChange);
-    WaitDialogForUSBPluggingOut(iUsbWaitDialog);
+    if(iUsbWaitDialog == NULL)
+        WaitDialogForUSBPluggingOut(iUsbWaitDialog);
     return KErrNone;
     }
 
 TInt CVRRecView::HandleUsbPlugOutL()
     {
-    if (iUsbWaitDialog)
-        {
-        iUsbWaitDialog->ProcessFinishedL();
-        }
+	if(MenuBar()->IsDisplayed())
+		{
+		MenuBar()->StopDisplayingMenuBar();
+		MenuBar()->TryDisplayMenuBarL();
+		}
+	
 
     HandleCommandL(ECmdUSBChange);
     return KErrNone;
