@@ -161,52 +161,8 @@ void CVRAppUi::ConstructL()
 // for multiple drives
 #else
 
-        TInt memoDrive = VRUtils::MemoDriveL();
-        if (VRUtils::DriveValid(memoDrive))
-            {
-            VRUtils::SetMemoDriveL((TDriveNumber) memoDrive);
-            }
-        else
-            {
-            TInt defaultDrive = VRUtils::DefaultMemoDriveL(); //eMMC
-            if (defaultDrive == memoDrive)
-                {
-                SetDriveL();
-                }
-            else
-                {
-                if (VRUtils::DriveValid(defaultDrive))
-                    {
-                    VRUtils::SetMemoDriveL((TDriveNumber) defaultDrive);
-                    }
-                else
-                    {
-                    SetDriveL();
-                    }
-                }
-            }
 
-	    if (CVRUSBStateHanlder::IsUsbActive())
-	        {
-	        ShowDialogForWaitUSBPluggingOutL();
-	        Exit();
-	        }
-        
-        /***** check if memory is below min value, if yes, close app*****/
-        RFs& fs(CEikonEnv::Static()->FsSession());
-        if (SysUtil::DiskSpaceBelowCriticalLevelL(&fs, 0,
-                VRUtils::MemoDriveL()))
-            {
-            HBufC* errorText = StringLoader::LoadLC(
-                    R_VR_MEMORY_LOW_STOP_WARNING);
-            CAknErrorNote* dlg = new (ELeave) CAknErrorNote(ETrue);
-            dlg->ExecuteLD(*errorText);
-            CleanupStack::PopAndDestroy(errorText);
-            Exit();
-            }
-        // check memory size end
 #endif
-
 		}
 
     CVRRecView* view = CVRRecView::NewLC(R_VR_RECORDER_VIEW,
@@ -226,70 +182,6 @@ void CVRAppUi::ConstructL()
         }
 
 	}
-
-// ---------------------------------------------------------------------------
-// Make user insert the SD card, and choose SD card as the memo storage
-// ---------------------------------------------------------------------------
-//
-void CVRAppUi::SetDriveL()
-    {
-    TInt driveRemovableMassStorage = VRUtils::GetRemovableMassStorageL();
-    if ( VRUtils::DriveValid( (TDriveNumber) driveRemovableMassStorage ) )
-    	{
-    	VRUtils::SetMemoDriveL( (TDriveNumber) driveRemovableMassStorage );
-    	}
-    else
-        {
-        if (CVRUSBStateHanlder::IsUsbActive())
-            {
-            ShowDialogForWaitUSBPluggingOutL();
-            Exit();
-
-            }
-        while ( !VRUtils::DriveValid( (TDriveNumber) driveRemovableMassStorage ) )
-            {
-            if (!ShowDialogForWaitStorageCardL())
-                {
-                Exit();
-                }
-            }
-        // Come to here when driveRemovableMassStorage is valid
-        VRUtils::SetMemoDriveL( (TDriveNumber) driveRemovableMassStorage );
-        }
-    }
-
-// ---------------------------------------------------------------------------
-// This method show a dialog to warn user to insert the SD card.
-// ---------------------------------------------------------------------------
-//
-TBool CVRAppUi::ShowDialogForWaitStorageCardL()
-    {
-    HBufC* text = StringLoader::LoadLC( R_QTN_CCOR_INSERT_MMC );
-    CAknQueryDialog* dlg = CAknQueryDialog::NewL();
-    TInt result( dlg->ExecuteLD( R_INSERT_F_CARD_DIALOG, *text ) );
-    CleanupStack::PopAndDestroy( text );
-
-    if ( result )
-    	{
-    	return ETrue;
-    	}
-
-    return EFalse;
-    }
-
-
-TBool CVRAppUi::ShowDialogForWaitUSBPluggingOutL()
-{
-    HBufC* text = StringLoader::LoadLC(R_QTN_USB_MODE_NOTE_MODE);
-    CAknQueryDialog* dlg = CAknQueryDialog::NewL();
-    TInt result(dlg->ExecuteLD(R_INSERT_F_USB_PLUG_IN_DIALOG, *text));
-    CleanupStack::PopAndDestroy(text);
-    if (result)
-        {
-        return ETrue;
-        }
-    return EFalse;    
-}
 
 // ---------------------------------------------------------------------------
 // CVRAppUi::HandleCommandL

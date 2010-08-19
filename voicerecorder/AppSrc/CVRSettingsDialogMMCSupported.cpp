@@ -36,8 +36,15 @@
 #include <AknCommonDialogsDynMem.h>
 #include <driveinfo.h>
 #include <CAknMemorySelectionDialogMultiDrive.h>
+#include <CAknMemorySelectionSettingItemMultiDrive.h>
 #endif
 
+// ListBox item index
+enum TListItemIndex
+    {
+    EListItemQualityIndex = 0,
+    ElistItemMemoStoreIndex,
+    };
 // ---------------------------------------------------------------------------
 // CVRSettingsDialog::~CVRSettingsDialog
 // 
@@ -131,7 +138,6 @@ void CVRSettingsDialog::PreLayoutDynInitL()
     CAknSettingItem* settingItem;
   
     HBufC* itemTitle;
-   	TInt id( 0 );
     if ( VRUtils::FeatureEnabled( EVRFeatureShowQualitySetting ) )
         {
     	// Add quality setting
@@ -145,7 +151,7 @@ void CVRSettingsDialog::PreLayoutDynInitL()
     	CleanupStack::PushL( settingItem );
 
     	itemTitle = iCoeEnv->AllocReadResourceLC( R_QTN_VOREC_SET_QUALITY );
-    	settingItem->ConstructL( EFalse, id, *itemTitle, NULL,
+    	settingItem->ConstructL( EFalse, EListItemQualityIndex, *itemTitle, NULL,
     	                     R_VR_SETTINGS_DEFAULT_SPEAKER_PAGE, EAknCtPopupField, NULL,
     						 R_VR_SETTINGS_QUALITY_TEXTS );
     	CleanupStack::PopAndDestroy();		// itemTitle
@@ -153,7 +159,6 @@ void CVRSettingsDialog::PreLayoutDynInitL()
     	// Add quality item to the settings array
     	iSettingItemArray.AppendL( settingItem ); 
     	CleanupStack::Pop();	// settingItem
-    	id++;
         }
 
     if ( VRUtils::MultipleMassStorageAvailable() )
@@ -173,21 +178,16 @@ void CVRSettingsDialog::PreLayoutDynInitL()
 	CleanupStack::Pop();	// settingItem
 
 #else    //multiple drives
-
-	CAknMemorySelectionDialogMultiDrive* dlg = CAknMemorySelectionDialogMultiDrive::NewL(
-    ECFDDialogTypeNormal, 
-    R_VOREC_MEMORY_SELECTION_DIALOG, // Default resource Id
-    EFalse,
-    AknCommonDialogsDynMem::EMemoryTypeInternalMassStorage |
-    AknCommonDialogsDynMem::EMemoryTypeMMCExternal);
-
-    CleanupStack::PushL( dlg );
-    TBool value = dlg->ExecuteL( iDrive );
-    CleanupStack::PopAndDestroy( dlg );
-    if (value)
-     	{
-        VRUtils::SetMemoDriveL( iDrive );
-       	}
+        settingItem = new( ELeave ) CAknMemorySelectionSettingItemMultiDrive(0, iDrive );
+        CleanupStack::PushL( settingItem );
+        TInt includedMedias = AknCommonDialogsDynMem::EMemoryTypeInternalMassStorage |
+                                 AknCommonDialogsDynMem::EMemoryTypeMMCExternal;
+        static_cast< CAknMemorySelectionSettingItemMultiDrive *> ( settingItem )->SetIncludedMediasL( includedMedias );
+        // Set memo store item's title
+        settingItem->ConstructL( EFalse, ElistItemMemoStoreIndex, *itemTitle, NULL, 0, EAknSetListBox );
+        // Add memo store item to the settings array
+        iSettingItemArray.AppendL( settingItem );
+        CleanupStack::Pop();	// settingItem
  
 #endif
 
@@ -226,8 +226,17 @@ void CVRSettingsDialog::HandleListBoxEventL( CEikListBox* aListBox, TListBoxEven
 		case EEventEditingStarted: // From ProcessCommand->ECmdChange
 			{
 			TInt index( aListBox->CurrentItemIndex() );
+			TInt driveDefaultMassStorage = VRUtils::DefaultMemoDriveL();
+			TInt driveRemovableMassStorage = VRUtils::GetRemovableMassStorageL();
+			
 			if ( index >=0 )	// index is -1 if there are no items in the list
 				{
+			    if(index == ElistItemMemoStoreIndex && 
+			        !VRUtils::DriveValid(driveDefaultMassStorage) && 
+			            !VRUtils::DriveValid(driveRemovableMassStorage) )
+			        {
+			        break;
+			        }
 			    iSettingItemArray.At( index )->EditItemL( 
 				aEventType == EEventEditingStarted );
 			    aListBox->DrawItem( index );
@@ -335,7 +344,10 @@ void CVRSettingsDialog::StoreAllSettingsL()
         	iDrive = (TDriveNumber)defaultDrive;
   			}
 	 	}
+    if(iDrive == defaultDrive || iDrive == VRUtils::GetRemovableMassStorageL())
+        {
         VRUtils::SetMemoDriveL( iDrive );
+        }
 #endif 
      
     if ( VRUtils::FeatureEnabled( EVRFeatureShowQualitySetting ) )

@@ -41,6 +41,11 @@ class CVRRecViewContainer;
 class CVRRecViewActivationContainer;
 class CVRRecViewModel;
 
+enum TDialogTypeID {
+        EDialogForWaitStorageCard = 0,
+        EDialogForWaitUSBPluggingOut
+    };
+
 // CLASS DEFINITION
 /**
  * CVRRecView is an CAknView inherited view class that implements
@@ -100,6 +105,47 @@ private:
                 * Callback that is called after model is activated
                 */
                 TCallBack iCallback;
+            };
+        
+        /*
+        * One shot class for note pop-up
+        */
+        NONSHARABLE_CLASS( CVRRecViewDialogActivator ) 
+            : public CAsyncOneShot
+            {
+            public:  // constructor and destructor
+                CVRRecViewDialogActivator( CVRRecViewModel* aModel);
+                ~CVRRecViewDialogActivator(); 
+                
+            public: // new method
+                void SetDialogType(TDialogTypeID aType);
+                
+                void SetViewContexts(TVRRecViewContexts aContext);
+                
+            private: // Functions from base classes
+
+                /**
+                 * From CActive.
+                 */
+                void RunL();
+                void DoCancel();
+
+            private: // Data:
+
+                /*
+                * State machine model, not owned
+                */
+                CVRRecViewModel* iModel;
+                
+                /*
+                * The type of dialog
+                */
+                TDialogTypeID iType;
+                
+                /*
+                * Context that is used to activate model
+                */                
+                TVRRecViewContexts iContext;  
             };
 	
 	
@@ -285,6 +331,22 @@ private:
      * the actual UI container and deletes the empty one.
      */
     void ActivateContainerL();    
+    
+    /*
+     * Check the current state of drives
+     */
+    void CheckDriveState();    
+    
+    /**
+    * This method show a dialog to warn user to insert the SD card.
+    * @return if user insert the SD card or not
+    */
+    static TBool ShowDialogForWaitStorageCardL();
+    
+    /**
+     * Make user insert the SD card, and choose SD card as the memo storage
+     */
+    void SetDriveL();
    
 public:
     virtual TInt HandleUsbPlugInL();
@@ -321,7 +383,17 @@ private:
 		* asynchronically. Owned.
 		*/
 		CVRRecViewModelActivator* iModelActivator;
+		
+		/**
+        * One shot object that is used to pop up the note
+        */
+		CVRRecViewDialogActivator* iDialogActivator;
 
+    /**
+     * The type of dialog
+     */
+	TDialogTypeID iDialogType;
+		
     /**
      * The command that passed to Handlecommand
      * 
@@ -334,6 +406,10 @@ private:
     
     CVRUSBStateHanlder* iUSBStateHandler;
     
+    /*
+    * Context that is used to activate model
+    */                
+    TVRRecViewContexts iContext;
     };
 
 #endif // __CVRRECVIEW_H__

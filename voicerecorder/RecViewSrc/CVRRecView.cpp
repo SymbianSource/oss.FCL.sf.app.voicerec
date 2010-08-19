@@ -43,6 +43,8 @@
 #include <coreapplicationuisdomainpskeys.h>
 #include <AknLaunchAppService.h>
 #include <AiwGenericParam.h>
+#include <sysutil.h>
+#include <aknnotewrappers.h>
 
 #include "voicerecorder.hrh"
 #include "CVRRecView.h"
@@ -116,10 +118,13 @@ CVRRecView::CVRRecViewModelActivator::~CVRRecViewModelActivator()
 //
 void CVRRecView::CVRRecViewModelActivator::RunL()
 	{
-	// Activate model in correct context
-	iModel->SetMemoNameNewL( iContext == EContextRecordNewForRemote);
-	iModel->EnterContextL( iContext );
-	iModel->ActivateL();
+	if(iModel->GetIsDriveReady())
+	    {
+        // Activate model in correct context
+	    iModel->SetMemoNameNewL( iContext == EContextRecordNewForRemote);
+	    iModel->EnterContextL( iContext );
+	    iModel->ActivateL();
+	    } 
 	
 	// Notify recview
 	iCallback.CallBack();
@@ -150,6 +155,101 @@ void CVRRecView::CVRRecViewModelActivator::DoCancel()
     {
     }
 
+// ---------------------------------------------------------------------------
+// CVRRecView::CVRRecViewDialogActivator::CVRRecViewDialogActivator
+// 
+// ---------------------------------------------------------------------------
+//
+CVRRecView::CVRRecViewDialogActivator::CVRRecViewDialogActivator( CVRRecViewModel* aModel)
+:CAsyncOneShot(EPriorityNormal), iModel(aModel)
+    {
+    
+    }
+
+// ---------------------------------------------------------------------------
+// CVRRecView::CVRRecViewDialogActivator::~CVRRecViewDialogActivator
+// 
+// ---------------------------------------------------------------------------
+//
+CVRRecView::CVRRecViewDialogActivator::~CVRRecViewDialogActivator()
+    {
+    Cancel();
+    }
+
+// ---------------------------------------------------------------------------
+// CVRRecView::CVRRecViewDialogActivator::~CVRRecViewDialogActivator
+// 
+// ---------------------------------------------------------------------------
+//
+void CVRRecView::CVRRecViewDialogActivator::SetDialogType(TDialogTypeID aType)
+    {
+    iType = aType;
+    }
+
+// ---------------------------------------------------------------------------
+// CVRRecView::CVRRecViewDialogActivator::SetViewContexts
+// 
+// ---------------------------------------------------------------------------
+//
+void CVRRecView::CVRRecViewDialogActivator::SetViewContexts(TVRRecViewContexts aContext)
+    {
+    iContext = aContext;
+    }
+
+// ---------------------------------------------------------------------------
+// CVRRecView::CVRRecViewDialogActivator::DoCancel
+// 
+// ---------------------------------------------------------------------------
+//
+void CVRRecView::CVRRecViewDialogActivator::DoCancel()
+    {
+    }
+
+// ---------------------------------------------------------------------------
+// CVRRecView::CVRRecViewNoteActivator::RunL
+// 
+// ---------------------------------------------------------------------------
+//
+void CVRRecView::CVRRecViewDialogActivator::RunL()
+    {
+    if(iType == EDialogForWaitStorageCard)
+        {
+        TInt driveRemovableMassStorage = VRUtils::GetRemovableMassStorageL();
+        while ( !VRUtils::DriveValid( (TDriveNumber) driveRemovableMassStorage ) )
+            {
+            if (!ShowDialogForWaitStorageCardL())
+                {
+                iModel->SendExitEvent();
+                }
+            }
+        // Come to here when driveRemovableMassStorage is valid
+        VRUtils::SetMemoDriveL( (TDriveNumber) driveRemovableMassStorage );    
+        
+        /***** check if memory is below min value, if yes, close app*****/
+        RFs& fs(CEikonEnv::Static()->FsSession());
+        if (SysUtil::DiskSpaceBelowCriticalLevelL(&fs, 0, VRUtils::MemoDriveL()))
+           {
+           HBufC* errorText = StringLoader::LoadLC(
+                   R_VR_MEMORY_LOW_STOP_WARNING);
+           CAknErrorNote* dlg = new (ELeave) CAknErrorNote(ETrue);
+           dlg->ExecuteLD(*errorText);
+           CleanupStack::PopAndDestroy(errorText);
+           iModel->SendExitEvent();
+           }
+        // check memory size end
+        
+        // To activate view model
+        iModel->SetMemoNameNewL( iContext == EContextRecordNewForRemote);
+        iModel->SetIsDriveReady(ETrue);
+        iModel->EnterContextL( iContext );
+        iModel->ActivateL();
+        }
+    else if(iType == EDialogForWaitUSBPluggingOut)
+        {
+        ShowDialogForWaitUSBPluggingOutL();
+        iModel->SendExitEvent();
+        }
+    }
 
 // ---------------------------------------------------------------------------
 // CVRRecView::NewLC
@@ -186,6 +286,7 @@ CVRRecView::~CVRRecView()
 
     delete iContainer;
     delete iActivationContainer;
+    delete iDialogActivator;
     delete iModel;
     delete iSendUi;
     delete iModelActivator;
@@ -726,11 +827,15 @@ void CVRRecView::ReallyDoActivateL(const TVwsViewId& /*aPrevViewId*/,
 	appUi->AddToViewStackL( *this, iActivationContainer );
 	iActivationContainer->ActivateL();
 
+	iDialogActivator = new( ELeave ) CVRRecViewDialogActivator(iModel);
+	CheckDriveState();
+
     // Activate model in correct context asynchronically.
     // iContainer will be activated trough callback after model activation
     TCallBack cb(ActivationCallBack, this);
-    iModelActivator->Activate(
-            static_cast<TVRRecViewContexts> (aCustomMessageId.iUid), cb);
+    iContext = static_cast<TVRRecViewContexts> (aCustomMessageId.iUid);
+    iDialogActivator->SetViewContexts(iContext);
+    iModelActivator->Activate(iContext , cb);
 
     // Construct the real container
     iContainer = new (ELeave) CVRRecViewContainer;
@@ -739,6 +844,108 @@ void CVRRecView::ReallyDoActivateL(const TVwsViewId& /*aPrevViewId*/,
     iContainer->SetVolumeChangeObserver(iModel);
     }
 
+// ---------------------------------------------------------------------------
+// CVRRecView::CheckDriveState
+// 
+// ---------------------------------------------------------------------------
+//
+void CVRRecView::CheckDriveState()
+    {
+    TInt memoDrive = VRUtils::MemoDriveL();
+    if (VRUtils::DriveValid(memoDrive))
+        {
+        VRUtils::SetMemoDriveL((TDriveNumber) memoDrive);
+        }
+    else
+        {
+        TInt defaultDrive = VRUtils::DefaultMemoDriveL(); //eMMC
+        if (defaultDrive == memoDrive)
+            {
+            SetDriveL();
+            }
+        else
+            {
+            if (VRUtils::DriveValid(defaultDrive))
+                {
+                VRUtils::SetMemoDriveL((TDriveNumber) defaultDrive);
+                }
+            else
+                {
+                SetDriveL();
+                }
+            }
+        }
+
+    
+    if (iModel->GetIsDriveReady() && CVRUSBStateHanlder::IsUsbActive())
+        {
+        iModel->SetIsDriveReady(EFalse);
+        iDialogActivator->SetDialogType(EDialogForWaitUSBPluggingOut);
+        iDialogActivator->Call();
+        }
+    
+    
+    if(iModel->GetIsDriveReady()) 
+        {
+        /***** check if memory is below min value, if yes, close app*****/
+        RFs& fs(CEikonEnv::Static()->FsSession());
+        if (SysUtil::DiskSpaceBelowCriticalLevelL(&fs, 0, VRUtils::MemoDriveL()))
+            {
+            HBufC* errorText = StringLoader::LoadLC(
+                    R_VR_MEMORY_LOW_STOP_WARNING);
+            CAknErrorNote* dlg = new (ELeave) CAknErrorNote(ETrue);
+            dlg->ExecuteLD(*errorText);
+            CleanupStack::PopAndDestroy(errorText);
+            iModel->SendExitEvent();
+            }
+        // check memory size end
+        }
+    }
+
+// ---------------------------------------------------------------------------
+// Make user insert the SD card, and choose SD card as the memo storage
+// ---------------------------------------------------------------------------
+//
+void CVRRecView::SetDriveL()
+    {
+    TInt driveRemovableMassStorage = VRUtils::GetRemovableMassStorageL();
+    if ( VRUtils::DriveValid( (TDriveNumber) driveRemovableMassStorage ) )
+        {
+        VRUtils::SetMemoDriveL( (TDriveNumber) driveRemovableMassStorage );
+        }
+    else
+        {
+        iModel->SetIsDriveReady(EFalse);
+        if (CVRUSBStateHanlder::IsUsbActive())
+            {
+            iDialogActivator->SetDialogType(EDialogForWaitUSBPluggingOut);
+            iDialogActivator->Call();
+            }
+        else
+            {
+            iDialogActivator->SetDialogType(EDialogForWaitStorageCard);
+            iDialogActivator->Call();
+            }
+        }
+    }
+
+// ---------------------------------------------------------------------------
+// This method show a dialog to warn user to insert the SD card.
+// ---------------------------------------------------------------------------
+//
+TBool CVRRecView::ShowDialogForWaitStorageCardL()
+    {
+    HBufC* text = StringLoader::LoadLC( R_QTN_CCOR_INSERT_MMC );
+    CAknQueryDialog* dlg = CAknQueryDialog::NewL();
+    TInt result( dlg->ExecuteLD( R_INSERT_F_CARD_DIALOG, *text ) );
+    CleanupStack::PopAndDestroy( text );
+
+    if ( result )
+        {
+        return ETrue;
+        }
+    return EFalse;
+    }
 
 // ---------------------------------------------------------------------------
 // CVRRecView::SetFileHandle
@@ -867,6 +1074,11 @@ TInt CVRRecView::HandleUsbPlugOutL()
 	
 
     HandleCommandL(ECmdUSBChange);
+    
+    if(!VRUtils::DriveValid(VRUtils::MemoDriveL()))
+        {
+        iModel->SendExitEvent();
+        }
     return KErrNone;
     }
 
