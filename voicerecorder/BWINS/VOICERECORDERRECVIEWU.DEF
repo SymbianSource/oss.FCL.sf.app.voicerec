@@ -1,4 +1,0 @@
-EXPORTS
-	?MrccatoCommand@CVRRemConObserver@@MAEXW4TRemConCoreApiOperationId@@W4TRemConCoreApiButtonAction@@@Z @ 1 NONAME ; void CVRRemConObserver::MrccatoCommand(enum TRemConCoreApiOperationId, enum TRemConCoreApiButtonAction)
-	?NewLC@CVRRecView@@SAPAV1@HH@Z @ 2 NONAME ; class CVRRecView * CVRRecView::NewLC(int, int)
-

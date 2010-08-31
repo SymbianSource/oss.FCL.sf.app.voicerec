@@ -1,7 +1,0 @@
-EXPORTS
-	_ZN10CVRRecView5NewLCEii @ 1 NONAME
-	_ZTI10CVRRecView @ 2 NONAME ; #<TI>#
-	_ZTV10CVRRecView @ 3 NONAME ; #<VT>#
-	_ZN17CVRRemConObserver14MrccatoCommandE25TRemConCoreApiOperationId26TRemConCoreApiButtonAction @ 4 NONAME
-	_ZThn4_N17CVRRemConObserver14MrccatoCommandE25TRemConCoreApiOperationId26TRemConCoreApiButtonAction @ 5 NONAME ; #<thunk>#
-
