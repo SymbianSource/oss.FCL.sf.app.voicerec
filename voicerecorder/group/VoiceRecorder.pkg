@@ -1,0 +1,26 @@
+;
+; Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
+; All rights reserved.
+; This component and the accompanying materials are made available
+; under the terms of "Eclipse Public License v1.0"
+; which accompanies this distribution, and is available
+; at the URL "http://www.eclipse.org/legal/epl-v10.html".
+;
+; Initial Contributors:
+; Nokia Corporation - initial contribution.
+;
+; Contributors:
+;
+; Description:	Package file for project VoiceRecorder.
+;
+; VoiceRecorder.pkg
+;
+&EN
+#{"Voice Recorder"},(0x100058CA),1,0,0
+"..\..\epoc32\release\thumb\urel\VoiceRecorder.app"-"!:\system\apps\VoiceRecorder\VoiceRecorder.app"
+"..\..\epoc32\release\thumb\urel\VoiceRecorder.rsc"-"!:\system\apps\VoiceRecorder\VoiceRecorder.rsc"
+"..\..\epoc32\release\thumb\urel\VoiceRecorder.aif"-"!:\system\apps\VoiceRecorder\VoiceRecorder.aif"
+"..\..\epoc32\release\thumb\urel\VoiceRecorder.mbm"-"c:\system\data\VoiceRecorder.mbm"
+"..\..\epoc32\release\thumb\urel\VoiceRecorder_Caption.rsc"-"!:\system\apps\VoiceRecorder\VoiceRecorder_Caption.rsc"
+"..\..\epoc32\release\thumb\urel\VoiceRecorderRecView.dll"-"!:\system\apps\VoiceRecorder\VoiceRecorderRecView.dll"
+"..\..\epoc32\release\thumb\urel\VoiceRecorderUtils.dll"-"!:\system\apps\VoiceRecorder\VoiceRecorderUtils.dll"

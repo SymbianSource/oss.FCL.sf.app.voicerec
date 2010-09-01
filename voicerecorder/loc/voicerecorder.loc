@@ -1,0 +1,345 @@
+/*
+* Copyright (c) 2002 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+*     This is a localisation file for VoiceRecorder.app
+*     A .loc file is the one and only place where the logical strings
+*     to be localised are defined. 
+*     
+*
+*/
+
+
+//  LOCALISATION STRINGS
+
+// d: Application title from list. 
+// l: list_single_large_graphic_pane_t1
+// w:
+// r: 3.0
+#define	qtn_vorec_app_title			"Recorder"
+
+// d: Application title from grid. 
+// l: cell_app_pane_t1
+#define	qtn_vorec_app_menu_grid			"Recorder"
+
+// d: Default file name created by VoiceRec application.
+// d: The first memo will be assigned with this name.
+// d: The maximum length for the name is 20 characters 
+// d: The filename extension (.amr) is NOT included in the translation.
+// l: vorec_t1
+// w:
+// r: 1.0
+#define qtn_vorec_first_memo_name		"Sound clip"
+
+// d: Default file name created by VoiceRec application.
+// d: Memos after the first memo will be assigned with this name
+// d: The maximum name length is specified as 20 characters, but the
+// d: number formatting must be taken into account ( Memo(105) ).
+// d: The filename extension (.amr) is NOT included in the translation.
+// d: Can be removed after qtn_vorec_default_memo_name has been taken in use
+// l: vorec_t1
+// w:
+// r: 3.1
+#define qtn_vorec_memo_name			"Sound clip(%N)"
+
+//d: A new default file name created by VoiceRec application.
+//d: Replaces qtn_vorec_memo_name.
+//d: Memos after the first memo will be assigned with this name
+//d: The maximum name length is specified as 20 characters, but the
+//d: number formatting must be taken into account (e.g. Memo(105) ).
+//d: The filename extension (.amr) is NOT included in the translation.
+//d: %U is replaced by the running memo count number retrieved from the Central Repository
+//l: vorec_t1
+//w:
+//r: 3.1
+//
+#define qtn_vorec_default_memo_name 	"Sound clip(%U)"
+
+// d: Menu string	
+// d: Close memo and open empty to record option on menu. 
+// l: list_single_pane_t1_cp2
+#define qtn_vorec_rec_new				"Record new"
+
+// d: Menu string	
+// d: Erase current memo menu item. 
+// l: list_single_pane_t1_cp2
+#define qtn_vorec_delete				"Delete"
+
+// d: Menu string
+// d: Change name of current memo option on menu. 
+// l: list_single_pane_t1_cp2
+#define text_voice_rec_edit_title		"Edit name"
+
+// d: Menu string
+// d: Go to File Manager app at location of clips.
+// l: list_single_pane_t1_cp2
+#define qtn_vorec_goto_my_clips			"Go to my clips"
+
+// d: Menu item	
+// d: Save mail attachment. 
+// l: list_single_pane_t1_cp2
+#define qtn_vorec_save_mail_atta		"Save"
+
+// d: Softkey text
+// d: provides the command to record
+// l: control_pane_t1/opt7
+#define qtn_vorec_rec_sk				"Record"
+
+// d: Softkey text
+// d: provides the command to play
+// l: control_pane_t1/opt7
+#define text_softkey_play				"Play"
+
+// d: Softkey text
+// d: provides the command to pause
+// l: control_pane_t1/opt7
+#define qtn_vorec_pause_sk				"Pause"
+
+// d: Softkey text
+// d: Provides the command to stop
+// l: control_pane_t1/opt7
+#define qtn_vorec_stop_sk				"Stop"
+
+//d:Softkey text
+//l:control_pane_t1/opt7
+//w:
+//r:3.2
+//
+#define qtn_vorec_insert_sk 			"Insert"
+
+// d: Information Note
+// d: Shown when recording is stopped while in embedded mode
+// l: popup_note_window
+#define qtn_vorec_info_record_stopped	"Recording stopped"
+
+// d: Information Note
+// d: Shown when trying to use Voice Recorder during a video call
+// l: popup_note_window
+#define qtn_vorec_info_video_call_ongoing	"Voice Recorder cannot be used during video call"
+
+// d: Information Note
+// d: Shown when trying to use Voice Recorder during an internet call
+// l: popup_note_window
+// w:
+// r: 3.0
+#define qtn_vorec_info_internet_call_ongoing	"Voice Recorder cannot be used during an internet call"
+
+// d: Error note text
+// d: Failed to open or play memo. File format error.
+// l: popup_note_window
+#define qtn_vorec_info_memo_unsupported	"Unable to play memo. Memo format not supported."
+
+// d: Error note text
+// d: Failed to open or play memo. File format error.
+// l: popup_note_window
+#define qtn_vorec_info_memo_corrupted	"Unable to play memo. Memo corrupted."
+
+// d: Error note text
+// d: Failed to play or record. Media Server error.
+// l: popup_note_window
+#define qtn_vorec_info_server_error		"Unable to continue. Media server error."
+
+// d: Wait note text
+// d: Shown when voice memo is being saved to permanent storage
+// d: Recording is stopped by user
+// l: popup_note_wait_window
+#define qtn_vorec_wait_saving_memo		"Saving memo..."
+
+// d: Wait note text
+// d: Shown when voice memo is being saved to permanent storage
+// d: Recording is stopped automatically
+// l: popup_note_wait_window
+#define qtn_vorec_wait_stop_saved		"Saving stopped memo..."
+
+// d: Menu string	
+// d: Settings Options submenu item for changing item settings.
+// l: list_single_pane_t1_cp2
+#define qtn_vorec_settings_change		"Change"
+
+// d: Recorder View Status text
+// d: Displayed while recording is in progress
+// l: vorec_t4
+#define qtn_vorec_recording				"Recording"
+
+// d: Recorder View Status text
+// d: Displayed while playback is in progress
+// l: vorec_t4
+// w:
+// r: 3.1
+#define qtn_vorec_playback				"Playing"
+
+// d: Recorder View Status text
+// d: Displayed while playing/recording is paused
+// l: vorec_t4
+#define qtn_vorec_paused				"Paused"
+
+// d: Format string for the memo name
+// d: Memo name is placed in %U
+// l: vorec_t1
+#define qtn_vorec_memo_label			"%U"
+
+// d: Format string for the creation date of the memo
+// d: Date is placed in %0U and time in %1U
+// d: %0U is formatted with R_QTN_DATE_USUAL_WITH_ZERO
+// d: %1U is formatted with R_QTN_TIME_USUAL_WITH_ZERO
+// l: vorec_t2
+// w:
+// r: 3.1
+#define qtn_vorec_date_label			"%0U %1U"
+
+// d: Min/Start value of the memo play/record progress bar
+// d: Always zero.
+// l: vorec_t6
+#define qtn_vorec_min_label				"0"
+
+// d: Format for displaying elapsed time and time left in recording and playback states.
+// d: %0U is elapsed time
+// d: %1U is maximum recording time, estimated time left or length of played memo
+// d: %0U and %1U are formatted with R_QTN_TIME_DURAT_MIN_SEC_WITH_ZERO, or
+// d: R_QTN_TIME_DURAT_LONG if the time is longer than one hour
+// l: vorec_t5
+// w:
+// r: 3.1
+#define qtn_vorec_time_indic             "%0U / %1U"
+
+// d: Recorder view quality text
+// l: vorec_t7
+// w:
+// r: 3.1
+#define qtn_vorec_quality_label		"Quality:"
+
+// d: Recorder view quality text for MMS optimized quality
+// l: vorec_t3
+// w:
+// r: 3.1
+#define qtn_vorec_quality_mms_optimized	"MMS"
+
+// d: Recorder view quality text for High quality
+// l: vorec_t3
+// w:
+// r: 3.1
+#define qtn_vorec_quality_high		"High"
+
+// d: Recorder view quality text for Normal quality
+// l: vorec_t7
+// w:
+// r: 3.2
+#define qtn_vorec_quality_normal		"Normal"
+
+// ---------------------------------------------------------------------------
+// Memory store usage specific strings
+
+// d: Information note 
+// d: Shown when VR is started and MMC is selected as default store,
+// d: but MMC is not available or it is locked
+// l: popup_note_window
+// w:
+// r: 1.0
+#define qtn_memc_vorec_note1			"The selected memory store is not accessible. Phone memory will be used instead."
+
+// d: Information note 
+// d: Shown when VR is started and MMC is selected as default store, but MMC is read-only
+// l: popup_note_window
+// w: 
+// r: 3.1
+#define qtn_memc_vorec_note2			"The selected memory store is read-only. Phone memory will be used instead."
+
+// d: Error note
+// d: Shown when user tries to unlock MMC, but enters an incorrect password
+// l: popup_note_window
+#define qtn_memc_set_password_error		"The passwords don't match, try again!"
+
+// d: Setting item title
+// d: Title for Memo Store Setting Item
+// l: list_setting_pane_t1
+#define qtn_vorec_set_store				"Memo store"
+
+// d: Confirmation note
+// d: Shown if when VR is started and MMC is locked
+// l: popup_note_window
+#define qtn_memc_unlock_query1		"The selected memory store is locked, it can't be used. Do you want to unlock it?"
+
+// d: Information note
+// d: Shown when VR is started and the SD card is not inserted
+// l: popup_note_window
+// w: 
+// r: 3.1
+#define qtn_ccor_insert_mmc            "Please insert memory card."
+
+// d: Information note
+// d: Shown when VR is started and the USB is inserted in Mass Storage mode
+// l: popup_note_window
+// w: 
+// r: 3.1
+#define qtn_usb_mode_note_mode_activated            "USB connected in Mass storage mode"
+
+// ---------------------------------------------------------------------------
+// No voice key specific strings
+
+// d: Setting item title
+// d: Title for Memo Store Setting Item
+// l: list_setting_pane_t1
+#define qtn_vorec_set_ihf		"Default speaker"
+
+// d: setting_item_with_two_available_ values
+// d: Indicates that the IHF is being selected as default speaker
+// l: list_set_graphic_pane_t1
+#define qtn_vorec_settings_ihf_hf	"Handsfree"
+
+// d: setting_item_with_two_available_ values
+// d: Indicates that the earpiece is being selected as default speaker
+// l: list_set_graphic_pane_t1
+#define qtn_vorec_settings_ihf_ear	"Earpiece"
+
+
+// ---------------------------------------------------------------------------
+// No voice key AND MMC specific strings
+
+// d: Menu string	
+// d: Displays the settings dialog. 
+// l: list_single_pane_t1_cp2
+// w:
+// r: 3.0
+#define qtn_vorec_settings				"Settings"
+
+// ---------------------------------------------------------------------------
+// Quality specific strings
+
+// d: Setting item title
+// d: Title for Recording quality setting item
+// l: list_setting_pane_t1
+// w:
+// r: 3.1
+#define qtn_vorec_set_quality		"Recording quality"
+
+// d: setting_item_with_two_available_ values
+// d: Indicates that memo quality is MMS Optimized
+// l: list_set_graphic_pane_t1
+// w:
+// r: 3.1
+#define qtn_vorec_settings_quality_mms_optimized	"MMS Optimized"
+
+// d: setting_item_with_two_available_ values
+// d: Indicates that memo quality is High quality
+// l: list_set_graphic_pane_t1
+// w:
+// r: 3.1
+#define qtn_vorec_settings_quality_high	"High"
+
+
+// d: setting_item_with_three_available_ values
+// d: Indicates that memo quality is Normal quality
+// l: list_set_graphic_pane_t1
+// w:
+// r: 3.2
+#define qtn_vorec_settings_quality_normal		"Normal"

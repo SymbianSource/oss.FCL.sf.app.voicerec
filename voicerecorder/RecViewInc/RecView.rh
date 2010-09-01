@@ -1,0 +1,94 @@
+/*
+* Copyright (c) 2002 - 2006 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+*     Defines resource structures for defining recording view states (visual).
+*     The file can be included in a resource file only.
+*
+*/
+
+
+#ifndef __RECVIEW_RH__
+#define __RECVIEW_RH__
+
+#include <uikon.rh>
+#include <badef.rh>
+
+#include "voicerecorder.hrh"
+
+STRUCT VR_TRANSITION
+	{
+	BYTE cmd = 0;
+	BYTE next = 0;
+	BYTE function = 0;
+	}
+
+STRUCT VR_CONTEXT
+	{
+	BYTE id;
+	STRUCT transition;
+	STRUCT states[];
+	}
+
+STRUCT VR_STATE
+	{
+	BYTE id;
+	STRUCT transitions[];
+	}
+
+
+STRUCT VR_STATEMACHINE
+	{
+	STRUCT labelsets[];			// a VR_LABELSET array
+	STRUCT labelLayouts[];			// a VR_LABEL array
+	STRUCT states[];			// a VR_VISUAL_STATE array
+	STRUCT contexts[];			// a VR_CONTEXT array
+	}
+
+STRUCT VR_VISUAL_STATE
+	{
+	LLINK menubar;
+	LLINK cba;
+	LTEXT< VRLABELMAXLENGTH > status;
+	BYTE labelSetId = 0;
+	BYTE hasVolumeControl = 0;
+	BYTE hasProgressBar = 1;
+	BYTE focusButton = 0;
+	BYTE stateID = 0;
+	STRUCT buttons[];
+	}
+	
+STRUCT VR_LABELSET
+	{
+	STRUCT labels[];	// an LTEXT array
+	}
+
+STRUCT VR_BUTTON_INFO
+	{
+	WORD commandId = 0;
+	BYTE state = 0;
+	}
+
+STRUCT VR_LABEL_LINK
+	{
+	LLINK euroLabelId;			 
+	LLINK apacLabelId;		
+	LLINK arabicHebrewLabelId;	
+	}
+	
+STRUCT VR_BUTTONS_NEW
+	{
+	STRUCT buttons[];
+	}
+			
+#endif // __RECVIEW_RH__

@@ -1,0 +1,42 @@
+/*
+* Copyright (c) 2005 Nokia Corporation and/or its subsidiary(-ies).
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+* Image description file for project Voicerecorder
+*	  
+*
+*/
+
+#ifndef __VOICERECORDER_IBY__
+#define __VOICERECORDER_IBY__
+
+S60_APP_EXE(Voicerecorder)
+S60_APP_AIF_ICONS(Voicerecorder)
+S60_UPGRADABLE_APP_REG_RSC(Voicerecorder)
+
+ECOM_PLUGIN(GSVoiceRecorderPlugin.dll,GSVoiceRecorderPlugin.rsc)
+
+SCALABLE_IMAGE(Resource\apps,APP_BITMAP_DIR,Voicerecorder)
+
+file=ABI_DIR\BUILD_DIR\VoicerecorderUtils.DLL           SHARED_LIB_DIR\VoicerecorderUtils.DLL
+file=ABI_DIR\BUILD_DIR\VoicerecorderRecview.DLL         SHARED_LIB_DIR\VoicerecorderRecview.DLL
+file=ABI_DIR\BUILD_DIR\NewService.DLL       		SHARED_LIB_DIR\NewService.DLL
+
+data=DATAZ_\BITMAP_DIR\GSVoiceRecorderPlugin.mif	BITMAP_DIR\GSVoiceRecorderPlugin.mif
+
+data=ZPRIVATE\100058CA\backup_registration.xml        	private\100058CA\backup_registration.xml
+
+data=ZSYSTEM\Install\VoiceRecorder_stub.SIS   System\install\VoiceRecorder_stub.SIS
+
+#endif
+

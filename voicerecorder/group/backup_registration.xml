@@ -1,0 +1,11 @@
+<!-- Copyright (c) 2005, Nokia. Inc. All Rights Reserved -->
+<!-- Profiles backup registration file -->
+
+<backup_registration>
+
+    <proxy_data_manager sid = "0x10202BE9" />
+
+    <restore requires_reboot = "no"/>
+
+</backup_registration>
+

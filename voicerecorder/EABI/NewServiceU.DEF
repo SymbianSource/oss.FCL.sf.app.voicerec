@@ -1,0 +1,21 @@
+EXPORTS
+	_ZN19CNewFileServiceBase13GenericParamsEv @ 1 NONAME
+	_ZN19CNewFileServiceBase26HandleCompletedNewServiceLEi @ 2 NONAME
+	_ZN19CNewFileServiceBase8ServiceLERK9RMessage2 @ 3 NONAME
+	_ZN19CNewFileServiceBaseC2Ev @ 4 NONAME
+	_ZN19CNewFileServiceBaseD0Ev @ 5 NONAME
+	_ZN19CNewFileServiceBaseD1Ev @ 6 NONAME
+	_ZN19CNewFileServiceBaseD2Ev @ 7 NONAME
+	_ZN21NewFileServiceFactory10NewClientLEv @ 8 NONAME
+	_ZTI19CNewFileServiceBase @ 9 NONAME ; #<TI>#
+	_ZTI21RNewFileServiceClient @ 10 NONAME ; #<TI>#
+	_ZTI24CNewFileServiceDiscovery @ 11 NONAME ; #<TI>#
+	_ZTI25CNewFileServiceClientImpl @ 12 NONAME ; #<TI>#
+	_ZTV19CNewFileServiceBase @ 13 NONAME ; #<VT>#
+	_ZTV21RNewFileServiceClient @ 14 NONAME ; #<VT>#
+	_ZTV24CNewFileServiceDiscovery @ 15 NONAME ; #<VT>#
+	_ZTV25CNewFileServiceClientImpl @ 16 NONAME ; #<VT>#
+	_ZThn36_N19CNewFileServiceBase26HandleCompletedNewServiceLEi @ 17 NONAME ; #<thunk>#
+	_ZN19CNewFileServiceBase12GetErrorCodeEv @ 18 NONAME
+	_ZN19CNewFileServiceBase12SetErrorCodeEi @ 19 NONAME
+
