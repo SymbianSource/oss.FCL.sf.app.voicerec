@@ -1054,8 +1054,18 @@ TInt CVRRecView::HandleUsbPlugInL()
             == iModel->VisualStateId() || EStateIdleRecordEmbedded
             == iModel->VisualStateId())
         {
-        ShowDialogForWaitUSBPluggingOutL();
-        AppUi()->Exit();
+        if ( !iUSBConnectedDialogOpen )
+            {
+            iUSBConnectedDialogOpen = ETrue;
+            TRAPD( err, ShowDialogForWaitUSBPluggingOutL() );
+            iUSBConnectedDialogOpen = EFalse;
+            User::LeaveIfError( err );
+            AppUi()->Exit();
+            }
+        else
+            {
+            return KErrNone;
+            }
         }
 
     HandleCommandL(ECmdUSBChange);

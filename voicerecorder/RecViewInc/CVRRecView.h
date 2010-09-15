@@ -410,6 +410,12 @@ private:
     * Context that is used to activate model
     */                
     TVRRecViewContexts iContext;
+    
+    /**
+    * Own: Indicates USB connection dialog is open or not.
+    * If value is ETrue, don't try to open it again.
+    */
+    TBool iUSBConnectedDialogOpen;
     };
 
 #endif // __CVRRECVIEW_H__
