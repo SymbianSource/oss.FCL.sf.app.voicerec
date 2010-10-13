@@ -118,6 +118,24 @@ class CVRAppUi
 		*/
 		MVRSelectionProvider* SelectionProviderL();
 
+       	
+       	/**
+       	* This method show a dialog to warn user to insert the SD card.
+       	* @return if user insert the SD card or not
+       	*/
+       	static TBool ShowDialogForWaitStorageCardL();
+       	
+        /**
+        * This method show a dialog to warn user to plug the usb cable.
+        * @return if user plug the usb cable or not
+        */
+        static TBool ShowDialogForWaitUSBPluggingOutL();       	
+       	
+       	/**
+       	 * Make user insert the SD card, and choose SD card as the memo storage
+       	 */
+       	void SetDriveL();
+
 	private: // data
 		/**
 		* CActiveScheduler wrapper object. Owned.

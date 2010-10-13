@@ -432,23 +432,7 @@ NONSHARABLE_CLASS( CVRRecViewModel ):
 		*/
 		TVRQuality Quality() const;
 		
-        /**
-         * Send exit event to UI
-         */
-        void SendExitEvent();
-        
-        /**
-        * Set the value of iIsDriveReady.
-        * @param The new value of iIsDriveReady.
-        */
-        void SetIsDriveReady(TBool aIsDriveReady);
-                
-        /**
-        * Get the value of iIsDriveReady.
-        * @return The value of iIsDriveReady.
-        */
-        TBool GetIsDriveReady();
-
+		              
 	private: // new methods
 
 		/**
@@ -751,11 +735,6 @@ NONSHARABLE_CLASS( CVRRecViewModel ):
 		* causes no action.
 		*/
 		TBool iCBAEnabled;
-		
-	    /**
-	     * To judge whether the current drive is ready for recording
-	     */
-	    TBool iIsDriveReady;
 	};
 
 #endif // __CVRRECVIEWMODEL_H__

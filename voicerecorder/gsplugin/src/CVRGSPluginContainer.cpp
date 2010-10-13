@@ -45,13 +45,6 @@
 
 const TUid KVRAppUID = { KVoiceRecorderAppUID3 };
 
-// ListBox item index
-enum TListItemIndex
-    {
-    EListItemQualityIndex = 0,
-    ElistItemMemoStoreIndex,
-    };
-
 // ========================= MEMBER FUNCTIONS ================================
 
 // ---------------------------------------------------------------------------
@@ -165,6 +158,7 @@ void CVRGSPluginContainer::CreateListBoxItemsL()
     {
     CAknSettingItem* settingItem;
     HBufC* itemTitle;
+   	TInt id( 0 );    
 
 	// Add quality setting
     if ( VRUtils::FeatureEnabled( EVRFeatureShowQualitySetting ) )
@@ -180,7 +174,7 @@ void CVRGSPluginContainer::CreateListBoxItemsL()
     	CleanupStack::PushL( settingItem );
 
     	itemTitle = iCoeEnv->AllocReadResourceLC( R_QTN_VOREC_SET_QUALITY );
-    	settingItem->ConstructL( EFalse, EListItemQualityIndex, *itemTitle, NULL,
+    	settingItem->ConstructL( EFalse, id, *itemTitle, NULL,
     	                     R_VR_SETTINGS_DEFAULT_SPEAKER_PAGE, 
     	                     EAknCtPopupField, NULL,
     						 R_VR_SETTINGS_QUALITY_TEXTS );
@@ -190,8 +184,9 @@ void CVRGSPluginContainer::CreateListBoxItemsL()
     	// Add quality item to the settings array
     	iSettingItemArray->AppendL( settingItem );
       	CleanupStack::Pop();	// settingItem        
+      	id++;
         }
-      if ( VRUtils::MultipleMassStorageAvailable() )
+    if ( VRUtils::MultipleMassStorageAvailable() )
         {
     // Add memo store setting
 	// Create the memo store item
@@ -216,7 +211,7 @@ void CVRGSPluginContainer::CreateListBoxItemsL()
 	settingItem->ConstructL( EFalse, id, *itemTitle, NULL,
 	    R_VOREC_MEMORY_SELECTION_DIALOG, EAknCtPopupSettingList );
 #else
-        settingItem->ConstructL( EFalse, ElistItemMemoStoreIndex, *itemTitle, NULL, 0, EAknCtPopupSettingList );
+   settingItem->ConstructL( EFalse, id, *itemTitle, NULL, 0, EAknCtPopupSettingList );
 #endif
 	    
 	CleanupStack::PopAndDestroy();	// itemTitle
@@ -224,6 +219,7 @@ void CVRGSPluginContainer::CreateListBoxItemsL()
         // Add memo store item to the settings array
         iSettingItemArray->AppendL( settingItem );
         CleanupStack::Pop();	// settingItem
+        id++;
     	}
     }
 
@@ -272,17 +268,9 @@ void CVRGSPluginContainer::SizeChanged()
 void CVRGSPluginContainer::HandleListBoxSelectionL( TInt aCommand ) 
     {
 	TInt index( iListBox->CurrentItemIndex() );
-	TInt driveDefaultMassStorage = VRUtils::DefaultMemoDriveL();
-	TInt driveRemovableMassStorage = VRUtils::GetRemovableMassStorageL();
-	
+
 	if ( index >=0 )	// index is -1 if there are no items in the list
 		{
-        if(index == ElistItemMemoStoreIndex &&
-		        !VRUtils::DriveValid(driveDefaultMassStorage) && 
-		            !VRUtils::DriveValid(driveRemovableMassStorage) )
-            {
-            return;
-            }
 		// Open edit dialog if EAknCmdOpen, invert the value otherwise
 		iSettingItemArray->At( index )->EditItemL( aCommand == EAknCmdOpen );
 		iListBox->DrawItem( index );
@@ -351,10 +339,7 @@ void CVRGSPluginContainer::StoreAllL()
         	iDrive = (TDriveNumber)defaultDrive;
   			}
 	 	}
-    if(iDrive == defaultDrive || iDrive == VRUtils::GetRemovableMassStorageL())
-        {
         VRUtils::SetMemoDriveL( iDrive );
-        }
 #endif 
 
     // Save quality setting

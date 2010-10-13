@@ -922,8 +922,7 @@ void CVRMdaRecorder::Stop()
 		iTonePlayer->PlayTone( EAvkonSIDVoiceRecordingStopTone );
 		iTonePlayer->PrepareTone( EAvkonSIDVoiceRecordingStartTone );			
 
-		if( ( iAudioRecorder->State() == CMdaAudioRecorderUtility::EOpen ) ||
-				reallyStopping )
+		if( reallyStopping )
 			{
 			// Set lower preference to ensure other sounds will 
 			// be played correctly

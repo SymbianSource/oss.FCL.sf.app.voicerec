@@ -1087,7 +1087,8 @@ EXPORT_C TBool VRUtils::MultipleMassStorageAvailable()
 	TInt removableStorageErr = DriveInfo::GetDefaultDrive(
 			DriveInfo::EDefaultRemovableMassStorage,    driveRemovableMassStorage );
 	if ( (defaultStorageErr) || (removableStorageErr) ||
-			( driveDefaultMassStorage == driveRemovableMassStorage ) )
+			( driveDefaultMassStorage == driveRemovableMassStorage ) ||
+			!DriveValid(driveDefaultMassStorage) || !DriveValid(driveRemovableMassStorage) )
 		{ flag = EFalse; }
 	
 	return flag;

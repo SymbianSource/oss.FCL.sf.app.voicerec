@@ -84,8 +84,7 @@ CVRRecViewModel::CVRRecViewModel()
 	iLabelSets( 2 ),
 	iPreviousCallState( EPSCTsyCallStateNone ),
 	iCanHandleCommands( ETrue ),
-	iCBAEnabled( ETrue ),
-	iIsDriveReady( ETrue )
+	iCBAEnabled( ETrue )
 	{
 	}
 
@@ -805,7 +804,7 @@ TBool CVRRecViewModel::CBAEnabled() const
 //	
 TInt CVRRecViewModel::ButtonState( TInt aButtonId ) const
 	{
-    if(CVRUSBStateHanlder::IsUsbActive() || !iIsDriveReady)
+    if(CVRUSBStateHanlder::IsUsbActive())
         {
             return EDimmed;
         }
@@ -2433,44 +2432,14 @@ void CVRRecViewModel::HandleMMCEjectEventL()
             ( !CVRUSBStateHanlder::IsUsbActive() ) )
 		{
         //exit for mmc dismount	
-        SendExitEvent();   
+        TWsEvent event;
+        event.SetType( EAknSoftkeyExit );
+        event.SetTimeNow();
+        event.SetHandle( CCoeEnv::Static()->WsSession().WsHandle() );
+        CCoeEnv::Static()->WsSession().SendEventToWindowGroup( CEikonEnv::Static()->RootWin().Identifier(), event );
+        return;       
 		}
-    }
-
-// ---------------------------------------------------------------------------
-// CVRRecViewModel::SendExitEvent
-// 
-// ---------------------------------------------------------------------------
-//
-void CVRRecViewModel::SendExitEvent()
-    {
-    TWsEvent event;
-    event.SetType( EAknSoftkeyExit );
-    event.SetTimeNow();
-    event.SetHandle( CCoeEnv::Static()->WsSession().WsHandle() );
-    CCoeEnv::Static()->WsSession().SendEventToWindowGroup( CEikonEnv::Static()->RootWin().Identifier(), event );
-    return;
-    }
-
-// ---------------------------------------------------------------------------
-// CVRRecViewModel::SetIsDriveReady
-// 
-// ---------------------------------------------------------------------------
-//
-void CVRRecViewModel::SetIsDriveReady(TBool aIsDriveReady)
-    {
-    iIsDriveReady = aIsDriveReady;
-    }
-
-// ---------------------------------------------------------------------------
-// CVRRecViewModel::GetIsDriveReady
-// 
-// ---------------------------------------------------------------------------
-//
-TBool CVRRecViewModel::GetIsDriveReady()
-    {
-    return iIsDriveReady;
-    }
+	}
 
 
 // End of file
